@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="dist/metadata.json"><img src="https://img.shields.io/badge/version-0.200-762F3B?style=flat-square&amp;color=762F3B" alt="Version: 0.200"></a>
+  <a href="dist/metadata.json"><img src="https://img.shields.io/badge/version-0.3.0-762F3B?style=flat-square&amp;color=762F3B" alt="Version: 0.3.0"></a>
   <a href="OFL.txt"><img src="https://img.shields.io/badge/license-OFL%201.1-762F3B?style=flat-square&amp;color=762F3B" alt="License: SIL OFL 1.1"></a>
   <a href="#get-the-font"><img src="https://img.shields.io/badge/formats-TTF%20%2B%20WOFF2-762F3B?style=flat-square&amp;color=762F3B" alt="Formats: TTF and WOFF2"></a>
 </p>
@@ -42,7 +42,7 @@ The font is also available on its own, ready to use in your documents, websites 
 
 ## Get the font
 
-The ready-to-use files are included in this repository. No build is required.
+The ready-to-use files are included in this repository. No build is required. Packaged editions are published on [GitHub Releases](https://github.com/illegalstudio/carta-rinascente/releases).
 
 | Style | Desktop / native | Web |
 | --- | --- | --- |
@@ -101,14 +101,14 @@ Copy all four WOFF2 files and `OFL.txt` into your project, then adjust the URLs:
 }
 ```
 
-Use normal CSS `font-weight` and `font-style` to select a face. Regular and Bold are upright; Italic and Bold Italic use a 10-degree design slant and dedicated letterforms. Their shared vertical metrics keep line spacing consistent when styles are mixed.
+Use normal CSS `font-weight` and `font-style` to select a face. Regular and Bold are upright, with broader proportions, level serifs and steady strokes. Italic and Bold Italic use a 16-degree design slant, looped ascenders, sweeping descenders and tapered exit strokes. Their shared vertical metrics keep line spacing consistent when styles are mixed.
 
 ## Character and coverage
 
 - **340 encoded characters and 341 glyphs per style**, including the missing-character glyph.
 - **Complete printable Basic Latin and Latin-1 coverage**, Italian accents, many Latin Extended-A characters, combining marks, the euro symbol and typographic punctuation.
 - **Proportional spacing and numerals**, with style-specific kerning, combining-mark positioning and contextual dot removal for accented i and j.
-- **Four linked styles**, version 0.200: Regular, Italic, Bold and Bold Italic, each supplied as TTF and WOFF2.
+- **Four linked styles**, version 0.3.0: Regular, Italic, Bold and Bold Italic, each supplied as TTF and WOFF2.
 
 This experimental family is intended for headings and short passages. For screen use, start around 24 px and check the result on your target device. Pair it with a text face for small type or dense interfaces. Dedicated ligatures, stacked-mark positioning and manual TrueType hinting are not included. Greek, Cyrillic and emoji are outside the current character set.
 
@@ -161,8 +161,13 @@ The original `build_font.py`, `render_specimen.py` and `validate_font.py` comman
 | [`validation.py`](src/validation.py) | Exported-font checks using FontTools, FreeType and HarfBuzz |
 | [`specimens.py`](src/specimens.py) | Reproducible family, individual-style, character and reading proofs |
 | [`cli.py`](src/cli.py) | Shared command-line interface |
+| [`versioning.py`](src/versioning.py) | SemVer parsing, OpenType revision and version labels |
+| [`distribution.py`](src/distribution.py) | Validated, reproducible release ZIP and checksums |
+| [`release.py`](src/release.py) | Interactive preflight, isolated preparation and atomic tag push |
 
-The upright styles have dedicated lowercase designs, including a double-storey a and g. The italics retain a more gestural rhythm with alternate f, g, k, l, y, z and Q paths. Bold styles use a heavier pen during geometry construction. All builds use isolated glyph state, fixed timestamps and deterministic glyph ordering.
+The upright styles have dedicated uppercase, lowercase and lining numeral designs, including a double-storey a and g. A level pen and even pressure keep the roman steady; an angled pen and dedicated italic paths give the cursive its contrasting rhythm. Bold styles use a heavier pen during geometry construction. All builds use isolated glyph state, fixed timestamps and deterministic glyph ordering.
+
+The design is drawn on a 900-unit grid and exported at 1000 units per em. Outlines, spacing, kerning and mark positions are scaled together. The larger lowercase body reaches approximately 52% of the em, giving the family more presence at the same point size.
 
 Compilation and validation happen in a temporary staging directory before the released font files are replaced. Temporary build directories are cleaned on success and failure. Pillow's built-in font supplies only the specimen labels; every displayed Carta Rinascente glyph comes from this project's generated TTF files.
 
@@ -173,6 +178,38 @@ The validator checks every style's character coverage, nonempty contours, vertic
 The unit tests cover malformed paths, closed counters, isolated style state, explicit zero advances, shared accent anchors, accented kerning pairs and safe handling of failed builds. `--check-reproducible` compares every font and manifest against a second clean build.
 
 The generated proofs and the browser preview have been visually checked. Integration in Ariadne and other native applications still needs verification in the target product.
+
+## Create a GitHub release
+
+Use Python 3.14, Git and Make. Your `origin` remote must point to the GitHub repository with matching fetch and push URLs, and your Git credentials must allow pushing to it. GitHub Actions must be enabled.
+
+```bash
+make setup              # Create .venv and install the pinned dependencies
+make check              # Unit tests, full build, validation and reproducibility
+make release-dry-run    # Read-only preflight and proposed version
+make release            # Interactive version selection and confirmation
+```
+
+Start on a clean `main` branch, with your changes committed and pushed. Like the release command in [ggw](https://github.com/illegalstudio/ggw), `make release` proposes a version and asks for confirmation. You can accept the proposal or enter another stable `MAJOR.MINOR.PATCH` version, with or without a `v` prefix. The first release uses the current source version; subsequent releases default to the next patch, unless the source already has a newer version. Prerelease and build suffixes are not supported yet.
+
+After confirmation, the command builds from a temporary copy of the committed source, runs the tests, validates all four styles and checks byte reproducibility. It updates the source version, README, preview, fonts and specimens, creates a release commit if needed, then creates an annotated tag. An atomic push sends `main` and the tag together. A failed preparation leaves the original checkout untouched.
+
+The [Release workflow](.github/workflows/release.yml) also checks every push to `main`. For a version tag, it rebuilds and compares the generated files, then publishes the GitHub release with generated release notes, all eight TTF/WOFF2 files, a family ZIP and `SHA256SUMS`. The ZIP includes the license, version and validation metadata, and installation instructions. GitHub supplies the tagged source archives separately.
+
+To create the same assets locally without publishing:
+
+```bash
+make package
+# Output: build/release/<version>/
+```
+
+The generated release directory is ignored by Git. If a push fails, the local release commit and tag are retained; the command prints the exact push command to retry. If GitHub's build fails, inspect its logs before publishing anything manually. A failed asset upload can leave a draft release, which should be reviewed and completed or removed before rerunning publication.
+
+### Versioning
+
+Project versions and GitHub tags use SemVer. Patch releases fix defects; minor releases add glyphs, features or design revisions while the family is below 1.0. After 1.0, incompatible changes to family names, coverage or layout belong in a major release.
+
+OpenType also stores a numeric font revision, which cannot encode three semantic components. [`src/__init__.py`](src/__init__.py) holds both values. `make release` increments the internal revision by 0.001 when it advances the project version, independently of the SemVer component being changed. The full SemVer remains in the font's name table and JSON metadata. This follows the [OpenType revision format](https://learn.microsoft.com/en-us/typography/opentype/spec/recom#head-table) while keeping GitHub releases consistent with other software projects.
 
 ## License and credits
 

@@ -70,13 +70,14 @@ def sample_path(path: str, step_size: float = 7.0) -> list[Point]:
     return points
 
 
-def sweep(path: str, weight: float = 1.0, tips: Tips = (0.75, 0.6)) -> BaseGeometry:
+def sweep(path: str, weight: float = 1.0, tips: Tips = (0.75, 0.6),
+          *, nib_angle: float = 18, nib_depth: float = 8.5) -> BaseGeometry:
     """Sweep a rounded broad nib with terminal pressure taper along one path."""
     if weight <= 0 or min(tips) <= 0:
         raise ValueError("Pen weight and terminal pressure must be positive")
     points = sample_path(path)
     closed = math.dist(points[0], points[-1]) < 1
-    angle = math.radians(18)
+    angle = math.radians(nib_angle)
     ca, sa = math.cos(angle), math.sin(angle)
     stamps = []
     for index, (x, y) in enumerate(points):
@@ -87,13 +88,15 @@ def sweep(path: str, weight: float = 1.0, tips: Tips = (0.75, 0.6)) -> BaseGeome
             a = segment * math.tau / 16
             u, v = math.cos(a), math.sin(a)
             u = math.copysign(abs(u) ** 0.72, u) * 32 * weight * pressure
-            v = math.copysign(abs(v) ** 0.72, v) * 8.5 * weight * pressure
+            v = math.copysign(abs(v) ** 0.72, v) * nib_depth * weight * pressure
             contour.append((x + ca * u - sa * v, y + sa * u + ca * v))
         stamps.append(Polygon(contour))
     return unary_union([a.union(b).convex_hull for a, b in zip(stamps, stamps[1:])])
 
 
-def dot(x: float, y: float, weight: float = 1.0) -> tuple[str, float, Tips]:
+def dot(x: float, y: float, weight: float = 1.0, *, upright: bool = False) -> tuple[str, float, Tips]:
+    if upright:
+        return (f"M {x} {y - 12} L {x} {y + 12}", weight * 0.72, (1, 1))
     return (f"M {x - 3} {y - 5} L {x + 3} {y + 5}", weight, (1, 1))
 
 
@@ -112,7 +115,10 @@ class GlyphBuilder:
         self.glyphs: dict[str, Shape] = {}
 
     def ink(self, path: str, weight: float = 1.0, tips: Tips = (0.75, 0.6)) -> BaseGeometry:
-        return sweep(path, weight * self.style.pen_scale, tips)
+        if self.style.italic:
+            return sweep(path, weight * self.style.pen_scale, tips, nib_angle=24, nib_depth=7)
+        # Roman strokes keep level terminals and even pressure, with fuller hairlines.
+        return sweep(path, weight * self.style.pen_scale, (1, 1), nib_angle=0, nib_depth=11)
 
     def add(self, char: str, *paths: Stroke, bearing: int | None = None,
             advance: int | None = None) -> None:
@@ -120,15 +126,15 @@ class GlyphBuilder:
             raise ValueError("A glyph needs one Unicode character and at least one stroke")
         pieces = [self.ink(path) if isinstance(path, str) else self.ink(*path) for path in paths]
         geometry = unary_union(pieces).simplify(0.42, preserve_topology=True)
-        geometry = affine_transform(geometry, [1, self.style.slant, 0, 1, 0, 0])
+        geometry = affine_transform(geometry, [self.style.width_scale, self.style.slant, 0, 1, 0, 0])
         side = self.style.side_bearing if bearing is None else bearing
         geometry = translate(geometry, xoff=side - geometry.bounds[0])
-        width = round(geometry.bounds[2] + side) if advance is None else advance
+        width = round(geometry.bounds[2] + side) if advance is None else round(advance * self.style.width_scale)
         if width < 0:
             raise ValueError(f"Negative advance for {char!r}")
         self.glyphs[char] = Shape(geometry, width, char)
 
     def set_spacing(self, char: str, shift: float, advance: int) -> None:
         shape = self.glyphs[char]
-        self.glyphs[char] = replace(shape, geometry=translate(shape.geometry, xoff=shift),
-                                    advance=advance)
+        self.glyphs[char] = replace(shape, geometry=translate(shape.geometry, xoff=shift * self.style.width_scale),
+                                    advance=round(advance * self.style.width_scale))

@@ -21,7 +21,7 @@ def kerning_pairs(glyphs: dict[str, Shape], style: Style) -> dict[tuple[str, str
     if style.italic:
         adjustments.update({('f', 'i'): 22, ('f', 'l'): 74})
     elif style.weight == 700:
-        adjustments['f', 'l'] = 10
+        adjustments['f', 'l'] = 32
     for (left, right), adjustment in adjustments.items():
         lefts = [char for char, shape in glyphs.items() if shape.base == left and char.isalpha()]
         rights = [char for char, shape in glyphs.items() if shape.base == right and char.isalpha()]

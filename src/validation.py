@@ -18,7 +18,8 @@ from shapely.geometry.base import BaseGeometry
 from shapely.ops import unary_union
 import uharfbuzz as hb
 
-from .config import ASCENT, DESCENT, FAMILY, STYLES, VERSION, WHITESPACE, Style
+from .config import (ASCENT, CAP_HEIGHT, DESCENT, FAMILY, FONT_REVISION, STYLES,
+                     UNITS_PER_EM, VERSION, WHITESPACE, X_HEIGHT, Style)
 
 SAMPLES = (
     "Carta Rinascente", "A quiet page, an expressive voice.",
@@ -54,13 +55,21 @@ def shape(data: bytes, text: str, *, kern: bool = True) -> list[tuple[int, int, 
 def _check_style(font: TTFont, style: Style) -> None:
     names = font["name"]
     for name_id, expected in ((1, FAMILY), (2, style.name), (4, f"{FAMILY} {style.name}"),
+                              (3, f"{style.filename}-{VERSION}"),
+                              (5, f"Version {FONT_REVISION}; release {VERSION}"),
                               (6, style.filename), (16, FAMILY), (17, style.name)):
         require(names.getDebugName(name_id) == expected, f"{style.name}: incorrect name ID {name_id}")
+    require(abs(font["head"].fontRevision - float(FONT_REVISION)) <= 1 / 65536,
+            f"{style.name}: incorrect font revision")
+    require(font["head"].unitsPerEm == UNITS_PER_EM, f"{style.name}: incorrect em scale")
+    require(font["OS/2"].sxHeight == X_HEIGHT and font["OS/2"].sCapHeight == CAP_HEIGHT,
+            f"{style.name}: incorrect scaled body metrics")
     require(font["OS/2"].usWeightClass == style.weight, f"{style.name}: weight class mismatch")
     require(font["OS/2"].fsSelection == style.selection, f"{style.name}: incorrect OS/2 style flags")
     require(font["head"].macStyle == style.mac_style, f"{style.name}: incorrect head style flags")
     require(font["post"].italicAngle == style.angle, f"{style.name}: incorrect italic angle")
-    require(font["hhea"].caretSlopeRun == round(style.slant * 1000), f"{style.name}: caret mismatch")
+    require(font["hhea"].caretSlopeRise == 1000 and
+            font["hhea"].caretSlopeRun == round(style.slant * 1000), f"{style.name}: caret mismatch")
     require(font["hhea"].ascent == ASCENT and font["hhea"].descent == DESCENT,
             f"{style.name}: family line metrics mismatch")
     require(font["OS/2"].sTypoAscender == ASCENT and font["OS/2"].sTypoDescender == DESCENT,
@@ -103,6 +112,9 @@ def validate_style(directory: Path, style: Style) -> tuple[dict, tuple[list[str]
         _check_style(web, style)
         require(all(table in font for table in ("GPOS", "GDEF", "GSUB")), "Missing layout tables")
         cmap = font.getBestCmap()
+        require(font["hmtx"][cmap[0x2003]][0] == UNITS_PER_EM and
+                font["hmtx"][cmap[0x2002]][0] == UNITS_PER_EM // 2,
+                f"{style.name}: em-space widths were not scaled correctly")
         required = {*range(32, 127), *range(160, 256)}
         require(required <= cmap.keys(), f"{style.name}: incomplete Basic Latin / Latin-1")
         bounds = []
@@ -170,6 +182,7 @@ def validate_family(directory: Path) -> dict:
             "Style character maps or glyph orders differ")
     metadata = json.loads((directory / "metadata.json").read_text())
     require(metadata["version"] == VERSION, "Stale metadata version")
+    require(metadata["font_revision"] == FONT_REVISION, "Stale metadata font revision")
     require([face["style"] for face in metadata["styles"]] == [style.name for style in STYLES],
             "Incomplete family metadata")
     require(metadata["codepoints"] == [f"U+{cp:04X}" for cp in sorted(repertoires[0][1])],
@@ -182,7 +195,7 @@ def validate_family(directory: Path) -> dict:
                 f"{style.name}: metadata style classification mismatch")
     require((directory / "OFL.txt").is_file(), "The distribution must include OFL.txt")
     report = {
-        "result": "PASS", "family": FAMILY, "version": VERSION,
+        "result": "PASS", "family": FAMILY, "version": VERSION, "font_revision": FONT_REVISION,
         "engines": ["FontTools", "FreeType via Pillow", "HarfBuzz"],
         "family_metrics": {"ascender": ASCENT, "descender": DESCENT, "line_gap": 0},
         "styles": list(results),

@@ -11,10 +11,12 @@ from tempfile import TemporaryDirectory
 from fontTools.feaLib.builder import addOpenTypeFeaturesFromString
 from fontTools.fontBuilder import FontBuilder
 from fontTools.ttLib import TTFont, newTable
+from fontTools.ttLib.scaleUpem import scale_upem
 from shapely.geometry import box
 
-from .config import (ASCENT, BUILD_TIMESTAMP, CAP_HEIGHT, COPYRIGHT, DESCENT,
-                     FAMILY, ROOT, STYLES, UNITS_PER_EM, VERSION, X_HEIGHT, Style)
+from .config import (BUILD_TIMESTAMP, COPYRIGHT, DESIGN_ASCENT, DESIGN_CAP_HEIGHT,
+                     DESIGN_DESCENT, DESIGN_UNITS_PER_EM, DESIGN_X_HEIGHT,
+                     FAMILY, FONT_REVISION, ROOT, STYLES, UNITS_PER_EM, VERSION, Style)
 from .design import build_glyphs
 from .features import feature_source
 from .outlines import glyph_name, glyph_outline
@@ -35,7 +37,7 @@ def compile_style(style: Style, output: Path) -> dict:
     order = [".notdef", *map(glyph_name, chars)]
     if len(set(order)) != len(order):
         raise ValueError("Duplicate glyph names")
-    builder = FontBuilder(UNITS_PER_EM, isTTF=True)
+    builder = FontBuilder(DESIGN_UNITS_PER_EM, isTTF=True)
     builder.setupGlyphOrder(order)
     builder.setupCharacterMap({ord(char): glyph_name(char) for char in chars})
     missing_box = box(40, 0, 430, 670).difference(box(77, 37, 393, 633))
@@ -46,7 +48,7 @@ def compile_style(style: Style, output: Path) -> dict:
     metrics.update({glyph_name(char): (shapes[char].advance,
                     getattr(glyphs[glyph_name(char)], "xMin", 0)) for char in chars})
     builder.setupHorizontalMetrics(metrics)
-    builder.setupHorizontalHeader(ascent=ASCENT, descent=DESCENT, lineGap=0,
+    builder.setupHorizontalHeader(ascent=DESIGN_ASCENT, descent=DESIGN_DESCENT, lineGap=0,
                                   caretSlopeRise=1000, caretSlopeRun=round(style.slant * 1000))
     builder.setupNameTable({
         "familyName": FAMILY,
@@ -56,7 +58,7 @@ def compile_style(style: Style, output: Path) -> dict:
         "uniqueFontIdentifier": f"{style.filename}-{VERSION}",
         "fullName": f"{FAMILY} {style.name}",
         "psName": style.filename,
-        "version": f"Version {VERSION}",
+        "version": f"Version {FONT_REVISION}; release {VERSION}",
         "copyright": COPYRIGHT,
         "designer": "nahime / illegal studio, with OpenAI Codex assistance",
         "vendorURL": "https://illegal.studio",
@@ -65,15 +67,15 @@ def compile_style(style: Style, output: Path) -> dict:
         "licenseDescription": "SIL Open Font License 1.1. No Reserved Font Names. See OFL.txt.",
         "licenseInfoURL": "https://openfontlicense.org",
     })
-    builder.setupOS2(version=4, sTypoAscender=ASCENT, sTypoDescender=DESCENT,
-                     sTypoLineGap=0, usWinAscent=ASCENT, usWinDescent=-DESCENT,
-                     sxHeight=X_HEIGHT, sCapHeight=CAP_HEIGHT, usWeightClass=style.weight,
+    builder.setupOS2(version=4, sTypoAscender=DESIGN_ASCENT, sTypoDescender=DESIGN_DESCENT,
+                     sTypoLineGap=0, usWinAscent=DESIGN_ASCENT, usWinDescent=-DESIGN_DESCENT,
+                     sxHeight=DESIGN_X_HEIGHT, sCapHeight=DESIGN_CAP_HEIGHT, usWeightClass=style.weight,
                      usWidthClass=5, fsType=0, fsSelection=style.selection, achVendID="CRIN")
     builder.setupPost(italicAngle=style.angle, underlinePosition=-95,
                       underlineThickness=round(37 * style.pen_scale))
     builder.setupMaxp()
     builder.font["head"].macStyle = style.mac_style
-    builder.font["head"].fontRevision = float(VERSION)
+    builder.font["head"].fontRevision = float(FONT_REVISION)
     builder.font["head"].created = builder.font["head"].modified = BUILD_TIMESTAMP
     builder.font.recalcTimestamp = False
     features, pair_count = feature_source(shapes, style)
@@ -81,6 +83,10 @@ def compile_style(style: Style, output: Path) -> dict:
     gasp = newTable("gasp")
     gasp.gaspRange = {65535: 15}
     builder.font["gasp"] = gasp
+    scale_upem(builder.font, UNITS_PER_EM)
+    # Caret slope is a ratio, independent of coordinate scaling.
+    builder.font["hhea"].caretSlopeRise = 1000
+    builder.font["hhea"].caretSlopeRun = round(style.slant * 1000)
     ttf = output / f"{style.filename}.ttf"
     builder.save(ttf)
     with TTFont(ttf, recalcTimestamp=False) as web:
@@ -113,7 +119,8 @@ def build_family(output: Path) -> dict:
         for face in faces:
             del face["codepoints"]
         metadata = {
-            "family": FAMILY, "version": VERSION, "units_per_em": UNITS_PER_EM,
+            "family": FAMILY, "version": VERSION, "font_revision": FONT_REVISION,
+            "units_per_em": UNITS_PER_EM,
             "encoded_characters": len(repertoire), "glyphs_per_style": len(repertoire) + 1,
             "styles": faces, "codepoints": repertoire,
             "source": "Independent paths in src/design; no input font.",

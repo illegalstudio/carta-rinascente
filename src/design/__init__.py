@@ -13,5 +13,7 @@ def build_glyphs(style: Style) -> dict[str, Shape]:
     latin.draw(builder)
     (italic if style.italic else roman).draw(builder)
     symbols.draw(builder)
+    if not style.italic:
+        roman.draw_numerals(builder)
     extend_alphabet(builder)
     return builder.glyphs

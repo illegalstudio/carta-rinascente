@@ -1,0 +1,62 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14"
+          cache: pip
+      - name: Verify the release tag
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          python - <<'PY'
+          import os
+          from src import __version__
+          from src.versioning import Version
+          tag = os.environ["RELEASE_TAG"]
+          if tag != Version.parse(__version__).tag:
+              raise SystemExit(f"Tag {tag} does not match source version {__version__}")
+          PY
+      - name: Install pinned dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Test, rebuild and verify reproducibility
+        run: |
+          make check PYTHON=python
+          git diff --exit-code
+      - name: Package fonts and checksums
+        run: make package PYTHON=python
+      - name: Publish GitHub release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          version="${RELEASE_TAG#v}"
+          gh release create "$RELEASE_TAG" build/release/"$version"/* \
+            --verify-tag --title "Carta Rinascente $version" --generate-notes

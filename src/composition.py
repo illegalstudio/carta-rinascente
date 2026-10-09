@@ -12,6 +12,7 @@ from shapely.geometry.base import BaseGeometry
 from shapely.ops import unary_union
 
 from .anchors import mark_anchor
+from .config import DESIGN_UNITS_PER_EM
 from .design.accents import ACCENTS
 from .geometry import GlyphBuilder, Shape
 
@@ -147,7 +148,8 @@ def _spacing_and_diacritics(builder: GlyphBuilder, accent_geometry: dict[str, Ba
         shapes[char] = Shape(translate(accent_geometry[combining], xoff=145, yoff=y), 290, char)
     g = shapes['|']
     shapes['¦'] = Shape(g.geometry.difference(box(-100, 275, 400, 370)), g.advance, '¦')
-    for char, width in [(' ', 248), ('\u00a0', 248), ('\u2009', 145), ('\u202f', 145), ('\u2002', 500), ('\u2003', 1000)]:
+    for char, width in [(' ', 248), ('\u00a0', 248), ('\u2009', 145), ('\u202f', 145),
+                        ('\u2002', DESIGN_UNITS_PER_EM // 2), ('\u2003', DESIGN_UNITS_PER_EM)]:
         shapes[char] = Shape(Polygon(), width, char)
     shapes['\u200b'] = Shape(Polygon(), 0, '\u200b')
 

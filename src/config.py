@@ -8,18 +8,25 @@ from dataclasses import dataclass
 import math
 from pathlib import Path
 
-from . import __version__
+from . import __font_revision__, __version__
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_OUTPUT = ROOT / "dist"
 FAMILY = "Carta Rinascente"
 VERSION = __version__
+FONT_REVISION = __font_revision__
 COPYRIGHT = "Copyright (c) 2026, Carta Rinascente contributors."
 UNITS_PER_EM = 1000
-ASCENT = 1050
-DESCENT = -320
-X_HEIGHT = 470
-CAP_HEIGHT = 700
+# Draw on a compact grid, then scale every OpenType table to the standard em.
+DESIGN_UNITS_PER_EM = 900
+DESIGN_ASCENT = 1050
+DESIGN_DESCENT = -320
+DESIGN_X_HEIGHT = 470
+DESIGN_CAP_HEIGHT = 700
+ASCENT = round(DESIGN_ASCENT * UNITS_PER_EM / DESIGN_UNITS_PER_EM)
+DESCENT = round(DESIGN_DESCENT * UNITS_PER_EM / DESIGN_UNITS_PER_EM)
+X_HEIGHT = round(DESIGN_X_HEIGHT * UNITS_PER_EM / DESIGN_UNITS_PER_EM)
+CAP_HEIGHT = round(DESIGN_CAP_HEIGHT * UNITS_PER_EM / DESIGN_UNITS_PER_EM)
 BUILD_TIMESTAMP = 3874348800
 BOTTOM_MARKS = frozenset({"\u0327", "\u0328"})
 WHITESPACE = frozenset({32, 160, 0x2002, 0x2003, 0x2009, 0x200B, 0x202F})
@@ -45,11 +52,15 @@ class Style:
 
     @property
     def angle(self) -> float:
-        return -10.0 if self.italic else 0.0
+        return -16.0 if self.italic else 0.0
 
     @property
     def slant(self) -> float:
         return math.tan(math.radians(-self.angle))
+
+    @property
+    def width_scale(self) -> float:
+        return 1.0 if self.italic else 1.12
 
     @property
     def selection(self) -> int:

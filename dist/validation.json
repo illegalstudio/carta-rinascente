@@ -1,15 +1,16 @@
 {
   "result": "PASS",
   "family": "Carta Rinascente",
-  "version": "0.200",
+  "version": "0.3.0",
+  "font_revision": "0.201",
   "engines": [
     "FontTools",
     "FreeType via Pillow",
     "HarfBuzz"
   ],
   "family_metrics": {
-    "ascender": 1050,
-    "descender": -320,
+    "ascender": 1167,
+    "descender": -356,
     "line_gap": 0
   },
   "styles": [
@@ -18,8 +19,8 @@
       "result": "PASS",
       "glyph_count": 341,
       "encoded_characters": 340,
-      "outline_y_min": -209,
-      "outline_y_max": 910,
+      "outline_y_min": -232,
+      "outline_y_max": 1009,
       "style_linking": true,
       "nfc_nfd_equivalence": true,
       "kerning_active": true,
@@ -27,8 +28,8 @@
       "proof_pairs_do_not_overlap": true,
       "woff2_round_trip_equivalent": true,
       "sha256": {
-        "CartaRinascente-Regular.ttf": "8008adbf414fab77487e3e2d65dddeb9ccabbf244cbe24c66448ecbb1428136f",
-        "CartaRinascente-Regular.woff2": "205f3b80102f5107cd0f28ff2a20a7aeea0bac6dc208816b9efbb7e345fc8c2f"
+        "CartaRinascente-Regular.ttf": "ce8fdbcd94161c3ea927b3aed1abafa0df7bc6af7fe34e7a3846d04e21dba116",
+        "CartaRinascente-Regular.woff2": "abcdff76307af9c4d2a1d78a22192643bf339902ce7d50515945afdcfffb630b"
       }
     },
     {
@@ -36,8 +37,8 @@
       "result": "PASS",
       "glyph_count": 341,
       "encoded_characters": 340,
-      "outline_y_min": -238,
-      "outline_y_max": 910,
+      "outline_y_min": -278,
+      "outline_y_max": 1012,
       "style_linking": true,
       "nfc_nfd_equivalence": true,
       "kerning_active": true,
@@ -45,8 +46,8 @@
       "proof_pairs_do_not_overlap": true,
       "woff2_round_trip_equivalent": true,
       "sha256": {
-        "CartaRinascente-Italic.ttf": "e2229213e87352433bc2a9fb81a7f3f934fe8c3b9b80099b4a60bed8b28c30c3",
-        "CartaRinascente-Italic.woff2": "238efcade47135dd3f65b127b8c68429083a57b036d6c188820e734c920ff4c0"
+        "CartaRinascente-Italic.ttf": "d7f10b9e18258977afa28dc4f7a3dc8101b6f3bb16f4cbd3b8c91d761b00fda7",
+        "CartaRinascente-Italic.woff2": "a9c4b43d232377b4ce79f1f7ec4fa3960dc69818d54831fda06586e77c4cf70a"
       }
     },
     {
@@ -54,8 +55,8 @@
       "result": "PASS",
       "glyph_count": 341,
       "encoded_characters": 340,
-      "outline_y_min": -216,
-      "outline_y_max": 915,
+      "outline_y_min": -238,
+      "outline_y_max": 1013,
       "style_linking": true,
       "nfc_nfd_equivalence": true,
       "kerning_active": true,
@@ -63,8 +64,8 @@
       "proof_pairs_do_not_overlap": true,
       "woff2_round_trip_equivalent": true,
       "sha256": {
-        "CartaRinascente-Bold.ttf": "44ea6417bc460ab593d14d32017bae796f7a51731ff00f31e8c5e04ef684d790",
-        "CartaRinascente-Bold.woff2": "fdbdb15bcee59b3c3e6b1cfade95ce61752e47ae9c499dbe30934c58b0a5cdb8"
+        "CartaRinascente-Bold.ttf": "ab21202faa08c99b2c0d6b9b84295d224ee93cd7e20f78913a95b783bcea6b1e",
+        "CartaRinascente-Bold.woff2": "cb0282a3128a3cacf587ed1b227342f3acc6a406b6afe17a11049e1a22b04ee9"
       }
     },
     {
@@ -72,8 +73,8 @@
       "result": "PASS",
       "glyph_count": 341,
       "encoded_characters": 340,
-      "outline_y_min": -245,
-      "outline_y_max": 915,
+      "outline_y_min": -287,
+      "outline_y_max": 1019,
       "style_linking": true,
       "nfc_nfd_equivalence": true,
       "kerning_active": true,
@@ -81,8 +82,8 @@
       "proof_pairs_do_not_overlap": true,
       "woff2_round_trip_equivalent": true,
       "sha256": {
-        "CartaRinascente-BoldItalic.ttf": "0500131a3275e644700f6b276d0ad5ad33cdffa19349305bd208b68b03bdce10",
-        "CartaRinascente-BoldItalic.woff2": "1430b071542585cc6bdc9f67a17f7fa83c5c19dc83e7c4edae92319e3fca1e64"
+        "CartaRinascente-BoldItalic.ttf": "550d951a6087a84640437b3bc554b477a640288b42c9fd98d65fcdffb4a8cad1",
+        "CartaRinascente-BoldItalic.woff2": "4bfda79c309917e834d969e17ca718684756a31940bad293dec98cb100b21a82"
       }
     }
   ],
