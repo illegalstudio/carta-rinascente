@@ -8,19 +8,43 @@ from dataclasses import dataclass, replace
 import math
 import re
 
+from shapely import transform
 from shapely.affinity import affine_transform, translate
 from shapely.geometry import Polygon
 from shapely.geometry.base import BaseGeometry
 from shapely.ops import unary_union
 
-from .config import Style
+from .config import DESIGN_CAP_HEIGHT, DESIGN_X_HEIGHT, Style
 
 type Point = tuple[float, float]
 type Tips = tuple[float, float]
-type Stroke = str | tuple[str, float] | tuple[str, float, Tips]
+
+
+@dataclass(frozen=True)
+class FilledPath:
+    """An original closed contour, used for bracketed serifs and terminals."""
+
+    path: str
+
+
+type Stroke = str | tuple[str, float] | tuple[str, float, Tips] | FilledPath
 
 _TOKEN = re.compile(r"[MLCQZ]|[+-]?(?:\d+(?:\.\d*)?|\.\d+)")
 _ARITY = {"M": 2, "L": 2, "Q": 4, "C": 6, "Z": 0}
+_ITALIC_PATH_X_HEIGHT = 470
+
+
+def raise_italic_body(geometry: BaseGeometry) -> BaseGeometry:
+    """Enlarge the italic lowercase body while preserving its vertical extremes."""
+    def body_y(y: float) -> float:
+        if 0 < y <= _ITALIC_PATH_X_HEIGHT:
+            return y * DESIGN_X_HEIGHT / _ITALIC_PATH_X_HEIGHT
+        if _ITALIC_PATH_X_HEIGHT < y < DESIGN_CAP_HEIGHT:
+            fraction = (y - _ITALIC_PATH_X_HEIGHT) / (DESIGN_CAP_HEIGHT - _ITALIC_PATH_X_HEIGHT)
+            return DESIGN_X_HEIGHT + fraction * (DESIGN_CAP_HEIGHT - DESIGN_X_HEIGHT)
+        return y
+
+    return transform(geometry, lambda x, y: (x, [body_y(value) for value in y]), interleaved=False)
 
 
 def sample_path(path: str, step_size: float = 7.0) -> list[Point]:
@@ -116,16 +140,28 @@ class GlyphBuilder:
 
     def ink(self, path: str, weight: float = 1.0, tips: Tips = (0.75, 0.6)) -> BaseGeometry:
         if self.style.italic:
-            return sweep(path, weight * self.style.pen_scale, tips, nib_angle=24, nib_depth=7)
+            return sweep(path, weight * self.style.pen_scale, tips, nib_angle=21, nib_depth=10)
         # Roman strokes keep level terminals and even pressure, with fuller hairlines.
-        return sweep(path, weight * self.style.pen_scale, (1, 1), nib_angle=0, nib_depth=11)
+        return sweep(path, weight * self.style.pen_scale, (1, 1), nib_angle=0, nib_depth=15)
 
     def add(self, char: str, *paths: Stroke, bearing: int | None = None,
             advance: int | None = None) -> None:
         if len(char) != 1 or not paths:
             raise ValueError("A glyph needs one Unicode character and at least one stroke")
-        pieces = [self.ink(path) if isinstance(path, str) else self.ink(*path) for path in paths]
+        pieces = []
+        for path in paths:
+            if isinstance(path, FilledPath):
+                if not path.path.rstrip().endswith("Z"):
+                    raise ValueError("A filled contour must be explicitly closed")
+                contour = Polygon(sample_path(path.path))
+                if not contour.is_valid or contour.area == 0:
+                    raise ValueError("A filled contour must have a valid nonzero area")
+                pieces.append(contour)
+            else:
+                pieces.append(self.ink(path) if isinstance(path, str) else self.ink(*path))
         geometry = unary_union(pieces).simplify(0.42, preserve_topology=True)
+        if self.style.italic and char.islower():
+            geometry = raise_italic_body(geometry)
         geometry = affine_transform(geometry, [self.style.width_scale, self.style.slant, 0, 1, 0, 0])
         side = self.style.side_bearing if bearing is None else bearing
         geometry = translate(geometry, xoff=side - geometry.bounds[0])

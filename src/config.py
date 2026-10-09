@@ -21,7 +21,7 @@ UNITS_PER_EM = 1000
 DESIGN_UNITS_PER_EM = 900
 DESIGN_ASCENT = 1050
 DESIGN_DESCENT = -320
-DESIGN_X_HEIGHT = 470
+DESIGN_X_HEIGHT = 500
 DESIGN_CAP_HEIGHT = 700
 ASCENT = round(DESIGN_ASCENT * UNITS_PER_EM / DESIGN_UNITS_PER_EM)
 DESCENT = round(DESIGN_DESCENT * UNITS_PER_EM / DESIGN_UNITS_PER_EM)
@@ -52,7 +52,7 @@ class Style:
 
     @property
     def angle(self) -> float:
-        return -16.0 if self.italic else 0.0
+        return -13.0 if self.italic else 0.0
 
     @property
     def slant(self) -> float:
@@ -60,7 +60,7 @@ class Style:
 
     @property
     def width_scale(self) -> float:
-        return 1.0 if self.italic else 1.12
+        return 1.08 if self.italic else 1.06
 
     @property
     def selection(self) -> int:
@@ -75,8 +75,8 @@ class Style:
 
 
 STYLES = (
-    Style("Regular"),
-    Style("Italic", italic=True, side_bearing=29),
-    Style("Bold", weight=700, pen_scale=1.48, side_bearing=35),
-    Style("Bold Italic", weight=700, italic=True, pen_scale=1.48, side_bearing=32),
+    Style("Regular", pen_scale=1.3, side_bearing=36),
+    Style("Italic", italic=True, pen_scale=1.26, side_bearing=23),
+    Style("Bold", weight=700, pen_scale=1.76, side_bearing=38),
+    Style("Bold Italic", weight=700, italic=True, pen_scale=1.72, side_bearing=26),
 )

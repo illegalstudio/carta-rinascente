@@ -53,6 +53,12 @@ def draw(builder: GlyphBuilder) -> None:
         ('M 105 227 Q 207 252 278 244', 0.58))
     add('Q', 'M 299 704 C 125 716 31 437 79 206 C 132 -103 425 -20 476 283 C 524 536 451 704 299 704 Z',
         'M 242 151 C 295 -34 434 -165 605 -60')
+    # Let loops and sweeping descenders overhang their advances. Whole-outline
+    # bounds otherwise insert visible gaps inside words such as page and yellow.
+    for char, shift, reduction in (('d', 0, 80), ('g', -140, 140),
+                                   ('l', 0, 100), ('p', -75, 75), ('y', -145, 145)):
+        advance = round(builder.glyphs[char].advance / builder.style.width_scale) - reduction
+        builder.set_spacing(char, shift, advance)
     extra = 14 if builder.style.weight == 700 else 0
     builder.set_spacing('f', -66, 319 + extra)
     for char in ('j', 'ȷ'):

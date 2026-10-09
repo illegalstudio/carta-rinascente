@@ -27,7 +27,8 @@ def label(size: int = 20) -> ImageFont.FreeTypeFont:
 
 
 def text(draw: ImageDraw.ImageDraw, directory: Path, style: Style, value: str,
-         xy: tuple[int, int], size: int, width: int = 1400, fill: str = INK) -> None:
+         xy: tuple[int, int], size: int, width: int = 1400, fill: str = INK,
+         *, fit: bool = True) -> None:
     """Fit a proof line by its real ink bounds, including italic overhangs."""
     x, y = xy
     face = font(directory, style, size)
@@ -35,6 +36,8 @@ def text(draw: ImageDraw.ImageDraw, directory: Path, style: Style, value: str,
         left, top, right, bottom = draw.textbbox((0, 0), value, font=face)
         if right - left <= width:
             break
+        if not fit:
+            raise ValueError(f"Proof text exceeds its width at {size} px: {value!r}")
         size -= 1
         if size < 12:
             raise ValueError(f"Proof text cannot fit: {value!r}")
@@ -102,17 +105,18 @@ def character_sheet(directory: Path, style: Style) -> None:
 
 
 def reading_sheet(directory: Path) -> None:
-    image = Image.new("RGB", (1800, 1720), "white")
+    image = Image.new("RGB", (1000, 1720), "white")
     draw = ImageDraw.Draw(image)
-    draw.text((60, 40), "CARTA RINASCENTE / READING, SPACING AND STYLE COMPARISON", font=label(24), fill=INK)
+    draw.text((60, 40), "CARTA RINASCENTE / ACTUAL PIXEL SIZES", font=label(24), fill=INK)
+    draw.text((60, 78), "View at 100% zoom. Every row uses the exact size shown.", font=label(18), fill=MUTED)
     for index, style in enumerate(STYLES):
         top = 120 + index * 390
         draw.text((60, top), style.name, font=label(23), fill=ACCENT)
         for row, size in enumerate((18, 24, 36, 48)):
             y = top + 58 + row * 68
             draw.text((60, y), f"{size} px", font=label(16), fill=MUTED)
-            text(draw, directory, style, "The quick brown fox. AVATAR To Wa fi fl. Perché la città è già più bella?",
-                 (160, y), size, width=1570)
+            text(draw, directory, style, "The art of a quiet page.",
+                 (160, y), size, width=780, fit=False)
     image.save(directory / "prove-lettura.png")
 
 

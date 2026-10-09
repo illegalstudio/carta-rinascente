@@ -16,10 +16,10 @@ def kerning_pairs(glyphs: dict[str, Shape], style: Style) -> dict[tuple[str, str
     pairs = {}
     factor = 0.85 if style.weight == 700 else 1.0
     adjustments = {pair: round(value * factor) for pair, value in KERN_PAIRS.items()}
-    # The italic f overhang needs positive spacing beside i's dot and l's ascender.
+    # The italic f overhang needs clearance beside dots, loops and descenders.
     # Keep it local to these pairs rather than opening every word containing f.
     if style.italic:
-        adjustments.update({('f', 'i'): 22, ('f', 'l'): 74})
+        adjustments.update({('f', 'i'): 22, ('f', 'l'): 74, ('f', 'p'): 42, ('f', 'y'): 42})
     elif style.weight == 700:
         adjustments['f', 'l'] = 32
     for (left, right), adjustment in adjustments.items():

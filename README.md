@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="dist/metadata.json"><img src="https://img.shields.io/badge/version-0.3.0-762F3B?style=flat-square&amp;color=762F3B" alt="Version: 0.3.0"></a>
+  <a href="dist/metadata.json"><img src="https://img.shields.io/badge/version-0.4.0-762F3B?style=flat-square&amp;color=762F3B" alt="Version: 0.4.0"></a>
   <a href="OFL.txt"><img src="https://img.shields.io/badge/license-OFL%201.1-762F3B?style=flat-square&amp;color=762F3B" alt="License: SIL OFL 1.1"></a>
   <a href="#get-the-font"><img src="https://img.shields.io/badge/formats-TTF%20%2B%20WOFF2-762F3B?style=flat-square&amp;color=762F3B" alt="Formats: TTF and WOFF2"></a>
 </p>
@@ -101,16 +101,16 @@ Copy all four WOFF2 files and `OFL.txt` into your project, then adjust the URLs:
 }
 ```
 
-Use normal CSS `font-weight` and `font-style` to select a face. Regular and Bold are upright, with broader proportions, level serifs and steady strokes. Italic and Bold Italic use a 16-degree design slant, looped ascenders, sweeping descenders and tapered exit strokes. Their shared vertical metrics keep line spacing consistent when styles are mixed.
+Use normal CSS `font-weight` and `font-style` to select a face. Regular and Bold are upright, with open proportions, bracketed serifs and steady strokes. Italic and Bold Italic use a 13-degree design slant, looped ascenders, sweeping descenders and tapered exit strokes. Optical spacing lets these flourishes extend beyond the lowercase body without separating the words. Shared vertical metrics keep line spacing consistent when styles are mixed.
 
 ## Character and coverage
 
 - **340 encoded characters and 341 glyphs per style**, including the missing-character glyph.
 - **Complete printable Basic Latin and Latin-1 coverage**, Italian accents, many Latin Extended-A characters, combining marks, the euro symbol and typographic punctuation.
 - **Proportional spacing and numerals**, with style-specific kerning, combining-mark positioning and contextual dot removal for accented i and j.
-- **Four linked styles**, version 0.3.0: Regular, Italic, Bold and Bold Italic, each supplied as TTF and WOFF2.
+- **Four linked styles**, version 0.4.0: Regular, Italic, Bold and Bold Italic, each supplied as TTF and WOFF2.
 
-This experimental family is intended for headings and short passages. For screen use, start around 24 px and check the result on your target device. Pair it with a text face for small type or dense interfaces. Dedicated ligatures, stacked-mark positioning and manual TrueType hinting are not included. Greek, Cyrillic and emoji are outside the current character set.
+This experimental family is intended for headings and short passages. The reading proof shows all four styles at exactly 18, 24, 36 and 48 px, using “The art of a quiet page.” without automatic resizing. Inspect it at 100% zoom and check the result in your target application. Dedicated ligatures, stacked-mark positioning and manual TrueType hinting are not included. Greek, Cyrillic and emoji are outside the current character set.
 
 Browse the [full character metadata](dist/metadata.json), [character sheet](dist/caratteri.png), [reading and spacing tests](dist/prove-lettura.png) or [four-style family specimen](dist/anteprima.png).
 
@@ -118,7 +118,7 @@ Browse the [full character metadata](dist/metadata.json), [character sheet](dist
 
 Carta Rinascente was inspired by **Michelangelus**, the typeface introduced by Microsoft and inspired by Michelangelo's work and handwritten manuscripts. Commissioned by the Fabbrica di San Pietro and designed by Studiogusto, the project explores how Renaissance letterforms can inform contemporary typography. Read the official [Microsoft Design story, *Designing Michelangelus*](https://microsoft.design/articles/designing-michelangelus/), or visit the [Microsoft Michelangelus download page](https://www.microsoft.com/en-us/download/details.aspx?id=108856).
 
-That idea prompted our own experiment with the rhythm of a pen on paper. Carta Rinascente's glyphs are built from independent pen paths in [`src/design/`](src/design). No outlines, metrics, font files or traced letterforms from Michelangelus or other proprietary fonts were used. It is an independent project, unaffiliated with Microsoft, Studiogusto or the Fabbrica di San Pietro, and does not claim to reconstruct Michelangelo's handwriting.
+That idea prompted our own experiment with the rhythm of a pen on paper. Carta Rinascente's glyphs are built from independent pen paths and closed contours in [`src/design/`](src/design). No outlines, metrics or traced letterforms from Michelangelus or other proprietary fonts are copied into the design, and no external font files are required to build it. It is an independent project, unaffiliated with Microsoft, Studiogusto or the Fabbrica di San Pietro, and does not claim to reconstruct Michelangelo's handwriting.
 
 ## Build from source
 
@@ -152,7 +152,7 @@ The original `build_font.py`, `render_specimen.py` and `validate_font.py` comman
 | --- | --- |
 | [`config.py`](src/config.py) | Immutable style definitions, family names and shared metrics |
 | [`design/`](src/design) | Original Latin, roman, italic, symbol and accent paths; optical kerning pairs |
-| [`geometry.py`](src/geometry.py) | Strict path parsing, pen pressure, stroke geometry and per-style state |
+| [`geometry.py`](src/geometry.py) | Strict path parsing, pen pressure, filled contours, body scaling and per-style state |
 | [`composition.py`](src/composition.py) | Extended Latin, accents, fractions, punctuation and whitespace |
 | [`anchors.py`](src/anchors.py) | Shared anchors for composed accents and OpenType positioning |
 | [`outlines.py`](src/outlines.py) | TrueType contours and winding |
@@ -165,17 +165,17 @@ The original `build_font.py`, `render_specimen.py` and `validate_font.py` comman
 | [`distribution.py`](src/distribution.py) | Validated, reproducible release ZIP and checksums |
 | [`release.py`](src/release.py) | Interactive preflight, isolated preparation and atomic tag push |
 
-The upright styles have dedicated uppercase, lowercase and lining numeral designs, including a double-storey a and g. A level pen and even pressure keep the roman steady; an angled pen and dedicated italic paths give the cursive its contrasting rhythm. Bold styles use a heavier pen during geometry construction. All builds use isolated glyph state, fixed timestamps and deterministic glyph ordering.
+The upright styles have dedicated uppercase, lowercase and lining numeral designs, including a double-storey a and g. A level pen, even pressure and curved serif brackets keep the roman steady; an angled pen and dedicated italic paths give the cursive its contrasting rhythm. Bold styles use a heavier pen during geometry construction. All builds use isolated glyph state, fixed timestamps and deterministic glyph ordering.
 
-The design is drawn on a 900-unit grid and exported at 1000 units per em. Outlines, spacing, kerning and mark positions are scaled together. The larger lowercase body reaches approximately 52% of the em, giving the family more presence at the same point size.
+The design is drawn on a 900-unit grid and exported at 1000 units per em. Outlines, spacing, kerning and mark positions are scaled together. The lowercase body reaches approximately 56% of the em. Wider roman counters and fuller strokes give the family more presence at the same font size; the italic body is enlarged without extending its ascenders or descenders.
 
 Compilation and validation happen in a temporary staging directory before the released font files are replaced. Temporary build directories are cleaned on success and failure. Pillow's built-in font supplies only the specimen labels; every displayed Carta Rinascente glyph comes from this project's generated TTF files.
 
 ### Validation
 
-The validator checks every style's character coverage, nonempty contours, vertical bounds, naming and style flags, embedding permissions, zero-width combining marks, NFC/NFD equivalence, contextual dot removal, kerning, mark positioning, unintended overlap in representative letter pairs, FreeType rasterization at 24 and 64 px, and TTF/WOFF2 outline and shaping equivalence. The [validation report](dist/validation.json) records all eight SHA-256 hashes.
+The validator checks every style's character coverage, nonempty contours, vertical bounds, naming and style flags, embedding permissions, zero-width combining marks, NFC/NFD equivalence, contextual dot removal, kerning, mark positioning, unintended overlap in representative letter pairs, FreeType rasterization at 18, 24 and 64 px, and TTF/WOFF2 outline and shaping equivalence. The [validation report](dist/validation.json) records all eight SHA-256 hashes.
 
-The unit tests cover malformed paths, closed counters, isolated style state, explicit zero advances, shared accent anchors, accented kerning pairs and safe handling of failed builds. `--check-reproducible` compares every font and manifest against a second clean build.
+The unit tests cover malformed paths and filled contours, open counters, italic body scaling, isolated style state, explicit zero advances, shared accent anchors, accented kerning pairs and safe handling of failed builds. `--check-reproducible` compares every font and manifest against a second clean build.
 
 The generated proofs and the browser preview have been visually checked. Integration in Ariadne and other native applications still needs verification in the target product.
 

@@ -5,8 +5,10 @@ SPDX-License-Identifier: OFL-1.1
 
 import unittest
 
+from shapely.geometry import Polygon, box
+
 from src.config import STYLES
-from src.geometry import GlyphBuilder, sample_path, sweep
+from src.geometry import FilledPath, GlyphBuilder, raise_italic_body, sample_path, sweep
 
 
 class PathTests(unittest.TestCase):
@@ -33,6 +35,30 @@ class PathTests(unittest.TestCase):
 
 
 class BuilderTests(unittest.TestCase):
+    def test_filled_contours_join_strokes_without_filling_counters(self):
+        builder = GlyphBuilder(STYLES[0])
+        builder.add("b", "M 0 0 L 0 400", FilledPath("M -80 0 L 80 0 L 80 20 L -80 20 Z"),
+                    "M 0 50 C 300 50 300 350 0 350")
+        geometry = builder.glyphs["b"].geometry
+        self.assertEqual(geometry.geom_type, "Polygon")
+        self.assertTrue(geometry.is_valid)
+        self.assertEqual(len(geometry.interiors), 1)
+
+    def test_invalid_filled_contours_are_rejected(self):
+        builder = GlyphBuilder(STYLES[0])
+        for path in ("M 0 0 L 20 0 L 20 20", "M 0 0 L 20 20 L 0 20 L 20 0 Z",
+                     "M 0 0 L 20 0 L 40 0 Z"):
+            with self.subTest(path=path), self.assertRaises(ValueError):
+                builder.add("x", FilledPath(path))
+
+    def test_italic_body_enlargement_preserves_ascenders_and_descenders(self):
+        body = raise_italic_body(box(0, 0, 300, 470))
+        self.assertEqual(body.bounds, (0, 0, 300, 500))
+        outline = Polygon([(0, -220), (300, -220), (300, 470), (200, 700), (0, 760)])
+        raised = raise_italic_body(outline)
+        self.assertEqual(raised.bounds, outline.bounds)
+        self.assertTrue(raised.is_valid)
+
     def test_face_state_does_not_leak_between_builds(self):
         regular = GlyphBuilder(STYLES[0])
         bold = GlyphBuilder(STYLES[2])

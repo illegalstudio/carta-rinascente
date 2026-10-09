@@ -1,138 +1,170 @@
-"""Upright, restrained letterforms with a double-storey a and g.
+"""Original text roman with open proportions and bracketed serifs.
 
-These paths are drawn for the roman, not obtained by unslanting the italic.
 Copyright (c) 2026, Carta Rinascente contributors.
 SPDX-License-Identifier: OFL-1.1
 """
 
-from ..geometry import GlyphBuilder, Stroke, dot
+from functools import partial
+
+from ..geometry import FilledPath, GlyphBuilder, dot
 
 
-def serif(x: int, y: int = 18) -> Stroke:
-    return (f"M {x - 36} {y} L {x + 36} {y}", 0.56)
+def bracketed_serif(builder: GlyphBuilder, x: float, y: float = 0, *, top: bool = False) -> FilledPath:
+    """Join a level serif to its stem with two concave shoulder curves."""
+    weight = builder.style.pen_scale
+    stem = 32 * weight
+    spread = stem + 31 * weight ** 0.5
+    lip = 11 * weight
+    rise = 40 * weight ** 0.3
+    direction = -1 if top else 1
+    a, b, c = y + direction * lip, y + direction * rise * 0.35, y + direction * rise
+    return FilledPath(
+        f"M {x-spread} {y} L {x+spread} {y} L {x+spread} {a} "
+        f"C {x+stem+8} {a} {x+stem} {b} {x+stem} {c} "
+        f"L {x-stem} {c} C {x-stem} {b} {x-stem-8} {a} {x-spread} {a} Z"
+    )
+
+
+def head_serif(builder: GlyphBuilder, x: float, y: float) -> FilledPath:
+    """A short, slightly rising left serif for lowercase stem entries."""
+    stem = 32 * builder.style.pen_scale
+    left = x - stem - 31
+    return FilledPath(
+        f"M {left} {y-6} L {x+stem} {y+13} L {x+stem} {y-48} "
+        f"L {x-stem} {y-48} C {x-stem} {y-22} {left+17} {y-18} {left} {y-18} Z"
+    )
 
 
 def draw(builder: GlyphBuilder) -> None:
     add = builder.add
-    add('a', 'M 66 392 C 95 497 297 493 298 355 L 298 65 Q 298 13 341 32',
-        'M 295 272 C 205 268 63 235 62 111 C 59 -5 211 -19 297 108')
-    add('b', 'M 99 700 L 99 28', serif(99, 700),
-        'M 101 350 C 211 518 334 468 333 243 C 333 49 223 -37 100 42')
-    add('c', 'M 309 393 C 279 510 76 476 65 244 C 54 28 196 -45 314 93',
-        ('M 309 393 L 286 369', 0.65))
-    add('d', 'M 294 378 C 185 523 57 445 58 219 C 59 34 180 -36 294 127',
-        'M 298 700 L 298 24', serif(298, 700), serif(298))
-    add('e', 'M 62 264 L 305 271 C 303 527 73 511 61 272 C 48 49 189 -46 317 94')
-    add('f', 'M 107 20 L 107 559 C 107 735 206 763 257 661',
-        ('M 35 438 L 231 438', 0.65), serif(107))
-    add('g', 'M 190 460 C 36 460 23 167 183 164 C 333 161 340 459 190 460 Z',
-        ('M 251 437 Q 291 461 340 449', 0.65),
-        ('M 112 179 C 30 107 91 47 193 41', 0.68),
-        'M 192 41 C 376 52 367 -192 184 -194 C 21 -196 17 -46 97 8')
-    add('h', 'M 97 700 L 97 20', serif(97, 700),
-        'M 99 319 C 179 494 303 481 303 336 L 303 20', serif(97), serif(303))
-    stem_i = ('M 98 444 L 98 20', serif(98, 444), serif(98))
-    add('i', *stem_i, dot(98, 591, 0.82, upright=True))
-    add('ı', *stem_i)
-    stem_j = ('M 98 444 L 98 -58 C 98 -206 -13 -239 -48 -135', serif(98, 444))
-    add('j', *stem_j, dot(98, 591, 0.82, upright=True))
-    add('ȷ', *stem_j)
-    add('k', 'M 98 700 L 98 20', serif(98, 700),
-        ('M 305 450 L 102 221', 0.68), 'M 179 306 L 324 27',
-        serif(98), serif(320), serif(301, 442))
-    add('l', 'M 98 700 L 98 20', serif(98, 700), serif(98))
-    add('m', 'M 95 444 L 95 20', serif(95, 444),
-        'M 97 319 C 165 493 284 478 284 327 L 284 20',
-        'M 286 319 C 363 493 480 478 480 327 L 480 20',
-        serif(95), serif(284), serif(480))
-    add('n', 'M 95 444 L 95 20', serif(95, 444),
-        'M 97 320 C 183 499 308 477 308 329 L 308 20', serif(95), serif(308))
-    add('o', 'M 200 462 C 23 462 21 8 200 8 C 379 8 377 462 200 462 Z')
-    add('p', 'M 98 444 L 98 -198', serif(98, 444),
-        'M 99 337 C 211 528 339 453 336 235 C 333 47 209 -33 100 92', serif(98, -200))
-    add('q', 'M 299 375 C 190 522 58 445 60 220 C 61 32 183 -35 300 129',
-        'M 301 451 L 301 -198', serif(301, -200))
-    add('r', 'M 97 444 L 97 20', serif(97, 444),
-        'M 99 317 C 157 468 242 492 275 402', serif(97))
-    add('s', 'M 278 389 C 237 503 73 467 79 347 C 84 255 268 252 270 129 C 272 -16 99 -24 54 78',
-        ('M 54 78 L 52 122', 0.62))
-    add('t', 'M 129 578 L 129 118 C 129 18 176 -12 261 62', ('M 39 438 L 264 438', 0.66))
-    add('u', 'M 94 444 L 94 143 C 94 -23 218 -15 306 158', serif(94, 444),
-        'M 307 444 L 307 24', serif(307, 444), serif(307))
-    add('v', 'M 56 443 L 190 22', ('M 190 22 L 330 443', 0.66), serif(58, 443), serif(331, 443))
-    add('w', 'M 54 443 L 171 24', ('M 171 24 L 304 419', 0.65),
-        'M 292 443 L 411 24', ('M 411 24 L 548 443', 0.65), serif(54, 443), serif(548, 443))
-    add('x', 'M 53 443 L 326 22', ('M 324 443 L 54 22', 0.66),
-        serif(53, 443), serif(324, 443), serif(54), serif(326))
-    add('y', 'M 54 443 L 193 60',
-        ('M 332 443 L 178 -29 C 128 -184 64 -246 20 -147', 0.77),
-        serif(54, 443), serif(332, 443))
-    add('z', ('M 54 382 L 66 443 L 303 443', 0.76),
-        'M 303 443 L 53 24', ('M 53 24 L 302 24 L 316 91', 0.76))
+    serif = partial(bracketed_serif, builder)
+    head = partial(head_serif, builder)
 
-    # Every roman capital has its own upright construction and level serifs.
-    add('A', ('M 43 23 L 252 683', 0.68), 'M 252 683 L 475 23',
-        ('M 119 254 L 397 254', 0.62), serif(43), serif(475))
-    add('B', 'M 98 683 L 98 23', serif(98, 683), serif(98),
-        'M 98 683 L 217 683 C 438 683 445 364 217 364 L 98 364',
-        'M 98 364 L 221 364 C 467 364 467 23 221 23 L 98 23')
-    add('C', 'M 456 581 C 399 761 65 768 65 353 C 65 -51 399 -31 459 143',
-        ('M 456 581 L 456 509', 0.62))
-    add('D', 'M 98 683 L 98 23', serif(98, 683), serif(98),
-        'M 98 683 L 211 683 C 548 683 548 23 211 23 L 98 23')
-    add('H', 'M 99 681 L 99 23', 'M 422 681 L 422 23',
-        ('M 99 352 L 422 352', 0.76), serif(99), serif(422), serif(99, 681), serif(422, 681))
-    add('I', 'M 114 681 L 114 23', serif(114), serif(114, 681))
-    add('J', 'M 280 681 L 280 186 C 280 -55 64 -59 57 102', serif(280, 681))
-    add('K', 'M 98 681 L 98 23', serif(98), serif(98, 681),
-        ('M 441 681 L 101 316', 0.7), 'M 231 460 L 460 23', serif(441, 681), serif(460))
-    add('L', 'M 98 681 L 98 29', ('M 98 29 L 419 29 L 449 116', 0.74), serif(98, 681))
-    add('T', ('M 51 607 L 69 682 L 491 682 L 507 607', 0.75),
-        'M 279 679 L 279 23', serif(279))
-    add('E', 'M 105 681 L 105 29', ('M 69 681 L 414 681 L 432 610', 0.73),
-        ('M 106 357 L 342 357', 0.72), ('M 337 402 L 337 310', 0.55),
-        ('M 73 29 L 424 29 L 449 106', 0.74))
-    add('F', 'M 105 681 L 105 23', ('M 69 681 L 414 681 L 432 610', 0.73),
-        ('M 106 357 L 342 357', 0.72), ('M 337 402 L 337 310', 0.55), serif(105))
-    add('G', 'M 462 581 C 391 770 65 755 65 353 C 65 -43 399 -42 459 150 L 459 324',
-        ('M 343 324 L 505 324', 0.65), ('M 462 581 L 462 520', 0.62))
-    add('M', ('M 82 23 L 82 681', 0.7), 'M 82 681 L 311 55',
-        ('M 311 55 L 541 681', 0.7), 'M 541 681 L 541 23',
-        serif(82), serif(541), serif(82, 681), serif(541, 681))
-    add('N', ('M 88 23 L 88 681', 0.7), 'M 88 681 L 470 23',
-        ('M 470 23 L 470 681', 0.7), serif(88), serif(470, 681))
-    add('O', 'M 279 697 C -2 697 -2 7 279 7 C 560 7 560 697 279 697 Z')
-    add('P', 'M 98 681 L 98 23', serif(98), serif(98, 681),
-        'M 98 681 L 225 681 C 469 681 469 346 225 346 L 98 346')
-    add('Q', 'M 281 699 C 31 699 23 8 281 8 C 539 8 531 699 281 699 Z',
-        ('M 265 136 Q 361 -37 493 -76', 0.8))
-    add('R', 'M 98 681 L 98 23', serif(98), serif(98, 681),
-        'M 98 681 L 225 681 C 469 681 469 346 225 346 L 98 346',
-        'M 221 346 L 439 23', serif(439))
-    add('S', 'M 405 579 C 356 756 76 728 77 542 C 78 358 410 368 410 177 C 410 -43 110 -43 62 120',
-        ('M 405 579 L 405 521', 0.58), ('M 62 120 L 62 175', 0.58))
-    add('U', 'M 90 681 L 90 234 C 90 -63 436 -63 436 234 L 436 681',
-        serif(90, 681), serif(436, 681))
-    add('V', 'M 70 681 L 281 20', ('M 281 20 L 498 681', 0.68), serif(70, 681), serif(498, 681))
-    add('W', 'M 63 681 L 232 20', ('M 232 20 L 406 648', 0.68),
-        'M 400 681 L 574 20', ('M 574 20 L 752 681', 0.68),
-        serif(63, 681), serif(400, 681), serif(752, 681))
-    add('X', 'M 72 681 L 468 23', ('M 459 681 L 67 23', 0.68),
-        serif(72, 681), serif(459, 681), serif(67), serif(468))
-    add('Y', 'M 60 681 L 269 345', ('M 482 681 L 269 345', 0.68),
-        'M 269 345 L 269 23', serif(60, 681), serif(482, 681), serif(269))
-    add('Z', ('M 63 594 L 63 681 L 465 681', 0.66), 'M 465 681 L 61 23',
-        ('M 61 23 L 465 23 L 465 110', 0.66))
-    # Keep descender overhangs out of the advance, so words remain evenly spaced.
-    extra = 12 if builder.style.weight == 700 else 0
-    builder.set_spacing('f', 0, 254 + extra)
+    add('a', 'M 85 397 C 84 527 354 529 354 352 L 354 81 C 354 19 385 14 409 49',
+        'M 351 290 C 230 280 75 251 74 128 C 73 2 237 -35 352 132')
+    add('b', 'M 112 684 L 112 30', head(112, 686),
+        'M 112 384 C 237 574 458 507 458 257 C 458 42 277 -53 112 70')
+    add('c', 'M 424 413 C 371 566 77 519 77 251 C 77 23 284 -65 425 112',
+        ('M 424 413 L 398 382', 0.85))
+    add('d', 'M 422 391 C 289 573 74 480 74 246 C 74 38 242 -40 422 145',
+        'M 424 684 L 424 24', head(424, 686), serif(424))
+    add('e', 'M 77 273 L 438 273 C 438 564 75 572 75 267 C 75 37 288 -62 437 116')
+    add('f', 'M 135 22 L 135 529 C 135 719 269 747 323 647',
+        ('M 59 480 L 294 480', 0.76), serif(135))
+    add('g', 'M 237 490 C 18 490 21 186 233 186 C 444 186 458 490 237 490 Z',
+        ('M 323 466 Q 394 495 449 473', 0.65),
+        ('M 128 205 C 69 146 112 92 220 82 L 295 82', 0.8),
+        'M 295 82 C 492 88 488 -179 248 -180 C 33 -181 35 -22 145 35')
+    add('h', 'M 112 684 L 112 24', head(112, 686), serif(112),
+        'M 113 340 C 227 570 441 549 441 351 L 441 24', serif(441))
+    stem_i = ('M 112 482 L 112 24', head(112, 486), serif(112))
+    add('i', *stem_i, dot(112, 621, 1.02, upright=True), bearing=61)
+    add('ı', *stem_i, bearing=61)
+    stem_j = ('M 112 482 L 112 -47 C 112 -207 -36 -222 -54 -117', head(112, 486))
+    add('j', *stem_j, dot(112, 621, 1.02, upright=True))
+    add('ȷ', *stem_j)
+    add('k', 'M 112 684 L 112 24', head(112, 686), serif(112),
+        ('M 440 482 L 115 220', 0.74), 'M 270 348 L 463 24', serif(440, 497, top=True), serif(463))
+    add('l', 'M 112 684 L 112 24', head(112, 686), serif(112), bearing=61)
+    add('m', 'M 112 482 L 112 24', head(112, 486), serif(112),
+        'M 113 342 C 212 568 402 546 402 351 L 402 24', serif(402),
+        'M 403 342 C 519 568 706 546 706 351 L 706 24', serif(706))
+    add('n', 'M 112 482 L 112 24', head(112, 486), serif(112),
+        'M 113 343 C 226 576 445 543 445 351 L 445 24', serif(445))
+    add('o', 'M 267 494 C 139 494 76 397 76 252 C 76 107 139 8 267 8 C 395 8 458 107 458 252 C 458 397 395 494 267 494 Z')
+    add('p', 'M 112 482 L 112 -189', head(112, 486), serif(112, -212),
+        'M 112 380 C 244 584 457 500 457 258 C 457 45 279 -28 112 122')
+    add('q', 'M 421 391 C 285 575 76 484 76 249 C 76 27 251 -35 422 148',
+        'M 425 482 L 425 -189', serif(425, -212))
+    add('r', 'M 112 482 L 112 24', head(112, 486), serif(112),
+        'M 113 342 C 191 507 316 553 358 421', ('M 358 421 L 340 404', 0.85))
+    add('s', 'M 351 407 C 289 563 66 499 77 363 C 86 250 360 267 358 127 C 358 -28 118 -35 60 98',
+        ('M 60 98 L 60 146', 0.78))
+    add('t', 'M 145 616 L 145 123 C 145 23 207 -15 296 71', ('M 61 480 L 304 480', 0.76))
+    add('u', 'M 112 482 L 112 158 C 112 -47 319 -29 438 184', head(112, 486),
+        'M 440 482 L 440 24', head(440, 486), serif(440))
+    add('v', 'M 76 478 L 251 26', ('M 251 26 L 427 478', 0.75),
+        serif(76, 497, top=True), serif(427, 497, top=True))
+    add('w', 'M 75 478 L 225 25', ('M 225 25 L 396 475', 0.74),
+        'M 396 478 L 551 25', ('M 551 25 L 719 478', 0.74),
+        serif(75, 497, top=True), serif(396, 497, top=True), serif(719, 497, top=True))
+    add('x', 'M 77 478 L 429 24', ('M 421 478 L 74 24', 0.74),
+        serif(77, 497, top=True), serif(421, 497, top=True), serif(74), serif(429))
+    add('y', 'M 75 478 L 248 57',
+        ('M 433 478 L 229 -33 C 150 -241 63 -243 29 -129', 0.85),
+        serif(75, 497, top=True), serif(433, 497, top=True))
+    add('z', ('M 79 415 L 91 480 L 414 480', 0.8),
+        'M 414 480 L 79 24', ('M 79 24 L 414 24 L 428 94', 0.8))
+
+    add('A', ('M 79 25 L 339 682', 0.75), 'M 339 682 L 590 25',
+        ('M 165 252 L 504 252', 0.72), serif(79), serif(590))
+    add('B', 'M 127 677 L 127 25', serif(127, 700, top=True), serif(127),
+        'M 127 683 L 300 683 C 584 683 600 369 299 365 L 127 365',
+        'M 127 365 L 303 365 C 628 365 629 19 303 19 L 127 19')
+    add('C', 'M 613 578 C 531 766 88 784 88 355 C 88 -41 498 -33 614 145',
+        ('M 613 578 L 613 510', 0.8))
+    add('D', 'M 127 677 L 127 25', serif(127, 700, top=True), serif(127),
+        'M 127 683 L 300 683 C 746 683 746 19 300 19 L 127 19')
+    add('E', 'M 127 677 L 127 25',
+        ('M 68 683 L 552 683 L 572 606', 0.8),
+        ('M 127 357 L 453 357', 0.76), ('M 451 406 L 451 308', 0.66),
+        ('M 68 19 L 567 19 L 596 110', 0.8))
+    add('F', 'M 127 677 L 127 25', serif(127),
+        ('M 68 683 L 555 683 L 576 606', 0.8),
+        ('M 127 357 L 452 357', 0.76), ('M 451 406 L 451 308', 0.66))
+    add('G', 'M 610 579 C 525 780 89 771 89 355 C 89 -54 500 -35 595 160 L 595 320',
+        ('M 470 320 L 654 320', 0.76), ('M 610 579 L 610 516', 0.8))
+    add('H', 'M 127 677 L 127 25', 'M 617 677 L 617 25',
+        ('M 127 358 L 617 358', 0.76), serif(127), serif(617),
+        serif(127, 700, top=True), serif(617, 700, top=True))
+    add('I', 'M 127 677 L 127 25', serif(127), serif(127, 700, top=True), bearing=73)
+    add('J', 'M 377 677 L 377 199 C 377 -57 84 -49 77 112', serif(377, 700, top=True))
+    add('K', 'M 127 677 L 127 25', serif(127), serif(127, 700, top=True),
+        ('M 606 677 L 130 311', 0.78), 'M 325 462 L 620 25',
+        serif(606, 700, top=True), serif(620))
+    add('L', 'M 127 677 L 127 25', serif(127, 700, top=True),
+        ('M 66 19 L 551 19 L 590 119', 0.8))
+    add('M', ('M 128 25 L 128 677', 0.76), 'M 128 677 L 414 78',
+        ('M 414 78 L 714 677', 0.76), 'M 714 677 L 714 25',
+        serif(128), serif(714), serif(128, 700, top=True), serif(714, 700, top=True))
+    add('N', ('M 124 25 L 124 677', 0.76), 'M 124 677 L 622 25',
+        ('M 622 25 L 622 677', 0.76), serif(124), serif(622, 700, top=True))
+    add('O', 'M 355 697 C 176 697 79 565 79 352 C 79 139 176 5 355 5 C 534 5 631 139 631 352 C 631 565 534 697 355 697 Z')
+    add('P', 'M 127 677 L 127 25', serif(127), serif(127, 700, top=True),
+        'M 127 683 L 304 683 C 620 683 620 352 304 352 L 127 352')
+    add('Q', 'M 355 697 C 176 697 79 565 79 352 C 79 139 176 5 355 5 C 534 5 631 139 631 352 C 631 565 534 697 355 697 Z',
+        ('M 339 145 Q 457 -25 619 -66', 0.83))
+    add('R', 'M 127 677 L 127 25', serif(127), serif(127, 700, top=True),
+        'M 127 683 L 304 683 C 620 683 620 352 304 352 L 127 352',
+        'M 304 352 C 426 296 454 57 596 25', serif(596))
+    add('S', 'M 543 576 C 462 769 110 741 110 540 C 110 360 546 370 546 181 C 546 -62 170 -32 77 126',
+        ('M 543 576 L 543 518', 0.76), ('M 77 126 L 77 182', 0.76))
+    add('T', ('M 52 601 L 70 683 L 649 683 L 667 601', 0.8),
+        'M 359 677 L 359 25', serif(359))
+    add('U', 'M 127 677 L 127 241 C 127 -66 600 -66 600 241 L 600 677',
+        serif(127, 700, top=True), serif(600, 700, top=True))
+    add('V', 'M 83 677 L 355 24', ('M 355 24 L 625 677', 0.76),
+        serif(83, 700, top=True), serif(625, 700, top=True))
+    add('W', 'M 84 677 L 300 25', ('M 300 25 L 509 675', 0.76),
+        'M 506 677 L 720 25', ('M 720 25 L 930 677', 0.76),
+        serif(84, 700, top=True), serif(506, 700, top=True), serif(930, 700, top=True))
+    add('X', 'M 88 677 L 621 25', ('M 613 677 L 80 25', 0.76),
+        serif(88, 700, top=True), serif(613, 700, top=True), serif(80), serif(621))
+    add('Y', 'M 78 677 L 357 344', ('M 631 677 L 357 344', 0.76),
+        'M 357 344 L 357 25', serif(78, 700, top=True), serif(631, 700, top=True), serif(357))
+    add('Z', ('M 87 602 L 87 683 L 609 683', 0.76), 'M 609 683 L 87 25',
+        ('M 87 19 L 609 19 L 609 105', 0.76))
+
+    extra = 17 if builder.style.weight == 700 else 0
+    builder.set_spacing('f', 0, 348 + extra)
     for char in ('j', 'ȷ'):
-        builder.set_spacing(char, -92, 162 + extra)
+        builder.set_spacing(char, -126, 257 + extra)
 
 
 def draw_numerals(builder: GlyphBuilder) -> None:
     """Level lining figures for the roman, without calligraphic entry strokes."""
     add = builder.add
+    serif = partial(bracketed_serif, builder)
     add('0', 'M 224 674 C 7 674 7 14 224 14 C 441 14 441 674 224 674 Z')
     add('1', ('M 93 547 L 214 671', 0.65), 'M 214 671 L 214 24', serif(214))
     add('2', 'M 64 518 C 66 732 390 728 385 515 C 381 330 185 237 63 26',

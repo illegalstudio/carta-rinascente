@@ -1,7 +1,7 @@
 {
   "family": "Carta Rinascente",
-  "version": "0.3.0",
-  "font_revision": "0.201",
+  "version": "0.4.0",
+  "font_revision": "0.202",
   "units_per_em": 1000,
   "encoded_characters": 340,
   "glyphs_per_style": 341,
@@ -23,10 +23,10 @@
       "style": "Italic",
       "weight": 400,
       "italic": true,
-      "italic_angle": -16.0,
+      "italic_angle": -13.0,
       "glyphs": 341,
       "encoded_characters": 340,
-      "kerning_pairs": 884,
+      "kerning_pairs": 889,
       "files": [
         "CartaRinascente-Italic.ttf",
         "CartaRinascente-Italic.woff2"
@@ -49,10 +49,10 @@
       "style": "Bold Italic",
       "weight": 700,
       "italic": true,
-      "italic_angle": -16.0,
+      "italic_angle": -13.0,
       "glyphs": 341,
       "encoded_characters": 340,
-      "kerning_pairs": 884,
+      "kerning_pairs": 889,
       "files": [
         "CartaRinascente-BoldItalic.ttf",
         "CartaRinascente-BoldItalic.woff2"

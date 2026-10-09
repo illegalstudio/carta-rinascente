@@ -28,7 +28,7 @@
     select { margin-left:8px; }
     button:hover,a.button:hover { border-color:var(--accent); background:#eee5e0; }
     :focus-visible { outline:2px solid var(--accent); outline-offset:4px; }
-    #proof { font-size:64px; line-height:1.5; padding:30px; min-height:250px; background:#fffaf5; border:1px solid var(--rule); border-radius:5px; overflow-wrap:anywhere; white-space:pre-wrap; }
+    #proof { font-size:18px; line-height:1.5; padding:30px; min-height:180px; background:#fffaf5; border:1px solid var(--rule); border-radius:5px; overflow-wrap:anywhere; white-space:pre-wrap; }
     .hint { color:#736669; font-size:12px; margin:10px 0 36px; }
     section.alphabet,.comparison,.downloads { border-top:1px solid var(--rule); padding:28px 0; }
     h2 { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.13em; margin:0 0 24px; }
@@ -55,7 +55,7 @@
 <main>
   <header class="eyebrow">
     <a class="brand" href="https://illegal.studio"><img src="assets/logo-mark.png" alt=""><span>illegal studio</span></a>
-    <span>Four voices, one family / 0.3.0</span>
+    <span>Four voices, one family / 0.4.0</span>
   </header>
   <h1 class="font">Carta Rinascente</h1>
   <p class="intro">A composed Regular. An expressive Italic. Two confident Bold companions.
@@ -71,10 +71,10 @@
           <option value="BoldItalic">Bold Italic</option>
         </select>
       </label>
-      <label for="size">Size <input id="size" type="range" min="18" max="144" value="64"><output id="size-value" for="size">64 px</output></label>
+      <label for="size">Size <input id="size" type="range" min="18" max="144" value="18"><output id="size-value" for="size">18 px</output></label>
       <div><button type="button" data-sample="prose">Text</button> <button type="button" data-sample="writing">Writing</button> <button type="button" data-sample="accents">Accents</button></div>
     </div>
-    <div id="proof" class="font" contenteditable="plaintext-only" role="textbox" aria-label="Type here to try the font" aria-multiline="true" spellcheck="false">A quiet page, an expressive voice.</div>
+    <div id="proof" class="font" contenteditable="plaintext-only" role="textbox" aria-label="Type here to try the font" aria-multiline="true" spellcheck="false">The art of a quiet page.</div>
     <p class="hint">Type or paste your own words. Everything stays in your browser. <span id="load-status" role="status">Loading font...</span></p>
   </section>
   <section class="comparison" aria-labelledby="comparison-title">
@@ -99,7 +99,7 @@
     <a id="download-woff" class="button" href="dist/CartaRinascente-Regular.woff2" download>Download WOFF2</a>
     <a class="button" href="OFL.txt">Read the license</a>
   </div>
-  <footer>Original font family, version 0.3.0. SIL Open Font License 1.1.
+  <footer>Original font family, version 0.4.0. SIL Open Font License 1.1.
     Keep the license and copyright notice when redistributing the fonts.
     <a href="README.md">Read the project documentation</a>.</footer>
 </main>
@@ -141,7 +141,7 @@
     document.querySelector("#size-value").textContent = `${size.value} px`;
   });
   const samples = {
-    prose: "A quiet page, an expressive voice.",
+    prose: "The art of a quiet page.",
     writing: "Ariadne\nA place for notes, chapters and new beginnings.",
     accents: "Perché la città è già più bella?\nÀ È É Ì Ò Ù / à è é ì ò ù\n«Sì, verrà!» € 125.90"
   };

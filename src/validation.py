@@ -23,6 +23,7 @@ from .config import (ASCENT, CAP_HEIGHT, DESCENT, FAMILY, FONT_REVISION, STYLES,
 
 SAMPLES = (
     "Carta Rinascente", "A quiet page, an expressive voice.",
+    "The art of a quiet page. A yellow flower, a playful melody.",
     "Perché la città è già più bella? À È É Ì Ò Ù à è é ì ò ù",
     "minimum illimitato fili foglie qui quattro",
     "AVATAR WA VA To Ta Te Yo Wo fi fl ffi ffl",
@@ -94,7 +95,8 @@ def _polygon_outline(font: TTFont, char: str) -> BaseGeometry:
 
 
 def _check_proof_spacing(font: TTFont, data: bytes, style: Style) -> None:
-    for pair in ('AV', 'VA', 'WA', 'TA', 'To', 'Ta', 'Te', 'Yo', 'Wo', 'fi', 'fl', 'ff', 'gy', 'rn'):
+    for pair in ('AV', 'VA', 'WA', 'TA', 'To', 'Ta', 'Te', 'Yo', 'Wo', 'fi', 'fl', 'ff',
+                 'fp', 'fy', 'ag', 'pa', 'pg', 'gy', 'yl', 'll', 'ld', 'rn'):
         result = shape(data, pair)
         left, right = (_polygon_outline(font, char) for char in pair)
         overlap = left.intersection(translate(right, xoff=result[0][1])).area
@@ -146,7 +148,7 @@ def validate_style(directory: Path, style: Style) -> tuple[dict, tuple[list[str]
         dotless = shape(data, "i\u0307")
         require(dotless[0][0] == font.getGlyphID("dotlessi"), f"{style.name}: dotted-i substitution failed")
         _check_proof_spacing(font, data, style)
-        for size in (24, 64):
+        for size in (18, 24, 64):
             rasterizer = ImageFont.truetype(str(ttf_path), size)
             for codepoint in cmap:
                 if codepoint in WHITESPACE or codepoint == 0xAD or unicodedata.combining(chr(codepoint)):
