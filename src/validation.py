@@ -8,6 +8,7 @@ from io import BytesIO
 import hashlib
 import json
 from pathlib import Path
+from string import ascii_lowercase
 import unicodedata
 
 from fontTools.ttLib import TTFont
@@ -29,6 +30,16 @@ SAMPLES = (
     "AVATAR WA VA To Ta Te Yo Wo fi fl ffi ffl",
     "The journey: € 125.90. 09/10/2026 (14:30)",
     "Æ Œ æ œ ð þ Ð Þ µ ß ı ȷ",
+)
+
+WIDTH_PROOFS = (
+    "The art of a quiet page.",
+    "A quiet page, an expressive voice.",
+    "A place for notes, chapters and new beginnings.",
+    "The quick brown fox jumps over the lazy dog.",
+    "Perché la città è già più bella?",
+    "minimum illimitato fili foglie qui quattro",
+    "Hamburgefontsiv 0123456789",
 )
 
 
@@ -95,12 +106,32 @@ def _polygon_outline(font: TTFont, char: str) -> BaseGeometry:
 
 
 def _check_proof_spacing(font: TTFont, data: bytes, style: Style) -> None:
-    for pair in ('AV', 'VA', 'WA', 'TA', 'To', 'Ta', 'Te', 'Yo', 'Wo', 'fi', 'fl', 'ff',
-                 'fp', 'fy', 'ag', 'pa', 'pg', 'gy', 'yl', 'll', 'ld', 'rn'):
+    pairs = {'AV', 'VA', 'WA', 'TA', 'To', 'Ta', 'Te', 'Yo', 'Wo'}
+    pairs.update(left + right for left in ascii_lowercase for right in ascii_lowercase)
+    outlines = {char: _polygon_outline(font, char) for char in set(''.join(pairs))}
+    for pair in sorted(pairs):
         result = shape(data, pair)
-        left, right = (_polygon_outline(font, char) for char in pair)
+        left, right = (outlines[char] for char in pair)
         overlap = left.intersection(translate(right, xoff=result[0][1])).area
         require(overlap <= 1, f"{style.name}: unintended outline overlap in {pair!r}")
+
+
+def _check_style_widths(directory: Path) -> list[dict]:
+    """Keep italic text near its roman companion's width, with natural variation."""
+    comparisons = []
+    for roman, italic in ((STYLES[0], STYLES[1]), (STYLES[2], STYLES[3])):
+        data = [(directory / f"{style.filename}.ttf").read_bytes() for style in (roman, italic)]
+        samples = []
+        for index, value in enumerate(WIDTH_PROOFS):
+            upright, cursive = [sum(row[1] for row in shape(face, value)) for face in data]
+            ratio = cursive / upright
+            lower, upper = (1.0, 1.03) if index == 0 else (0.94, 1.08)
+            require(lower <= ratio <= upper,
+                    f"{italic.name}: proof width ratio {ratio:.3f} outside {lower}..{upper} for {value!r}")
+            samples.append({"text": value, "roman_px": round(upright * 18 / UNITS_PER_EM, 2),
+                            "italic_px": round(cursive * 18 / UNITS_PER_EM, 2), "ratio": round(ratio, 4)})
+        comparisons.append({"roman": roman.name, "italic": italic.name, "size_px": 18, "samples": samples})
+    return comparisons
 
 
 def validate_style(directory: Path, style: Style) -> tuple[dict, tuple[list[str], dict[int, str]]]:
@@ -201,6 +232,7 @@ def validate_family(directory: Path) -> dict:
         "engines": ["FontTools", "FreeType via Pillow", "HarfBuzz"],
         "family_metrics": {"ascender": ASCENT, "descender": DESCENT, "line_gap": 0},
         "styles": list(results),
+        "style_width_comparisons": _check_style_widths(directory),
         "scope": "Static family structure, style linking, shaping, coverage and rasterization. "
                  "Application integration requires testing in the target product.",
     }

@@ -6,7 +6,10 @@ SPDX-License-Identifier: OFL-1.1
 
 from functools import partial
 
-from ..geometry import FilledPath, GlyphBuilder, dot
+from shapely.affinity import scale, translate
+from shapely.ops import unary_union
+
+from ..geometry import FilledPath, GlyphBuilder, Shape, dot
 
 
 def bracketed_serif(builder: GlyphBuilder, x: float, y: float = 0, *, top: bool = False) -> FilledPath:
@@ -58,10 +61,10 @@ def draw(builder: GlyphBuilder) -> None:
     add('h', 'M 112 684 L 112 24', head(112, 686), serif(112),
         'M 113 340 C 227 570 441 549 441 351 L 441 24', serif(441))
     stem_i = ('M 112 482 L 112 24', head(112, 486), serif(112))
-    add('i', *stem_i, dot(112, 621, 1.02, upright=True), bearing=61)
+    add('i', *stem_i, dot(112, 621, 1.02), bearing=61)
     add('ı', *stem_i, bearing=61)
     stem_j = ('M 112 482 L 112 -47 C 112 -207 -36 -222 -54 -117', head(112, 486))
-    add('j', *stem_j, dot(112, 621, 1.02, upright=True))
+    add('j', *stem_j, dot(112, 621, 1.02))
     add('ȷ', *stem_j)
     add('k', 'M 112 684 L 112 24', head(112, 686), serif(112),
         ('M 440 482 L 115 220', 0.74), 'M 270 348 L 463 24', serif(440, 497, top=True), serif(463))
@@ -159,6 +162,32 @@ def draw(builder: GlyphBuilder) -> None:
     builder.set_spacing('f', 0, 348 + extra)
     for char in ('j', 'ȷ'):
         builder.set_spacing(char, -126, 257 + extra)
+
+
+def draw_extended(builder: GlyphBuilder) -> None:
+    """Keep less frequent Latin letters consistent with the upright alphabet."""
+    add = builder.add
+    serif = partial(bracketed_serif, builder)
+    head = partial(head_serif, builder)
+    add('ß', 'M 112 24 L 112 508 C 112 757 414 742 390 554 C 375 452 302 404 247 373',
+        'M 247 373 C 501 362 500 22 283 22 Q 223 22 190 66', serif(112))
+    add('µ', 'M 112 482 L 112 -189', head(112, 486), serif(112, -212),
+        'M 112 281 L 112 158 C 112 -47 319 -29 438 184',
+        'M 440 482 L 440 24', head(440, 486), serif(440))
+    add('þ', 'M 112 684 L 112 -189', head(112, 686), serif(112, -212),
+        'M 112 380 C 244 584 457 500 457 258 C 457 45 279 -28 112 122')
+    add('Þ', 'M 127 677 L 127 25', serif(127, 700, top=True), serif(127),
+        'M 127 527 L 286 527 C 612 527 612 193 286 193 L 127 193')
+    add('ð', 'M 122 672 C 327 628 462 430 452 249 C 448 89 375 8 263 8 '
+        'C 137 8 77 111 77 251 C 77 438 269 552 415 371',
+        ('M 108 535 L 327 662', 0.64))
+    for char, left in (('æ', 'a'), ('œ', 'o')):
+        a, e = builder.glyphs[left], builder.glyphs['e']
+        factor = 0.88
+        offset = (a.geometry.bounds[2] - e.geometry.bounds[0]) * factor - 56
+        geometry = unary_union([scale(a.geometry, xfact=factor, yfact=1, origin=(0, 0)),
+                                translate(scale(e.geometry, xfact=factor, yfact=1, origin=(0, 0)), xoff=offset)])
+        builder.glyphs[char] = Shape(geometry, round(offset + e.advance * factor), char)
 
 
 def draw_numerals(builder: GlyphBuilder) -> None:

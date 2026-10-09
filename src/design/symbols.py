@@ -4,14 +4,11 @@ Copyright (c) 2026, Carta Rinascente contributors.
 SPDX-License-Identifier: OFL-1.1
 """
 
-from functools import partial
-
-from ..geometry import GlyphBuilder, dot as pen_dot
+from ..geometry import GlyphBuilder, dot
 
 
 def draw(builder: GlyphBuilder) -> None:
     add = builder.add
-    dot = partial(pen_dot, upright=not builder.style.italic)
     add('0', 'M 229 672 C 77 683 38 381 72 177 C 108 -84 310 4 334 276 C 358 517 336 671 229 672 Z')
     add('1', ('M 69 498 Q 164 571 215 666', 0.8), 'M 215 666 L 172 37',
         ('M 81 29 Q 174 51 265 37', 0.7))

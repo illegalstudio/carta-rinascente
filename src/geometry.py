@@ -10,7 +10,7 @@ import re
 
 from shapely import transform
 from shapely.affinity import affine_transform, translate
-from shapely.geometry import Polygon
+from shapely.geometry import Point as GeometryPoint, Polygon
 from shapely.geometry.base import BaseGeometry
 from shapely.ops import unary_union
 
@@ -27,7 +27,16 @@ class FilledPath:
     path: str
 
 
-type Stroke = str | tuple[str, float] | tuple[str, float, Tips] | FilledPath
+@dataclass(frozen=True)
+class RoundDot:
+    """A round ink mark, independent of the broad nib's angle."""
+
+    x: float
+    y: float
+    weight: float = 1.0
+
+
+type Stroke = str | tuple[str, float] | tuple[str, float, Tips] | FilledPath | RoundDot
 
 _TOKEN = re.compile(r"[MLCQZ]|[+-]?(?:\d+(?:\.\d*)?|\.\d+)")
 _ARITY = {"M": 2, "L": 2, "Q": 4, "C": 6, "Z": 0}
@@ -95,11 +104,12 @@ def sample_path(path: str, step_size: float = 7.0) -> list[Point]:
 
 
 def sweep(path: str, weight: float = 1.0, tips: Tips = (0.75, 0.6),
-          *, nib_angle: float = 18, nib_depth: float = 8.5) -> BaseGeometry:
+          *, nib_angle: float = 18, nib_depth: float = 8.5,
+          path_width_scale: float = 1.0) -> BaseGeometry:
     """Sweep a rounded broad nib with terminal pressure taper along one path."""
-    if weight <= 0 or min(tips) <= 0:
-        raise ValueError("Pen weight and terminal pressure must be positive")
-    points = sample_path(path)
+    if weight <= 0 or min(tips) <= 0 or path_width_scale <= 0:
+        raise ValueError("Pen weight, terminal pressure and path width must be positive")
+    points = [(x * path_width_scale, y) for x, y in sample_path(path)]
     closed = math.dist(points[0], points[-1]) < 1
     angle = math.radians(nib_angle)
     ca, sa = math.cos(angle), math.sin(angle)
@@ -118,10 +128,17 @@ def sweep(path: str, weight: float = 1.0, tips: Tips = (0.75, 0.6),
     return unary_union([a.union(b).convex_hull for a, b in zip(stamps, stamps[1:])])
 
 
-def dot(x: float, y: float, weight: float = 1.0, *, upright: bool = False) -> tuple[str, float, Tips]:
-    if upright:
-        return (f"M {x} {y - 12} L {x} {y + 12}", weight * 0.72, (1, 1))
-    return (f"M {x - 3} {y - 5} L {x + 3} {y + 5}", weight, (1, 1))
+def dot(x: float, y: float, weight: float = 1.0) -> RoundDot:
+    return RoundDot(x, y, weight)
+
+
+def soften_corners(geometry: BaseGeometry, radius: float = 5.0) -> BaseGeometry:
+    """Round abrupt joins and terminal corners without changing glyph spacing."""
+    rounded = geometry.buffer(radius, quad_segs=4).buffer(-radius, quad_segs=4)
+    rounded = rounded.buffer(-radius, quad_segs=4).buffer(radius, quad_segs=4)
+    if rounded.is_empty:
+        raise ValueError("Corner refinement removed a glyph")
+    return rounded
 
 
 @dataclass(frozen=True)
@@ -138,39 +155,48 @@ class GlyphBuilder:
         self.style = style
         self.glyphs: dict[str, Shape] = {}
 
-    def ink(self, path: str, weight: float = 1.0, tips: Tips = (0.75, 0.6)) -> BaseGeometry:
+    def ink(self, path: str, weight: float = 1.0, tips: Tips = (0.75, 0.6),
+            *, path_width_scale: float | None = None) -> BaseGeometry:
         if self.style.italic:
-            return sweep(path, weight * self.style.pen_scale, tips, nib_angle=21, nib_depth=10)
+            return sweep(path, weight * self.style.pen_scale, tips, nib_angle=21, nib_depth=10,
+                         path_width_scale=self.style.path_width_scale if path_width_scale is None else path_width_scale)
         # Roman strokes keep level terminals and even pressure, with fuller hairlines.
         return sweep(path, weight * self.style.pen_scale, (1, 1), nib_angle=0, nib_depth=15)
+
+    def stroke(self, path: Stroke) -> BaseGeometry:
+        if isinstance(path, RoundDot):
+            radius = 24 * path.weight * self.style.pen_scale
+            if radius <= 0:
+                raise ValueError("Dot weight must be positive")
+            return GeometryPoint(path.x * self.style.path_width_scale, path.y).buffer(radius, quad_segs=12)
+        if isinstance(path, FilledPath):
+            if not path.path.rstrip().endswith("Z"):
+                raise ValueError("A filled contour must be explicitly closed")
+            contour = Polygon(sample_path(path.path))
+            if not contour.is_valid or contour.area == 0:
+                raise ValueError("A filled contour must have a valid nonzero area")
+            return affine_transform(contour, [self.style.path_width_scale, 0, 0, 1, 0, 0])
+        return self.ink(path) if isinstance(path, str) else self.ink(*path)
 
     def add(self, char: str, *paths: Stroke, bearing: int | None = None,
             advance: int | None = None) -> None:
         if len(char) != 1 or not paths:
             raise ValueError("A glyph needs one Unicode character and at least one stroke")
-        pieces = []
-        for path in paths:
-            if isinstance(path, FilledPath):
-                if not path.path.rstrip().endswith("Z"):
-                    raise ValueError("A filled contour must be explicitly closed")
-                contour = Polygon(sample_path(path.path))
-                if not contour.is_valid or contour.area == 0:
-                    raise ValueError("A filled contour must have a valid nonzero area")
-                pieces.append(contour)
-            else:
-                pieces.append(self.ink(path) if isinstance(path, str) else self.ink(*path))
+        pieces = [self.stroke(path) for path in paths]
         geometry = unary_union(pieces).simplify(0.42, preserve_topology=True)
         if self.style.italic and char.islower():
             geometry = raise_italic_body(geometry)
         geometry = affine_transform(geometry, [self.style.width_scale, self.style.slant, 0, 1, 0, 0])
         side = self.style.side_bearing if bearing is None else bearing
         geometry = translate(geometry, xoff=side - geometry.bounds[0])
-        width = round(geometry.bounds[2] + side) if advance is None else round(advance * self.style.width_scale)
+        width = round(geometry.bounds[2] + side) if advance is None else round(advance * self.style.spacing_scale)
         if width < 0:
             raise ValueError(f"Negative advance for {char!r}")
+        if not self.style.italic:
+            geometry = soften_corners(geometry)
         self.glyphs[char] = Shape(geometry, width, char)
 
     def set_spacing(self, char: str, shift: float, advance: int) -> None:
         shape = self.glyphs[char]
-        self.glyphs[char] = replace(shape, geometry=translate(shape.geometry, xoff=shift * self.style.width_scale),
-                                    advance=round(advance * self.style.width_scale))
+        self.glyphs[char] = replace(shape, geometry=translate(shape.geometry, xoff=shift * self.style.spacing_scale),
+                                    advance=round(advance * self.style.spacing_scale))

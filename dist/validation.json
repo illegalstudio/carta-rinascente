@@ -1,8 +1,8 @@
 {
   "result": "PASS",
   "family": "Carta Rinascente",
-  "version": "0.4.0",
-  "font_revision": "0.202",
+  "version": "0.5.0",
+  "font_revision": "0.203",
   "engines": [
     "FontTools",
     "FreeType via Pillow",
@@ -28,8 +28,8 @@
       "proof_pairs_do_not_overlap": true,
       "woff2_round_trip_equivalent": true,
       "sha256": {
-        "CartaRinascente-Regular.ttf": "abd291740f27e70ef9fe548390dd1eb5fe87cf059fc41fca3c03bff7feab0d9f",
-        "CartaRinascente-Regular.woff2": "c504b9c19430e82e4e3509455eb01d599ac3d1ffe036d93e95fb7a4ab19c8c25"
+        "CartaRinascente-Regular.ttf": "9ea2d2d456538d3baf593c27cf3dfb378e585d70fd92ac181c28bb0c87ed5a3a",
+        "CartaRinascente-Regular.woff2": "563790693621cf3f62033ad423dcca62b5622034a62049d962e1b9d6db722ae9"
       }
     },
     {
@@ -46,8 +46,8 @@
       "proof_pairs_do_not_overlap": true,
       "woff2_round_trip_equivalent": true,
       "sha256": {
-        "CartaRinascente-Italic.ttf": "66a902f681483f83521be363493d085a18c72eb82039c1a32812dd3d3af0d961",
-        "CartaRinascente-Italic.woff2": "e73e76299d87b855f629ce578f6419b9adc749277edb4debff920592b2dc1b22"
+        "CartaRinascente-Italic.ttf": "e1d21e384e50741511b336f2bd864c5d9ee3b6d50454392276e032e63b8ccc22",
+        "CartaRinascente-Italic.woff2": "52469bc6bfbca64b80f80df39cbdc5fa4834904447831e261ce35a439a2654b3"
       }
     },
     {
@@ -64,8 +64,8 @@
       "proof_pairs_do_not_overlap": true,
       "woff2_round_trip_equivalent": true,
       "sha256": {
-        "CartaRinascente-Bold.ttf": "f38c36ca355ee578b8fac00f211fef8f9aab722b0eaf4170af9b08035ba1db33",
-        "CartaRinascente-Bold.woff2": "a1d99f39417e755d9b6298e80adc2f1d4224ae0ae943d9ced9914e9b291eff4c"
+        "CartaRinascente-Bold.ttf": "b69803eaa753017f049d983e3a9e26126a21a375be0b012fbc354d89563ee0f8",
+        "CartaRinascente-Bold.woff2": "9e0ba02334e53c5f4405bfe1ebf4dd2e83cf1bfea48f2e6f87cfc40b5df398e6"
       }
     },
     {
@@ -82,9 +82,109 @@
       "proof_pairs_do_not_overlap": true,
       "woff2_round_trip_equivalent": true,
       "sha256": {
-        "CartaRinascente-BoldItalic.ttf": "57a8ca4f0531d3cc0157f416d27d28f9e7f29c8c79bf89747d2cef637d586435",
-        "CartaRinascente-BoldItalic.woff2": "359ed1c966a3091a4d9f36322b25a8f93f43dd2f84ac05aee5467b0b13590f75"
+        "CartaRinascente-BoldItalic.ttf": "bc71b4b02b148a60cb43c76424c7115de993bde744377d24c13086a5eb2186f3",
+        "CartaRinascente-BoldItalic.woff2": "c89c980360e3a9ec8a9a04908bf5f126f82d4002b5f08344ddc42ead2b4a40ae"
       }
+    }
+  ],
+  "style_width_comparisons": [
+    {
+      "roman": "Regular",
+      "italic": "Italic",
+      "size_px": 18,
+      "samples": [
+        {
+          "text": "The art of a quiet page.",
+          "roman_px": 213.19,
+          "italic_px": 215.06,
+          "ratio": 1.0088
+        },
+        {
+          "text": "A quiet page, an expressive voice.",
+          "roman_px": 311.33,
+          "italic_px": 304.74,
+          "ratio": 0.9788
+        },
+        {
+          "text": "A place for notes, chapters and new beginnings.",
+          "roman_px": 440.24,
+          "italic_px": 434.5,
+          "ratio": 0.987
+        },
+        {
+          "text": "The quick brown fox jumps over the lazy dog.",
+          "roman_px": 425.88,
+          "italic_px": 411.71,
+          "ratio": 0.9667
+        },
+        {
+          "text": "Perch\u00e9 la citt\u00e0 \u00e8 gi\u00e0 pi\u00f9 bella?",
+          "roman_px": 273.02,
+          "italic_px": 281.34,
+          "ratio": 1.0305
+        },
+        {
+          "text": "minimum illimitato fili foglie qui quattro",
+          "roman_px": 369.22,
+          "italic_px": 368.08,
+          "ratio": 0.9969
+        },
+        {
+          "text": "Hamburgefontsiv 0123456789",
+          "roman_px": 265.7,
+          "italic_px": 286.2,
+          "ratio": 1.0772
+        }
+      ]
+    },
+    {
+      "roman": "Bold",
+      "italic": "Bold Italic",
+      "size_px": 18,
+      "samples": [
+        {
+          "text": "The art of a quiet page.",
+          "roman_px": 226.53,
+          "italic_px": 227.7,
+          "ratio": 1.0052
+        },
+        {
+          "text": "A quiet page, an expressive voice.",
+          "roman_px": 333.58,
+          "italic_px": 324.0,
+          "ratio": 0.9713
+        },
+        {
+          "text": "A place for notes, chapters and new beginnings.",
+          "roman_px": 470.7,
+          "italic_px": 461.02,
+          "ratio": 0.9794
+        },
+        {
+          "text": "The quick brown fox jumps over the lazy dog.",
+          "roman_px": 453.4,
+          "italic_px": 435.71,
+          "ratio": 0.961
+        },
+        {
+          "text": "Perch\u00e9 la citt\u00e0 \u00e8 gi\u00e0 pi\u00f9 bella?",
+          "roman_px": 292.9,
+          "italic_px": 299.39,
+          "ratio": 1.0222
+        },
+        {
+          "text": "minimum illimitato fili foglie qui quattro",
+          "roman_px": 398.65,
+          "italic_px": 392.94,
+          "ratio": 0.9857
+        },
+        {
+          "text": "Hamburgefontsiv 0123456789",
+          "roman_px": 284.0,
+          "italic_px": 302.69,
+          "ratio": 1.0658
+        }
+      ]
     }
   ],
   "scope": "Static family structure, style linking, shaping, coverage and rasterization. Application integration requires testing in the target product."

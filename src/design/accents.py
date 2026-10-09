@@ -6,6 +6,18 @@ SPDX-License-Identifier: OFL-1.1
 
 from ..geometry import dot
 
+# These conventional forms use an independent comma-shaped mark. Compile the
+# corresponding decomposed sequence to its precomposed glyph in ccmp as well.
+CONTEXTUAL_ACCENTS = {
+    ('d', '\u030c'): 'ď',
+    ('l', '\u030c'): 'ľ',
+    ('t', '\u030c'): 'ť',
+    ('g', '\u0327'): 'ģ',
+}
+
+SIDE_COMMA = [dot(8, 97, 0.65), ('M 8 95 Q 12 26 -34 -12', 0.54)]
+TURNED_COMMA = [dot(0, 45, 0.62), ('M -10 57 Q -17 106 34 139', 0.5)]
+
 ACCENTS = {
     '\u0300': [('M -68 107 L 23 17', 0.84)],
     '\u0301': [('M -31 15 L 64 109', 0.84)],

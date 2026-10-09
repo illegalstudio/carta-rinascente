@@ -6,7 +6,7 @@ SPDX-License-Identifier: OFL-1.1
 
 from .anchors import mark_anchor
 from .config import BOTTOM_MARKS, Style
-from .design.accents import ACCENTS
+from .design.accents import ACCENTS, CONTEXTUAL_ACCENTS
 from .design.kerning import KERN_PAIRS
 from .geometry import Shape
 from .outlines import glyph_name
@@ -19,9 +19,12 @@ def kerning_pairs(glyphs: dict[str, Shape], style: Style) -> dict[tuple[str, str
     # The italic f overhang needs clearance beside dots, loops and descenders.
     # Keep it local to these pairs rather than opening every word containing f.
     if style.italic:
-        adjustments.update({('f', 'i'): 22, ('f', 'l'): 74, ('f', 'p'): 42, ('f', 'y'): 42})
-    elif style.weight == 700:
-        adjustments['f', 'l'] = 32
+        adjustments.update({('f', 'i'): 22, ('f', 'l'): 74, ('f', 'p'): 42, ('f', 'y'): 42,
+                            ('f', 'w'): 90, ('q', 'g'): 54, ('q', 'j'): 59, ('q', 'y'): 54})
+    else:
+        adjustments.update({('g', 'j'): 47, ('q', 'j'): 34})
+        if style.weight == 700:
+            adjustments['f', 'l'] = 32
     for (left, right), adjustment in adjustments.items():
         lefts = [char for char, shape in glyphs.items() if shape.base == left and char.isalpha()]
         rights = [char for char, shape in glyphs.items() if shape.base == right and char.isalpha()]
@@ -35,12 +38,12 @@ def feature_source(glyphs: dict[str, Shape], style: Style) -> tuple[str, int]:
     pairs = kerning_pairs(glyphs, style)
     top_marks = [mark for mark in ACCENTS if mark not in BOTTOM_MARKS]
     features = ["languagesystem DFLT dflt;", "languagesystem latn dflt;"]
-    features += ["@TOP_MARKS = [" + " ".join(map(glyph_name, top_marks)) + "];",
-                 "feature ccmp {",
-                 "  sub i' @TOP_MARKS by dotlessi;",
+    features += ["@TOP_MARKS = [" + " ".join(map(glyph_name, top_marks)) + "];", "feature ccmp {"]
+    for (base, mark), composed in CONTEXTUAL_ACCENTS.items():
+        features.append(f"  sub {glyph_name(base)} {glyph_name(mark)} by {glyph_name(composed)};")
+    features += ["  sub i' @TOP_MARKS by dotlessi;",
                  "  sub j' @TOP_MARKS by uni0237;",
-                 "} ccmp;",
-                 "feature kern {", "  lookupflag IgnoreMarks;"]
+                 "} ccmp;", "feature kern {", "  lookupflag IgnoreMarks;"]
     features.extend(f"  pos {left} {right} {value};" for (left, right), value in pairs.items())
     features.append("} kern;")
     for mark in ACCENTS:

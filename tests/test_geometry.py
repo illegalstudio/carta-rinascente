@@ -8,7 +8,8 @@ import unittest
 from shapely.geometry import Polygon, box
 
 from src.config import STYLES
-from src.geometry import FilledPath, GlyphBuilder, raise_italic_body, sample_path, sweep
+from src.geometry import (FilledPath, GlyphBuilder, dot, raise_italic_body,
+                          sample_path, soften_corners, sweep)
 
 
 class PathTests(unittest.TestCase):
@@ -33,8 +34,49 @@ class PathTests(unittest.TestCase):
         self.assertTrue(outline.is_valid)
         self.assertEqual(len(outline.interiors), 1)
 
+    def test_path_expansion_preserves_stroke_weight_and_height(self):
+        stem = "M 100 0 L 100 500"
+        original = sweep(stem)
+        expanded = sweep(stem, path_width_scale=1.25)
+        self.assertAlmostEqual(expanded.bounds[2] - expanded.bounds[0],
+                               original.bounds[2] - original.bounds[0])
+        self.assertEqual(expanded.bounds[1::2], original.bounds[1::2])
+        self.assertAlmostEqual(expanded.area, original.area)
+        oval = "M 100 0 C -50 0 -50 400 100 400 C 250 400 250 0 100 0 Z"
+        before, after = sweep(oval), sweep(oval, path_width_scale=1.25)
+        self.assertGreater(after.interiors[0].bounds[2] - after.interiors[0].bounds[0],
+                           before.interiors[0].bounds[2] - before.interiors[0].bounds[0])
+        self.assertEqual(after.bounds[1::2], before.bounds[1::2])
+
 
 class BuilderTests(unittest.TestCase):
+    def test_round_dot_preserves_its_diameter_when_paths_are_widened(self):
+        for style in STYLES:
+            with self.subTest(style=style.name):
+                geometry = GlyphBuilder(style).stroke(dot(100, 600))
+                x0, y0, x1, y1 = geometry.bounds
+                self.assertAlmostEqual(x1 - x0, y1 - y0)
+                self.assertAlmostEqual(geometry.centroid.x, 100 * style.path_width_scale)
+                self.assertAlmostEqual(geometry.centroid.y, 600)
+
+    def test_corner_refinement_preserves_counters_and_overall_dimensions(self):
+        original = box(0, 0, 100, 400).difference(box(20, 20, 80, 380))
+        rounded = soften_corners(original)
+        self.assertTrue(rounded.is_valid)
+        self.assertEqual(len(rounded.interiors), 1)
+        self.assertLess(rounded.hausdorff_distance(original), 3)
+        self.assertGreater(rounded.symmetric_difference(original).area, 10)
+        for before, after in zip(original.bounds, rounded.bounds):
+            self.assertAlmostEqual(before, after, delta=0.1)
+
+    def test_derived_ink_does_not_expand_completed_glyph_coordinates(self):
+        builder = GlyphBuilder(STYLES[1])
+        stem = builder.ink("M 200 0 L 200 500", path_width_scale=1.0)
+        expanded = builder.ink("M 200 0 L 200 500")
+        self.assertAlmostEqual(stem.centroid.x, 200, delta=0.1)
+        self.assertAlmostEqual(expanded.centroid.x, 200 * STYLES[1].path_width_scale, delta=0.1)
+        self.assertAlmostEqual(stem.area, expanded.area)
+
     def test_filled_contours_join_strokes_without_filling_counters(self):
         builder = GlyphBuilder(STYLES[0])
         builder.add("b", "M 0 0 L 0 400", FilledPath("M -80 0 L 80 0 L 80 20 L -80 20 Z"),

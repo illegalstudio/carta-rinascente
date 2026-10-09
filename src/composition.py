@@ -7,13 +7,13 @@ SPDX-License-Identifier: OFL-1.1
 import unicodedata
 
 from shapely.affinity import translate, scale
-from shapely.geometry import Polygon, box
+from shapely.geometry import Point, Polygon, box
 from shapely.geometry.base import BaseGeometry
 from shapely.ops import unary_union
 
 from .anchors import mark_anchor
 from .config import DESIGN_UNITS_PER_EM
-from .design.accents import ACCENTS
+from .design.accents import ACCENTS, CONTEXTUAL_ACCENTS, SIDE_COMMA, TURNED_COMMA
 from .geometry import GlyphBuilder, Shape
 
 
@@ -35,12 +35,18 @@ def _extended_letters(builder: GlyphBuilder) -> None:
     for char, base in [('ø', 'o'), ('Ø', 'O'), ('ł', 'l'), ('Ł', 'L')]:
         original = shapes[base]
         x0, y0, x1, y1 = original.geometry.bounds
-        slash = ink(f'M {x0 + 6} {y0 + 25} L {x1 - 5} {y1 - 25}', 0.64)
+        if base in 'lL':
+            middle = (y0 + y1) * 0.52
+            slash = ink(f'M {x0 - 22} {middle - 60} L {x1 + 15} {middle + 74}', 0.64,
+                        path_width_scale=1.0)
+        else:
+            slash = ink(f'M {x0 + 6} {y0 + 25} L {x1 - 5} {y1 - 25}', 0.64,
+                        path_width_scale=1.0)
         shapes[char] = Shape(unary_union([original.geometry, slash]), original.advance, base)
     for char, base in [('đ', 'd'), ('Đ', 'D')]:
         original = shapes[base]
         y = 564 if char.islower() else 354
-        bar = ink(f'M 15 {y} L {original.advance - 20} {y + 8}', 0.66)
+        bar = ink(f'M 15 {y} L {original.advance - 20} {y + 8}', 0.66, path_width_scale=1.0)
         shapes[char] = Shape(unary_union([original.geometry, bar]), original.advance, base)
     shapes['Ð'] = shapes['Đ']
     add('ð', 'M 99 676 C 279 615 368 421 319 214 C 275 11 107 -60 65 125 C 29 291 133 470 255 431 Q 303 416 327 356',
@@ -55,11 +61,10 @@ def _extended_letters(builder: GlyphBuilder) -> None:
 
 def _accented_letters(builder: GlyphBuilder) -> dict[str, BaseGeometry]:
     """Place combining marks and precomposed accents using shared anchors."""
-    ink = builder.ink
     shapes = builder.glyphs
     accent_geometry = {}
     for char, paths in ACCENTS.items():
-        accent_geometry[char] = unary_union([ink(*p) for p in paths])
+        accent_geometry[char] = unary_union([builder.stroke(p) for p in paths])
         shapes[char] = Shape(accent_geometry[char], 0, char)
     for cp in range(0xC0, 0x180):
         char = chr(cp)
@@ -71,8 +76,19 @@ def _accented_letters(builder: GlyphBuilder) -> dict[str, BaseGeometry]:
             continue
         original = shapes['ı' if base == 'i' else ('ȷ' if base == 'j' else base)]
         x, y = mark_anchor(original, base, mark, builder.style)
-        accent = translate(accent_geometry[mark], xoff=x, yoff=y)
-        shapes[char] = Shape(unary_union([original.geometry, accent]), original.advance, base)
+        accent = accent_geometry[mark]
+        advance = original.advance
+        if (base, mark) in CONTEXTUAL_ACCENTS:
+            paths = TURNED_COMMA if base == 'g' else SIDE_COMMA
+            accent = unary_union([builder.stroke(path) for path in paths])
+            if base == 'g':
+                x, y = mark_anchor(original, base, '\u0301', builder.style)
+            else:
+                x = round(original.geometry.bounds[2] + 14 - accent.bounds[0])
+                y = round(original.geometry.bounds[3] - 72)
+                advance = max(advance, round(x + accent.bounds[2] + builder.style.side_bearing))
+        accent = translate(accent, xoff=x, yoff=y)
+        shapes[char] = Shape(unary_union([original.geometry, accent]), advance, base)
     return accent_geometry
 
 
@@ -120,9 +136,14 @@ def _small_forms(builder: GlyphBuilder) -> None:
         shapes[char] = Shape(unary_union([geo_a, diagonal, geo_b]), 295 + round(b.advance*0.52), char)
     for char, base in [('©', 'C'), ('®', 'R')]:
         g = shapes[base]
-        center = translate(scale(g.geometry, xfact=0.51, yfact=0.51, origin=(0, 0)), xoff=123, yoff=180)
-        ring = ink('M 281 709 C -16 700 -8 12 279 10 C 565 10 578 711 281 709 Z', 0.48)
-        shapes[char] = Shape(unary_union([center, ring]), 585, char)
+        x0, y0, x1, y1 = g.geometry.bounds
+        factor = min(390 / (x1 - x0), 430 / (y1 - y0))
+        center = scale(g.geometry, xfact=factor, yfact=factor, origin=(0, 0))
+        center = translate(center, xoff=350 - (x0 + x1) * factor / 2,
+                           yoff=350 - (y0 + y1) * factor / 2)
+        ring = Point(350, 350).buffer(330, quad_segs=32).difference(
+            Point(350, 350).buffer(330 - 22 * builder.style.pen_scale, quad_segs=32))
+        shapes[char] = Shape(unary_union([center, ring]), 700, char)
     g_t, g_m = shapes['T'], shapes['M']
     tm = unary_union([scale(g_t.geometry, xfact=0.48, yfact=0.48, origin=(0, 0)),
                       translate(scale(g_m.geometry, xfact=0.48, yfact=0.48, origin=(0, 0)), xoff=g_t.advance*0.48)])
@@ -132,8 +153,9 @@ def _small_forms(builder: GlyphBuilder) -> None:
 def _additional_symbols(builder: GlyphBuilder) -> None:
     """Draw paragraph, section and currency signs."""
     add = builder.add
-    add('§', 'M 302 630 C 210 766 55 615 137 508 L 289 291 C 395 137 139 116 93 272 C 48 427 287 471 329 338',
-        'M 106 492 C -14 382 138 225 244 148 C 347 66 221 -48 116 28')
+    add('§', 'M 188 430 C 340 365 351 278 260 228 C 205 197 107 249 81 310 C 52 374 112 446 188 430 Z',
+        'M 188 430 C 107 467 80 530 122 597 C 174 670 289 665 321 591',
+        'M 260 228 C 340 176 313 61 224 42 C 174 -16 80 27 85 96')
     add('¶', 'M 260 672 C 22 759 12 363 251 398', 'M 271 675 L 235 -76', 'M 378 676 L 342 -76')
     add('¤', ('M 205 488 C 23 484 24 164 202 166 C 382 168 391 490 205 488 Z', 0.7),
         ('M 61 512 L 354 139', 0.56), ('M 360 517 L 52 135', 0.56))
@@ -157,6 +179,9 @@ def _spacing_and_diacritics(builder: GlyphBuilder, accent_geometry: dict[str, Ba
 def extend_alphabet(builder: GlyphBuilder) -> None:
     """Complete one style in dependency order, without any input font."""
     _extended_letters(builder)
+    if not builder.style.italic:
+        from .design import roman
+        roman.draw_extended(builder)
     accents = _accented_letters(builder)
     _punctuation(builder)
     _small_forms(builder)

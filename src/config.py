@@ -63,6 +63,15 @@ class Style:
         return 1.08 if self.italic else 1.06
 
     @property
+    def path_width_scale(self) -> float:
+        """Broaden italic paths before applying ink, preserving stroke weight."""
+        return 1.30 if self.italic else 1.0
+
+    @property
+    def spacing_scale(self) -> float:
+        return self.path_width_scale * self.width_scale
+
+    @property
     def selection(self) -> int:
         # USE_TYPO_METRICS plus the mutually compatible style-linking bits.
         return 0x80 | (0x01 if self.italic else 0) | (0x20 if self.weight == 700 else 0) | (
@@ -76,7 +85,7 @@ class Style:
 
 STYLES = (
     Style("Regular", pen_scale=1.3, side_bearing=36),
-    Style("Italic", italic=True, pen_scale=1.26, side_bearing=23),
+    Style("Italic", italic=True, pen_scale=1.26, side_bearing=25),
     Style("Bold", weight=700, pen_scale=1.76, side_bearing=38),
-    Style("Bold Italic", weight=700, italic=True, pen_scale=1.72, side_bearing=26),
+    Style("Bold Italic", weight=700, italic=True, pen_scale=1.72, side_bearing=28),
 )

@@ -120,6 +120,23 @@ def reading_sheet(directory: Path) -> None:
     image.save(directory / "prove-lettura.png")
 
 
+def refinement_sheet(directory: Path) -> None:
+    """Show revised forms at a fixed display size and in short reading samples."""
+    image = Image.new("RGB", (1600, 1800), PAPER)
+    draw = ImageDraw.Draw(image)
+    draw.text((80, 36), f"CARTA RINASCENTE / LETTERFORM DETAILS / {VERSION}", font=label(24), fill=INK)
+    for index, style in enumerate(STYLES):
+        top = 100 + index * 420
+        draw.text((80, top), style.name.upper(), font=label(22), fill=ACCENT)
+        text(draw, directory, style, "b d f h k l   v w u   fi fl ff", (80, top + 48), 88, fit=False)
+        text(draw, directory, style, "ł Ł ø Ø đ Đ § © ® æ œ ß µ þ ð", (80, top + 166), 64, fit=False)
+        text(draw, directory, style, "ģ ď ľ ť   life flow hello shelf fluffy", (80, top + 260), 52, fit=False)
+        text(draw, directory, style, "The art of a quiet page. A little light falls across the shelf.",
+             (80, top + 351), 18, fit=False)
+        draw.line((80, top + 395, 1520, top + 395), fill=RULE)
+    image.save(directory / "prove-forme.png")
+
+
 def render_family(directory: Path, readme_output: Path | None = None) -> None:
     """Render every proof from the same installed family, with no borrowed outlines."""
     family = family_sheet(directory)
@@ -131,3 +148,4 @@ def render_family(directory: Path, readme_output: Path | None = None) -> None:
         style_sheet(directory, style)
         character_sheet(directory, style)
     reading_sheet(directory)
+    refinement_sheet(directory)

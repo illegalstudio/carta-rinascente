@@ -19,6 +19,25 @@ from src.geometry import GlyphBuilder, Shape
 
 
 class CompositionTests(unittest.TestCase):
+    def test_contextual_commas_remain_clear_of_the_base(self):
+        for style in STYLES:
+            with self.subTest(style=style.name):
+                builder = GlyphBuilder(style)
+                for char in 'dltg':
+                    height = 500 if char == 'g' else 700
+                    builder.glyphs[char] = Shape(box(30, 0, 300, height), 336, char)
+                _accented_letters(builder)
+                for base, composed in (('d', 'ď'), ('l', 'ľ'), ('t', 'ť'), ('g', 'ģ')):
+                    original = builder.glyphs[base].geometry
+                    modified = builder.glyphs[composed]
+                    mark = modified.geometry.difference(original)
+                    self.assertGreater(mark.distance(original), 10)
+                    if base == 'g':
+                        self.assertGreater(mark.bounds[1], original.bounds[3])
+                    else:
+                        self.assertGreater(mark.bounds[0], original.bounds[2])
+                        self.assertGreater(modified.advance, builder.glyphs[base].advance)
+
     def test_composed_accent_uses_the_same_anchor_as_gpos(self):
         for style in STYLES:
             with self.subTest(style=style.name):
