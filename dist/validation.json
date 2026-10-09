@@ -1,0 +1,25 @@
+{
+  "result": "PASS",
+  "engines": [
+    "FontTools table decoding",
+    "FreeType via Pillow",
+    "HarfBuzz"
+  ],
+  "glyph_count": 341,
+  "encoded_characters": 340,
+  "full_basic_latin_and_latin1": true,
+  "italian_nfc_nfd_equivalence": true,
+  "kerning_active": true,
+  "woff2_round_trip_equivalent": true,
+  "outline_y_min": -234,
+  "outline_y_max": 912,
+  "windows_metrics": [
+    -290,
+    990
+  ],
+  "sha256": {
+    "CartaRinascente-Regular.ttf": "fd443eb33f6c88c20f321a99d86719ca360f9ba16c968c59b827f11ed00d6ac7",
+    "CartaRinascente-Regular.woff2": "36abe59892a88e2fc4ef414d179348149ae998224678bd486e91fc3ca6cabffd"
+  },
+  "scope": "File structure, shaping, coverage and rasterization. Browser/native application integration requires project-specific verification."
+}
