@@ -129,7 +129,7 @@ def refinement_sheet(directory: Path) -> None:
     for index, style in enumerate(STYLES):
         top = 100 + index * 420
         draw.text((80, top), style.name.upper(), font=label(22), fill=ACCENT)
-        text(draw, directory, style, "b d f h k l   v w u   fi fl ff", (80, top + 48), 88, fit=False)
+        text(draw, directory, style, "b d f h k K l m n   u v w", (80, top + 48), 88, fit=False)
         text(draw, directory, style, "ł Ł ø Ø đ Đ § © ® æ œ ß µ þ ð", (80, top + 166), 64, fit=False)
         text(draw, directory, style, "ģ ď ľ ť   life flow hello shelf fluffy", (80, top + 260), 52, fit=False)
         text(draw, directory, style, "A little light, a quiet page. i j . , : ; ! ? ...  ‘light’  “quiet”",

@@ -9,7 +9,7 @@ from shapely.geometry import LineString, Polygon, box
 
 from src.config import STYLES
 from src.geometry import (FilledPath, GlyphBuilder, PenStroke, dot, raise_italic_body,
-                          sample_path, soften_corners, sweep)
+                          sample_path, soften_corners, sweep, terminal_pressure)
 
 
 class PathTests(unittest.TestCase):
@@ -78,6 +78,24 @@ class PathTests(unittest.TestCase):
         sparse = sweep("M 0 0 L 350 0", tips=(1, 1), pressure_profile=profile)
         split = sweep("M 0 0 L 1 0 L 2 0 L 3 0 L 350 0", tips=(1, 1), pressure_profile=profile)
         self.assertLess(sparse.hausdorff_distance(split), 0.02)
+
+    def test_terminal_taper_is_independent_of_path_command_count(self):
+        sparse = sweep("M 0 0 L 350 0")
+        split = sweep("M 0 0 L 1 0 L 2 0 L 3 0 L 350 0")
+        # Nonlinear taper sampling can vary slightly, but must remain sub-unit.
+        self.assertLess(sparse.hausdorff_distance(split), 0.5)
+
+    def test_terminal_taper_joins_full_pressure_smoothly(self):
+        epsilon = 0.00001
+        for tip in (0.35, 0.6, 0.75):
+            with self.subTest(tip=tip):
+                join = (1 - tip) / 5
+                self.assertEqual(terminal_pressure(0, tip), tip)
+                self.assertEqual(terminal_pressure(join, tip), 1)
+                self.assertEqual(terminal_pressure(join + epsilon, tip), 1)
+                self.assertLess((1 - terminal_pressure(join - epsilon, tip)) / epsilon, 0.01)
+                values = [terminal_pressure(index / 1000, tip) for index in range(1001)]
+                self.assertEqual(values, sorted(values))
 
     def test_invalid_pressure_profiles_and_depth_fail(self):
         for profile in (((0, 1),), ((0.1, 1), (1, 1)), ((0, 1), (0.9, 1)),

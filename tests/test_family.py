@@ -14,8 +14,24 @@ from src.anchors import mark_anchor
 from src.build import build_family
 from src.composition import _accented_letters
 from src.config import STYLES
+from src.design import roman
 from src.features import kerning_pairs
 from src.geometry import GlyphBuilder, Shape
+
+
+class OutlineTests(unittest.TestCase):
+    def test_roman_stems_stay_inside_flat_serif_feet(self):
+        for style in (STYLES[0], STYLES[2]):
+            builder = GlyphBuilder(style)
+            roman.draw(builder)
+            roman.draw_numerals(builder)
+            # Round bowls, bare terminals and flared feet have their own overshoot.
+            for char in 'AdfhiklmnrxHIKMPRTXY14':
+                with self.subTest(style=style.name, char=char):
+                    self.assertGreaterEqual(builder.glyphs[char].geometry.bounds[1], -0.1)
+            for char in 'pq':
+                with self.subTest(style=style.name, char=char):
+                    self.assertGreaterEqual(builder.glyphs[char].geometry.bounds[1], -212.1)
 
 
 class CompositionTests(unittest.TestCase):

@@ -132,18 +132,17 @@ def sweep(path: str, weight: float = 1.0, tips: Tips = (0.75, 0.6),
         raise ValueError("Pressure profiles need increasing positions from 0 to 1 and positive pressures")
     points = [(x * path_width_scale, y) for x, y in sample_path(path)]
     distances = [0.0]
-    if pressure_profile:
-        for a, b in zip(points, points[1:]):
-            distances.append(distances[-1] + math.dist(a, b))
+    for a, b in zip(points, points[1:]):
+        distances.append(distances[-1] + math.dist(a, b))
     closed = math.dist(points[0], points[-1]) < 1
     angle = math.radians(nib_angle)
     ca, sa = math.cos(angle), math.sin(angle)
     stamps = []
     for index, (x, y) in enumerate(points):
-        t = index / (len(points) - 1)
-        pressure = 1.0 if closed else min(1, tips[0] + t * 5, tips[1] + (1 - t) * 5)
+        position = distances[index] / distances[-1]
+        pressure = 1.0 if closed else min(terminal_pressure(position, tips[0]),
+                                           terminal_pressure(1 - position, tips[1]))
         if pressure_profile:
-            position = distances[index] / distances[-1]
             for (start, first), (end, last) in zip(pressure_profile, pressure_profile[1:]):
                 if position <= end:
                     fraction = (position - start) / (end - start)
@@ -159,6 +158,14 @@ def sweep(path: str, weight: float = 1.0, tips: Tips = (0.75, 0.6),
             contour.append((x + ca * u - sa * v, y + sa * u + ca * v))
         stamps.append(Polygon(contour))
     return unary_union([a.union(b).convex_hull for a, b in zip(stamps, stamps[1:])])
+
+
+def terminal_pressure(position: float, tip: float) -> float:
+    """Ease into full pressure without a slope discontinuity at the taper join."""
+    if tip >= 1:
+        return 1.0
+    fraction = min(1.0, position * 5 / (1 - tip))
+    return tip + (1 - tip) * fraction * fraction * (3 - 2 * fraction)
 
 
 def dot(x: float, y: float, weight: float = 1.0) -> RoundDot:
