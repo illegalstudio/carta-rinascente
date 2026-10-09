@@ -118,6 +118,20 @@ def _check_proof_spacing(font: TTFont, data: bytes, style: Style) -> None:
         require(overlap <= 1, f"{style.name}: unintended outline overlap in {pair!r}")
 
 
+def _check_joined_outlines(font: TTFont, style: Style) -> None:
+    """Keep tapered junctions connected and counters intact after quantization."""
+    counters = {**dict.fromkeys('abdpqþ', 1), **dict.fromkeys('æœ', 2),
+                **dict.fromkeys('hmnruµy', 0)}
+    if style.italic:
+        counters['g'] = 1
+    for char, expected in counters.items():
+        outline = _polygon_outline(font, char)
+        require(outline.geom_type == 'Polygon' and not outline.is_empty,
+                f"{style.name}: disconnected strokes in {char!r}")
+        require(len(outline.interiors) == expected,
+                f"{style.name}: damaged counter or stray hole in {char!r}")
+
+
 def _check_style_widths(directory: Path) -> list[dict]:
     """Keep italic text near its roman companion's width, with natural variation."""
     comparisons = []
@@ -181,6 +195,7 @@ def validate_style(directory: Path, style: Style) -> tuple[dict, tuple[list[str]
         dotless = shape(data, "i\u0307")
         require(dotless[0][0] == font.getGlyphID("dotlessi"), f"{style.name}: dotted-i substitution failed")
         _check_proof_spacing(font, data, style)
+        _check_joined_outlines(font, style)
         for size in (18, 24, 64):
             rasterizer = ImageFont.truetype(str(ttf_path), size)
             for codepoint in cmap:
@@ -205,6 +220,7 @@ def validate_style(directory: Path, style: Style) -> tuple[dict, tuple[list[str]
             "outline_y_max": max(y[1] for y in bounds), "style_linking": True,
             "nfc_nfd_equivalence": True, "kerning_active": True, "combining_marks": True,
             "proof_pairs_do_not_overlap": True,
+            "joined_strokes_and_counters": True,
             "woff2_round_trip_equivalent": True,
             "sha256": {path.name: hashlib.sha256(path.read_bytes()).hexdigest()
                        for path in (ttf_path, woff_path)},

@@ -168,13 +168,13 @@ def contrast_sheet(directory: Path) -> None:
     """Compare shoulders, bowl returns and neighboring forms at fixed sizes."""
     image = Image.new("RGB", (1600, 1760), PAPER)
     draw = ImageDraw.Draw(image)
-    draw.text((80, 30), f"CARTA RINASCENTE / STROKE BALANCE / {VERSION}", font=label(24), fill=INK)
+    draw.text((80, 30), f"CARTA RINASCENTE / STROKE BALANCE AND JOINS / {VERSION}", font=label(24), fill=INK)
     draw.text((80, 66), "View at 100% zoom. Reading samples use the exact sizes shown.", font=label(18), fill=MUTED)
     for index, style in enumerate(STYLES):
         top = 112 + index * 402
         draw.text((80, top), style.name.upper(), font=label(22), fill=ACCENT)
-        text(draw, directory, style, "n u h m r   a b d p q   y µ", (80, top + 48), 88, fit=False)
-        text(draw, directory, style, "ñ ń ň ņ   ù ú û ü ũ ū ŭ ů ű ų", (80, top + 158), 38, fit=False)
+        text(draw, directory, style, "n r a u   h m b d p q   y µ", (80, top + 48), 88, fit=False)
+        text(draw, directory, style, "ñ ń ň ņ   à á â ä   ù ú û ü   æ œ þ", (80, top + 158), 38, fit=False)
         for row, size in enumerate((18, 24, 36)):
             y = top + 230 + row * 48
             draw.text((80, y), f"{size} px", font=label(16), fill=MUTED)
