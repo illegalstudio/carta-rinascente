@@ -1,42 +1,65 @@
-# Carta Rinascente
+<p align="center">
+  <img src="assets/logo-mark.png" alt="Carta Rinascente quill and paper logo" width="130">
+</p>
 
-Prima versione di un carattere originale di stile rinascimentale leggibile, creata su richiesta di nahime con assistenza di OpenAI Codex. Ultima verifica: 9 ottobre 2026, host `Arc`.
+<h1 align="center">Carta Rinascente</h1>
 
-Il disegno nasce da percorsi a pennino scritti in `build_font.py`. Non usa file, contorni, metriche o tracciati ricavati da Michelangelus o da altri font. Non è una ricostruzione filologica della scrittura di Michelangelo.
+<p align="center">
+  <em>A new typeface with an old soul.</em>
+</p>
 
-## File pronti
+<p align="center">
+  <a href="dist/metadata.json"><img src="https://img.shields.io/badge/version-0.200-762F3B?style=flat-square&amp;color=762F3B" alt="Version: 0.200"></a>
+  <a href="OFL.txt"><img src="https://img.shields.io/badge/license-OFL%201.1-762F3B?style=flat-square&amp;color=762F3B" alt="License: SIL OFL 1.1"></a>
+  <a href="#get-the-font"><img src="https://img.shields.io/badge/formats-TTF%20%2B%20WOFF2-762F3B?style=flat-square&amp;color=762F3B" alt="Formats: TTF and WOFF2"></a>
+</p>
 
-- `dist/CartaRinascente-Regular.ttf`: installazione desktop e inclusione in app native.
-- `dist/CartaRinascente-Regular.woff2`: versione web, circa 27 KB.
-- `index.html`: anteprima locale con testo modificabile e controllo della dimensione. Conservare la cartella `dist` accanto al file HTML.
-- `dist/anteprima.png`: tavola di presentazione.
-- `dist/caratteri.png`: repertorio visibile dei caratteri.
-- `dist/prove-lettura.png`: prove a diverse dimensioni e sequenze di spaziatura.
-- `dist/metadata.json`: repertorio completo e metadati.
-- `dist/validation.json`: esito delle verifiche tecniche e impronte SHA-256.
-- `OFL.txt`: licenza da mantenere insieme al font.
+<p align="center">
+  <strong>340 characters per style &middot; Four styles &middot; TTF + WOFF2 &middot; Open source</strong>
+</p>
 
-## Caratteristiche
+<p align="center">
+  An original typeface inspired by Renaissance penmanship, created for inclusion among the default fonts in Ariadne, the writing software by illegal studio. A composed upright design and an expressive italic bring the warmth of ink on paper to titles, quotations and short passages.
+</p>
 
-Un peso Regular, versione 0.100. L'inclinazione di circa 6 gradi fa parte del disegno: usare `font-style: normal`, senza applicare un corsivo sintetico.
+<p align="center">
+  <a href="https://illegal.studio"><strong>illegal studio</strong></a>
+  &middot;
+  <a href="https://illegal.studio/en/products/ariadne"><strong>Discover Ariadne</strong></a>
+</p>
 
-340 caratteri codificati e 341 glifi, incluso quello di carattere mancante. Copertura completa dei caratteri stampabili Basic Latin e Latin-1, accenti italiani, numerosi caratteri Latin Extended-A, segni combinanti, euro e punteggiatura tipografica. L'elenco esatto è in `dist/metadata.json`; non comprende alfabeti greco o cirillico né emoji.
+---
 
-Spaziatura proporzionale, 907 coppie di kerning OpenType e posizionamento dei segni combinanti. Numeri proporzionali. Non contiene pesi Bold, varianti aggiuntive, legature dedicate o hinting manuale TrueType.
+<p align="center">
+  <img src="assets/readme-specimen.png" alt="Carta Rinascente specimen showing English text, uppercase and lowercase letters, numerals and accented characters" width="800">
+</p>
 
-Pensato per titoli, citazioni e brevi testi. Per l'uso a schermo partire da 24 px e verificare sul dispositivo di destinazione. Per testo minuto o interfacce dense è preferibile affiancarlo a un carattere da lettura. È una prima versione sperimentale da valutare nel proprio prodotto.
+## Made for Ariadne
 
-## Licenza e distribuzione
+Carta Rinascente was created to join the default font selection in [Ariadne](https://illegal.studio/en/products/ariadne), the writing software by [illegal studio](https://illegal.studio). The goal is to give writers a distinctive typographic voice for titles, quotations and short passages, with a design that recalls the movement of a pen.
 
-Font, sorgenti e documentazione sono distribuiti sotto **SIL Open Font License 1.1**, senza Reserved Font Names. Il testo completo e autorevole è `OFL.txt`.
+The font is also available on its own, ready to use in your documents, websites and applications.
 
-La licenza permette uso, modifica e inclusione del font in applicazioni anche commerciali. Quando distribuisci i file del font, conserva l'avviso di copyright e la licenza. Le versioni modificate del font rimangono sotto OFL. Il font non può essere venduto da solo.
+## Get the font
 
-Fonte del testo: <https://openfontlicense.org/documents/OFL.txt>.
+The ready-to-use files are included in this repository. No build is required.
 
-## Uso web
+| Style | Desktop / native | Web |
+| --- | --- | --- |
+| Regular | [TTF](dist/CartaRinascente-Regular.ttf) | [WOFF2](dist/CartaRinascente-Regular.woff2) |
+| Italic | [TTF](dist/CartaRinascente-Italic.ttf) | [WOFF2](dist/CartaRinascente-Italic.woff2) |
+| Bold | [TTF](dist/CartaRinascente-Bold.ttf) | [WOFF2](dist/CartaRinascente-Bold.woff2) |
+| Bold Italic | [TTF](dist/CartaRinascente-BoldItalic.ttf) | [WOFF2](dist/CartaRinascente-BoldItalic.woff2) |
 
-Copia il WOFF2 e `OFL.txt` tra gli asset del progetto. Adatta l'URL alla tua struttura:
+Install all four TTF files with your operating system's font manager, then select **Carta Rinascente**. The fonts share a family name and carry the style flags used by applications for bold and italic selection. Include [`OFL.txt`](OFL.txt) when redistributing them; a copy is also supplied in `dist/`.
+
+For native app bundles, register all four TTF files through the platform's font asset system. Their PostScript names follow `CartaRinascente-Regular`, `CartaRinascente-Italic`, `CartaRinascente-Bold` and `CartaRinascente-BoldItalic`.
+
+To try the interactive preview, download or clone the repository and open `index.html` locally, keeping `dist/` beside it.
+
+## Use on the web
+
+Copy all four WOFF2 files and `OFL.txt` into your project, then adjust the URLs:
 
 ```css
 @font-face {
@@ -47,35 +70,114 @@ Copia il WOFF2 e `OFL.txt` tra gli asset del progetto. Adatta l'URL alla tua str
   font-display: swap;
 }
 
-.titolo {
-  font-family: "Carta Rinascente", serif;
+@font-face {
+  font-family: "Carta Rinascente";
+  src: url("/fonts/CartaRinascente-Italic.woff2") format("woff2");
   font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Carta Rinascente";
+  src: url("/fonts/CartaRinascente-Bold.woff2") format("woff2");
+  font-weight: 700;
   font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Carta Rinascente";
+  src: url("/fonts/CartaRinascente-BoldItalic.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+.writing {
+  font-family: "Carta Rinascente", serif;
   font-synthesis: none;
-  line-height: 1.35;
+  line-height: 1.4;
 }
 ```
 
-Per un'app nativa, registra il TTF secondo il sistema di asset della piattaforma. Nome famiglia: `Carta Rinascente`. Nome PostScript: `CartaRinascente-Regular`.
+Use normal CSS `font-weight` and `font-style` to select a face. Regular and Bold are upright; Italic and Bold Italic use a 10-degree design slant and dedicated letterforms. Their shared vertical metrics keep line spacing consistent when styles are mixed.
 
-## Rigenerazione
+## Character and coverage
 
-Verificata su Python 3.14.7. Le dipendenze sono fissate in `requirements.txt`.
+- **340 encoded characters and 341 glyphs per style**, including the missing-character glyph.
+- **Complete printable Basic Latin and Latin-1 coverage**, Italian accents, many Latin Extended-A characters, combining marks, the euro symbol and typographic punctuation.
+- **Proportional spacing and numerals**, with style-specific kerning, combining-mark positioning and contextual dot removal for accented i and j.
+- **Four linked styles**, version 0.200: Regular, Italic, Bold and Bold Italic, each supplied as TTF and WOFF2.
+
+This experimental family is intended for headings and short passages. For screen use, start around 24 px and check the result on your target device. Pair it with a text face for small type or dense interfaces. Dedicated ligatures, stacked-mark positioning and manual TrueType hinting are not included. Greek, Cyrillic and emoji are outside the current character set.
+
+Browse the [full character metadata](dist/metadata.json), [character sheet](dist/caratteri.png), [reading and spacing tests](dist/prove-lettura.png) or [four-style family specimen](dist/anteprima.png).
+
+## Inspiration and originality
+
+Carta Rinascente was inspired by **Michelangelus**, the typeface introduced by Microsoft and inspired by Michelangelo's work and handwritten manuscripts. Commissioned by the Fabbrica di San Pietro and designed by Studiogusto, the project explores how Renaissance letterforms can inform contemporary typography. Read the official [Microsoft Design story, *Designing Michelangelus*](https://microsoft.design/articles/designing-michelangelus/), or visit the [Microsoft Michelangelus download page](https://www.microsoft.com/en-us/download/details.aspx?id=108856).
+
+That idea prompted our own experiment with the rhythm of a pen on paper. Carta Rinascente's glyphs are built from independent pen paths in [`src/design/`](src/design). No outlines, metrics, font files or traced letterforms from Michelangelus or other proprietary fonts were used. It is an independent project, unaffiliated with Microsoft, Studiogusto or the Fabbrica di San Pietro, and does not claim to reconstruct Michelangelo's handwriting.
+
+## Build from source
+
+The toolchain is verified with **Python 3.14**. Dependencies are pinned in [`requirements.txt`](requirements.txt).
 
 ```bash
 python -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
-.venv/bin/python build_font.py
-.venv/bin/python render_specimen.py
-.venv/bin/python validate_font.py
+.venv/bin/python -m src all
 ```
 
-`build_font.py` disegna i glifi, unisce i tratti del pennino, compone gli accenti e scrive le tabelle OpenType. Le dipendenze non sono incluse nel pacchetto e conservano le proprie licenze. Pillow usa il suo font integrato solo per le etichette delle tavole, mai per creare i glifi di Carta Rinascente.
+One command builds all eight font files, validates the family, copies the license and renders the English specimens. It also refreshes the README specimen when using the default `dist/` output. No external input font is required.
 
-## Verifiche e limiti
+For focused work:
 
-Controllati parsing completo delle tabelle, copertura dei caratteri, ingombri verticali, accenti italiani in forma composta e decomposta, kerning, rasterizzazione FreeType a 24 e 64 px e corrispondenza tra TTF e WOFF2 dopo decodifica. Le tavole PNG sono state ispezionate visivamente.
+```bash
+.venv/bin/python -m src build
+.venv/bin/python -m src specimen
+.venv/bin/python -m src validate
+.venv/bin/python -m unittest discover -s tests -v
+.venv/bin/python -m src all --check-reproducible
+```
 
-L'anteprima HTML è stata verificata staticamente. Il controllo nel browser automatizzato non è stato eseguito perché la policy del browser blocca gli URL `file:`. La verifica visiva si basa sui PNG resi con FreeType. Resta da provare l'integrazione nella specifica applicazione che userà il font.
+Each command accepts `--output PATH`. The specimen commands also accept `--readme-output PATH`. On Windows, use `.venv\Scripts\python.exe` in place of `.venv/bin/python`.
 
-Lo storico di sviluppo è nel progetto Code Journal `carta-rinascente`. La prima versione è stata creata il 9 ottobre 2026 su `Arc`; nello stesso giorno il progetto è stato trasferito nella repository dedicata `~/Developer/illegalstudio/carta-rinascente`.
+The original `build_font.py`, `render_specimen.py` and `validate_font.py` commands remain available as thin wrappers around the package.
+
+### Source layout
+
+| Module | Responsibility |
+| --- | --- |
+| [`config.py`](src/config.py) | Immutable style definitions, family names and shared metrics |
+| [`design/`](src/design) | Original Latin, roman, italic, symbol and accent paths; optical kerning pairs |
+| [`geometry.py`](src/geometry.py) | Strict path parsing, pen pressure, stroke geometry and per-style state |
+| [`composition.py`](src/composition.py) | Extended Latin, accents, fractions, punctuation and whitespace |
+| [`anchors.py`](src/anchors.py) | Shared anchors for composed accents and OpenType positioning |
+| [`outlines.py`](src/outlines.py) | TrueType contours and winding |
+| [`features.py`](src/features.py) | Kerning, dot removal and mark positioning |
+| [`build.py`](src/build.py) | Staged compilation, style linking and TTF/WOFF2 export |
+| [`validation.py`](src/validation.py) | Exported-font checks using FontTools, FreeType and HarfBuzz |
+| [`specimens.py`](src/specimens.py) | Reproducible family, individual-style, character and reading proofs |
+| [`cli.py`](src/cli.py) | Shared command-line interface |
+
+The upright styles have dedicated lowercase designs, including a double-storey a and g. The italics retain a more gestural rhythm with alternate f, g, k, l, y, z and Q paths. Bold styles use a heavier pen during geometry construction. All builds use isolated glyph state, fixed timestamps and deterministic glyph ordering.
+
+Compilation and validation happen in a temporary staging directory before the released font files are replaced. Temporary build directories are cleaned on success and failure. Pillow's built-in font supplies only the specimen labels; every displayed Carta Rinascente glyph comes from this project's generated TTF files.
+
+### Validation
+
+The validator checks every style's character coverage, nonempty contours, vertical bounds, naming and style flags, embedding permissions, zero-width combining marks, NFC/NFD equivalence, contextual dot removal, kerning, mark positioning, unintended overlap in representative letter pairs, FreeType rasterization at 24 and 64 px, and TTF/WOFF2 outline and shaping equivalence. The [validation report](dist/validation.json) records all eight SHA-256 hashes.
+
+The unit tests cover malformed paths, closed counters, isolated style state, explicit zero advances, shared accent anchors, accented kerning pairs and safe handling of failed builds. `--check-reproducible` compares every font and manifest against a second clean build.
+
+The generated proofs and the browser preview have been visually checked. Integration in Ariadne and other native applications still needs verification in the target product.
+
+## License and credits
+
+The font, source and documentation are distributed under the **SIL Open Font License 1.1**, with no Reserved Font Names. See [`OFL.txt`](OFL.txt) for the complete terms.
+
+The license permits use, modification and embedding in commercial applications. Keep the copyright notice and license with redistributed font files. Modified font versions remain under the OFL, and the font may not be sold by itself. Build dependencies retain their respective licenses.
+
+Created by nahime at [illegal studio](https://illegal.studio), with assistance from OpenAI Codex. First edition: October 2026.

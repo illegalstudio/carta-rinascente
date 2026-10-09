@@ -1,25 +1,90 @@
 {
   "result": "PASS",
+  "family": "Carta Rinascente",
+  "version": "0.200",
   "engines": [
-    "FontTools table decoding",
+    "FontTools",
     "FreeType via Pillow",
     "HarfBuzz"
   ],
-  "glyph_count": 341,
-  "encoded_characters": 340,
-  "full_basic_latin_and_latin1": true,
-  "italian_nfc_nfd_equivalence": true,
-  "kerning_active": true,
-  "woff2_round_trip_equivalent": true,
-  "outline_y_min": -234,
-  "outline_y_max": 912,
-  "windows_metrics": [
-    -290,
-    990
-  ],
-  "sha256": {
-    "CartaRinascente-Regular.ttf": "fd443eb33f6c88c20f321a99d86719ca360f9ba16c968c59b827f11ed00d6ac7",
-    "CartaRinascente-Regular.woff2": "36abe59892a88e2fc4ef414d179348149ae998224678bd486e91fc3ca6cabffd"
+  "family_metrics": {
+    "ascender": 1050,
+    "descender": -320,
+    "line_gap": 0
   },
-  "scope": "File structure, shaping, coverage and rasterization. Browser/native application integration requires project-specific verification."
+  "styles": [
+    {
+      "style": "Regular",
+      "result": "PASS",
+      "glyph_count": 341,
+      "encoded_characters": 340,
+      "outline_y_min": -209,
+      "outline_y_max": 910,
+      "style_linking": true,
+      "nfc_nfd_equivalence": true,
+      "kerning_active": true,
+      "combining_marks": true,
+      "proof_pairs_do_not_overlap": true,
+      "woff2_round_trip_equivalent": true,
+      "sha256": {
+        "CartaRinascente-Regular.ttf": "8008adbf414fab77487e3e2d65dddeb9ccabbf244cbe24c66448ecbb1428136f",
+        "CartaRinascente-Regular.woff2": "205f3b80102f5107cd0f28ff2a20a7aeea0bac6dc208816b9efbb7e345fc8c2f"
+      }
+    },
+    {
+      "style": "Italic",
+      "result": "PASS",
+      "glyph_count": 341,
+      "encoded_characters": 340,
+      "outline_y_min": -238,
+      "outline_y_max": 910,
+      "style_linking": true,
+      "nfc_nfd_equivalence": true,
+      "kerning_active": true,
+      "combining_marks": true,
+      "proof_pairs_do_not_overlap": true,
+      "woff2_round_trip_equivalent": true,
+      "sha256": {
+        "CartaRinascente-Italic.ttf": "e2229213e87352433bc2a9fb81a7f3f934fe8c3b9b80099b4a60bed8b28c30c3",
+        "CartaRinascente-Italic.woff2": "238efcade47135dd3f65b127b8c68429083a57b036d6c188820e734c920ff4c0"
+      }
+    },
+    {
+      "style": "Bold",
+      "result": "PASS",
+      "glyph_count": 341,
+      "encoded_characters": 340,
+      "outline_y_min": -216,
+      "outline_y_max": 915,
+      "style_linking": true,
+      "nfc_nfd_equivalence": true,
+      "kerning_active": true,
+      "combining_marks": true,
+      "proof_pairs_do_not_overlap": true,
+      "woff2_round_trip_equivalent": true,
+      "sha256": {
+        "CartaRinascente-Bold.ttf": "44ea6417bc460ab593d14d32017bae796f7a51731ff00f31e8c5e04ef684d790",
+        "CartaRinascente-Bold.woff2": "fdbdb15bcee59b3c3e6b1cfade95ce61752e47ae9c499dbe30934c58b0a5cdb8"
+      }
+    },
+    {
+      "style": "Bold Italic",
+      "result": "PASS",
+      "glyph_count": 341,
+      "encoded_characters": 340,
+      "outline_y_min": -245,
+      "outline_y_max": 915,
+      "style_linking": true,
+      "nfc_nfd_equivalence": true,
+      "kerning_active": true,
+      "combining_marks": true,
+      "proof_pairs_do_not_overlap": true,
+      "woff2_round_trip_equivalent": true,
+      "sha256": {
+        "CartaRinascente-BoldItalic.ttf": "0500131a3275e644700f6b276d0ad5ad33cdffa19349305bd208b68b03bdce10",
+        "CartaRinascente-BoldItalic.woff2": "1430b071542585cc6bdc9f67a17f7fa83c5c19dc83e7c4edae92319e3fca1e64"
+      }
+    }
+  ],
+  "scope": "Static family structure, style linking, shaping, coverage and rasterization. Application integration requires testing in the target product."
 }

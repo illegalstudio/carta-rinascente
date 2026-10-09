@@ -1,93 +1,154 @@
 <!doctype html>
-<html lang="it">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Carta Rinascente | Prova il carattere</title>
+  <title>Carta Rinascente | Four voices, one family</title>
   <style>
-    @font-face {
-      font-family: 'Carta Rinascente';
-      src: url('dist/CartaRinascente-Regular.woff2') format('woff2');
-      font-style: normal;
-      font-weight: 400;
-      font-display: swap;
-    }
-    :root { color-scheme: light; --paper:#f5f0e6; --ink:#273731; --accent:#946045; --rule:#d9cfbe; }
+    @font-face { font-family:"Carta Rinascente"; src:url("dist/CartaRinascente-Regular.woff2") format("woff2"); font-style:normal; font-weight:400; font-display:swap; }
+    @font-face { font-family:"Carta Rinascente"; src:url("dist/CartaRinascente-Italic.woff2") format("woff2"); font-style:italic; font-weight:400; font-display:swap; }
+    @font-face { font-family:"Carta Rinascente"; src:url("dist/CartaRinascente-Bold.woff2") format("woff2"); font-style:normal; font-weight:700; font-display:swap; }
+    @font-face { font-family:"Carta Rinascente"; src:url("dist/CartaRinascente-BoldItalic.woff2") format("woff2"); font-style:italic; font-weight:700; font-display:swap; }
+    :root { color-scheme:light; --paper:#f7f2ea; --ink:#332e2d; --accent:#762f3b; --rule:#d8c9c4; }
     * { box-sizing:border-box; }
     body { margin:0; background:var(--paper); color:var(--ink); font:16px/1.6 system-ui,sans-serif; }
-    main { max-width:1200px; padding:40px 48px 70px; margin:auto; }
-    header { display:flex; justify-content:space-between; gap:20px; border-bottom:1px solid var(--rule); padding-bottom:18px; }
+    main { max-width:1200px; padding:36px 48px 70px; margin:auto; }
+    header { display:flex; justify-content:space-between; align-items:center; gap:20px; border-bottom:1px solid var(--rule); padding-bottom:18px; }
     .eyebrow { font-size:11px; letter-spacing:.13em; text-transform:uppercase; }
-    .font { font-family:'Carta Rinascente',serif; font-weight:400; font-synthesis:none; }
-    h1 { font-size:clamp(62px,10vw,124px); line-height:1.25; margin:50px 0 16px; font-weight:400; }
-    .intro { max-width:620px; color:#67685c; margin-bottom:44px; }
-    .tools { display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; border-top:1px solid var(--rule); padding:20px 0; }
+    .brand { display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--accent); }
+    .brand img { width:40px; height:40px; object-fit:contain; }
+    a { color:var(--accent); text-underline-offset:3px; }
+    .font { font-family:"Carta Rinascente",serif; font-weight:400; font-synthesis:none; }
+    h1 { font-size:clamp(52px,10vw,118px); line-height:1.2; margin:48px 0 22px; color:var(--accent); }
+    .intro { max-width:760px; color:#736669; margin-bottom:40px; }
+    .tools { display:flex; align-items:center; gap:20px; flex-wrap:wrap; border-top:1px solid var(--rule); padding:20px 0; }
     label { font-size:14px; }
-    input[type=range] { width:170px; accent-color:var(--accent); vertical-align:middle; margin:0 12px; }
-    button,a.button { border:1px solid var(--rule); border-radius:5px; background:transparent; padding:9px 14px; color:inherit; font:inherit; font-size:13px; cursor:pointer; text-decoration:none; }
-    button:hover,a.button:hover { border-color:var(--accent); background:#ece4d6; }
-    button:focus-visible,a:focus-visible,input:focus-visible { outline:2px solid var(--accent); outline-offset:4px; }
-    #proof { font-size:64px; line-height:1.5; padding:32px 28px; min-height:260px; background:#fffaf2; border:1px solid var(--rule); border-radius:5px; overflow-wrap:anywhere; white-space:pre-wrap; }
-    #proof:focus { outline:2px solid var(--accent); outline-offset:3px; }
-    .hint { color:#777466; font-size:12px; margin:10px 0 35px; }
-    .alphabet { border-top:1px solid var(--rule); padding:28px 0; }
-    h2 { font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:.13em; margin:0 0 22px; }
+    input[type=range] { width:145px; accent-color:var(--accent); vertical-align:middle; margin:0 10px; }
+    button,select,a.button { border:1px solid var(--rule); border-radius:5px; background:transparent; padding:9px 12px; color:inherit; font:inherit; font-size:13px; cursor:pointer; text-decoration:none; }
+    select { margin-left:8px; }
+    button:hover,a.button:hover { border-color:var(--accent); background:#eee5e0; }
+    :focus-visible { outline:2px solid var(--accent); outline-offset:4px; }
+    #proof { font-size:64px; line-height:1.5; padding:30px; min-height:250px; background:#fffaf5; border:1px solid var(--rule); border-radius:5px; overflow-wrap:anywhere; white-space:pre-wrap; }
+    .hint { color:#736669; font-size:12px; margin:10px 0 36px; }
+    section.alphabet,.comparison,.downloads { border-top:1px solid var(--rule); padding:28px 0; }
+    h2 { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.13em; margin:0 0 24px; }
     .alphabet p { font-size:clamp(26px,3.5vw,44px); line-height:1.7; margin:0; overflow-wrap:anywhere; }
-    .downloads { border-top:1px solid var(--rule); padding-top:28px; display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
-    .downloads span { flex:1; font-size:13px; min-width:180px; }
-    footer { font-size:12px; color:#777466; margin-top:30px; }
-    #load-status { font-size:12px; color:#777466; }
-    @media (max-width:600px) { main {padding:26px 20px;} h1{margin-top:35px;} #proof {padding:18px;} .tools {gap:14px;} header {font-size:10px;} }
+    .voices { display:grid; grid-template-columns:1fr 1fr; gap:22px 40px; }
+    .voice .eyebrow { color:#736669; }
+    .voice p { font-size:42px; line-height:1.3; margin:10px 0; }
+    .italic { font-style:italic; }
+    .bold { font-weight:700; }
+    .downloads { display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
+    .downloads span { flex:1; font-size:13px; min-width:190px; }
+    footer { font-size:12px; color:#736669; margin-top:18px; }
+    @media (max-width:650px) {
+      main { padding:24px 20px; }
+      header { font-size:10px; }
+      h1 { margin-top:34px; }
+      #proof { padding:20px; }
+      .tools { gap:14px; }
+      .voices { grid-template-columns:1fr; }
+    }
   </style>
 </head>
 <body>
 <main>
-  <header class="eyebrow"><span>Un carattere nuovo, un gesto antico.</span><span>Regular / 0.1</span></header>
+  <header class="eyebrow">
+    <a class="brand" href="https://illegal.studio"><img src="assets/logo-mark.png" alt=""><span>illegal studio</span></a>
+    <span>Four voices, one family / 0.200</span>
+  </header>
   <h1 class="font">Carta Rinascente</h1>
-  <p class="intro">Una scrittura a pennino dal ritmo rinascimentale: inclinazione lieve, forme aperte e contrasti delicati. Pensata per titoli, citazioni e brevi testi.</p>
-  <section aria-labelledby="test-title">
+  <p class="intro">A composed Regular. An expressive Italic. Two confident Bold companions.
+    Original letterforms with a Renaissance soul, created for the default font collection in
+    <a href="https://illegal.studio/en/products/ariadne">Ariadne</a>.</p>
+  <section aria-label="Interactive font preview">
     <div class="tools">
-      <label id="test-title" for="size">Prova la dimensione <input id="size" type="range" min="18" max="144" value="64"><output id="size-value" for="size">64 px</output></label>
-      <div><button type="button" data-sample="poesia">Testo</button> <button type="button" data-sample="app">Nell’app</button> <button type="button" data-sample="accenti">Accenti</button></div>
+      <label for="style">Style
+        <select id="style">
+          <option value="Regular">Regular</option>
+          <option value="Italic">Italic</option>
+          <option value="Bold">Bold</option>
+          <option value="BoldItalic">Bold Italic</option>
+        </select>
+      </label>
+      <label for="size">Size <input id="size" type="range" min="18" max="144" value="64"><output id="size-value" for="size">64 px</output></label>
+      <div><button type="button" data-sample="prose">Text</button> <button type="button" data-sample="writing">Writing</button> <button type="button" data-sample="accents">Accents</button></div>
     </div>
-    <div id="proof" class="font" contenteditable="plaintext-only" role="textbox" aria-label="Scrivi qui per provare il font" aria-multiline="true" spellcheck="false">Ogni idea ha bisogno del proprio segno.</div>
-    <p class="hint">Scrivi o incolla un testo nell’area qui sopra. Tutto rimane nel tuo browser. <span id="load-status" role="status">Caricamento del font...</span></p>
+    <div id="proof" class="font" contenteditable="plaintext-only" role="textbox" aria-label="Type here to try the font" aria-multiline="true" spellcheck="false">A quiet page, an expressive voice.</div>
+    <p class="hint">Type or paste your own words. Everything stays in your browser. <span id="load-status" role="status">Loading font...</span></p>
+  </section>
+  <section class="comparison" aria-labelledby="comparison-title">
+    <h2 id="comparison-title">The same words, four voices</h2>
+    <div class="voices">
+      <div class="voice"><span class="eyebrow">Regular</span><p class="font">The art of a quiet page.</p></div>
+      <div class="voice"><span class="eyebrow">Italic</span><p class="font italic">The art of a quiet page.</p></div>
+      <div class="voice"><span class="eyebrow">Bold</span><p class="font bold">The art of a quiet page.</p></div>
+      <div class="voice"><span class="eyebrow">Bold Italic</span><p class="font bold italic">The art of a quiet page.</p></div>
+    </div>
   </section>
   <section class="alphabet">
-    <h2>Alfabeto</h2>
+    <h2>Character sample</h2>
     <p class="font">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</p>
     <p class="font">a b c d e f g h i j k l m n o p q r s t u v w x y z</p>
     <p class="font">0 1 2 3 4 5 6 7 8 9</p>
     <p class="font">à è é ì ò ù À È É Ì Ò Ù ç ñ ö ü € &amp; @ « » ? !</p>
   </section>
   <div class="downloads">
-    <span>Usalo nel tuo progetto</span>
-    <a class="button" href="dist/CartaRinascente-Regular.ttf" download>Scarica TTF</a>
-    <a class="button" href="dist/CartaRinascente-Regular.woff2" download>Scarica WOFF2</a>
-    <a class="button" href="OFL.txt">Leggi la licenza</a>
+    <span id="download-label">Get Regular for your project</span>
+    <a id="download-ttf" class="button" href="dist/CartaRinascente-Regular.ttf" download>Download TTF</a>
+    <a id="download-woff" class="button" href="dist/CartaRinascente-Regular.woff2" download>Download WOFF2</a>
+    <a class="button" href="OFL.txt">Read the license</a>
   </div>
-  <footer>Prima versione sperimentale, disegnata da tracciati originali. Licenza SIL OFL 1.1: uso anche commerciale, conservando la licenza quando distribuisci il font. Il carattere Regular ha un’inclinazione naturale.</footer>
+  <footer>Original font family, version 0.200. SIL Open Font License 1.1.
+    Keep the license and copyright notice when redistributing the fonts.
+    <a href="README.md">Read the project documentation</a>.</footer>
 </main>
 <script>
-  const size = document.querySelector('#size');
-  const proof = document.querySelector('#proof');
-  size.addEventListener('input', () => {
+  const size = document.querySelector("#size");
+  const proof = document.querySelector("#proof");
+  const style = document.querySelector("#style");
+  const status = document.querySelector("#load-status");
+  const faces = {
+    Regular: {weight:400, style:"normal", label:"Regular"},
+    Italic: {weight:400, style:"italic", label:"Italic"},
+    Bold: {weight:700, style:"normal", label:"Bold"},
+    BoldItalic: {weight:700, style:"italic", label:"Bold Italic"}
+  };
+  let loadRevision = 0;
+  async function updateStyle() {
+    const selected = style.value;
+    const face = faces[selected];
+    const revision = ++loadRevision;
+    document.querySelectorAll("#proof, .alphabet .font").forEach(element => {
+      element.style.fontWeight = face.weight;
+      element.style.fontStyle = face.style;
+    });
+    document.querySelector("#download-label").textContent = `Get ${face.label} for your project`;
+    document.querySelector("#download-ttf").href = `dist/CartaRinascente-${selected}.ttf`;
+    document.querySelector("#download-woff").href = `dist/CartaRinascente-${selected}.woff2`;
+    status.textContent = "Loading font...";
+    try {
+      const loaded = await document.fonts.load(`${face.style} ${face.weight} 32px "Carta Rinascente"`);
+      if (revision !== loadRevision) return;
+      status.textContent = loaded.length ? `${face.label} ready.` : "Font unavailable. Keep dist beside this page.";
+    } catch {
+      if (revision === loadRevision) status.textContent = "Font unavailable. Try serving this directory locally.";
+    }
+  }
+  style.addEventListener("change", updateStyle);
+  size.addEventListener("input", () => {
     proof.style.fontSize = `${size.value}px`;
-    document.querySelector('#size-value').textContent = `${size.value} px`;
+    document.querySelector("#size-value").textContent = `${size.value} px`;
   });
   const samples = {
-    poesia: 'Ogni idea ha bisogno del proprio segno.',
-    app: 'Il tuo quaderno\nAppunti, progetti e piccole scoperte.',
-    accenti: 'Perché la città è già più bella?\nÀ È É Ì Ò Ù / à è é ì ò ù\n«Sì, verrà!» € 125,90'
+    prose: "A quiet page, an expressive voice.",
+    writing: "Ariadne\nA place for notes, chapters and new beginnings.",
+    accents: "Perché la città è già più bella?\nÀ È É Ì Ò Ù / à è é ì ò ù\n«Sì, verrà!» € 125.90"
   };
-  document.querySelectorAll('[data-sample]').forEach(button => {
-    button.addEventListener('click', () => { proof.textContent = samples[button.dataset.sample]; });
+  document.querySelectorAll("[data-sample]").forEach(button => {
+    button.addEventListener("click", () => { proof.textContent = samples[button.dataset.sample]; });
   });
-  document.fonts.load('32px "Carta Rinascente"').then(faces => {
-    document.querySelector('#load-status').textContent = faces.length ? 'Font pronto.' : 'Font non caricato: conserva la cartella dist accanto a questo file.';
-  }).catch(() => {
-    document.querySelector('#load-status').textContent = 'Font non caricato: apri questa cartella tramite un server locale.';
-  });
+  updateStyle();
 </script>
 </body>
 </html>
