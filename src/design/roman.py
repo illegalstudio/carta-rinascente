@@ -9,7 +9,10 @@ from functools import partial
 from shapely.affinity import scale, translate
 from shapely.ops import unary_union
 
-from ..geometry import FilledPath, GlyphBuilder, Shape, dot
+from ..geometry import FilledPath, GlyphBuilder, PenStroke, Shape, dot
+
+SHOULDER_DEPTH = 19
+BOWL_PRESSURE = ((0, 1), (0.48, 1), (0.72, 0.82), (1, 0.55))
 
 
 def bracketed_serif(builder: GlyphBuilder, x: float, y: float = 0, *, top: bool = False) -> FilledPath:
@@ -59,7 +62,7 @@ def draw(builder: GlyphBuilder) -> None:
         ('M 128 205 C 69 146 112 92 220 82 L 295 82', 0.8),
         'M 295 82 C 492 88 488 -179 248 -180 C 33 -181 35 -22 145 35')
     add('h', 'M 112 684 L 112 24', head(112, 686), serif(112),
-        'M 113 340 C 227 570 441 549 441 351 L 441 24', serif(441))
+        PenStroke('M 113 340 C 227 570 441 549 441 351 L 441 24', nib_depth=SHOULDER_DEPTH), serif(441))
     stem_i = ('M 112 482 L 112 24', head(112, 486), serif(112))
     add('i', *stem_i, dot(112, 621, 1.38), bearing=61)
     add('ı', *stem_i, bearing=61)
@@ -70,21 +73,22 @@ def draw(builder: GlyphBuilder) -> None:
         ('M 440 482 L 115 220', 0.74), 'M 270 348 L 463 24', serif(440, 497, top=True), serif(463))
     add('l', 'M 112 684 L 112 24', head(112, 686), serif(112), bearing=61)
     add('m', 'M 112 482 L 112 24', head(112, 486), serif(112),
-        'M 113 342 C 212 568 402 546 402 351 L 402 24', serif(402),
-        'M 403 342 C 519 568 706 546 706 351 L 706 24', serif(706))
+        PenStroke('M 113 342 C 212 568 402 546 402 351 L 402 24', nib_depth=SHOULDER_DEPTH), serif(402),
+        PenStroke('M 403 342 C 519 568 706 546 706 351 L 706 24', nib_depth=SHOULDER_DEPTH), serif(706))
     add('n', 'M 112 482 L 112 24', head(112, 486), serif(112),
-        'M 113 343 C 226 576 445 543 445 351 L 445 24', serif(445))
+        PenStroke('M 113 343 C 226 576 445 543 445 351 L 445 24', nib_depth=SHOULDER_DEPTH), serif(445))
     add('o', 'M 267 494 C 139 494 76 397 76 252 C 76 107 139 8 267 8 C 395 8 458 107 458 252 C 458 397 395 494 267 494 Z')
     add('p', 'M 112 482 L 112 -189', head(112, 486), serif(112, -212),
         'M 112 380 C 244 584 457 500 457 258 C 457 45 279 -28 112 122')
     add('q', 'M 421 391 C 285 575 76 484 76 249 C 76 27 251 -35 422 148',
         'M 425 482 L 425 -189', serif(425, -212))
     add('r', 'M 112 482 L 112 24', head(112, 486), serif(112),
-        'M 113 342 C 191 507 316 553 358 421', ('M 358 421 L 340 404', 0.85))
+        PenStroke('M 113 342 C 191 507 316 553 358 421', nib_depth=SHOULDER_DEPTH),
+        ('M 358 421 L 340 404', 0.85))
     add('s', 'M 351 407 C 289 563 66 499 77 363 C 86 250 360 267 358 127 C 358 -28 118 -35 60 98',
         ('M 60 98 L 60 146', 0.78))
     add('t', 'M 145 616 L 145 123 C 145 23 207 -15 296 71', ('M 61 480 L 304 480', 0.76))
-    add('u', 'M 112 482 L 112 158 C 112 -47 319 -29 438 184', head(112, 486),
+    add('u', PenStroke('M 112 482 L 112 158 C 112 -47 319 -29 438 184', pressure=BOWL_PRESSURE), head(112, 486),
         'M 440 482 L 440 24', head(440, 486), serif(440))
     add('v', 'M 76 478 L 251 26', ('M 251 26 L 427 478', 0.75),
         serif(76, 497, top=True), serif(427, 497, top=True))
@@ -172,7 +176,8 @@ def draw_extended(builder: GlyphBuilder) -> None:
     add('ß', 'M 112 24 L 112 508 C 112 757 414 742 390 554 C 375 452 302 404 247 373',
         'M 247 373 C 501 362 500 22 283 22 Q 223 22 190 66', serif(112))
     add('µ', 'M 112 482 L 112 -189', head(112, 486), serif(112, -212),
-        'M 112 281 L 112 158 C 112 -47 319 -29 438 184',
+        PenStroke('M 112 281 L 112 158 C 112 -47 319 -29 438 184',
+                  pressure=((0, 1), (0.3, 1), (0.65, 0.82), (1, 0.55))),
         'M 440 482 L 440 24', head(440, 486), serif(440))
     add('þ', 'M 112 684 L 112 -189', head(112, 686), serif(112, -212),
         'M 112 380 C 244 584 457 500 457 258 C 457 45 279 -28 112 122')

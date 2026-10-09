@@ -1,7 +1,7 @@
 {
   "family": "Carta Rinascente",
-  "version": "0.5.1",
-  "font_revision": "0.204",
+  "version": "0.5.2",
+  "font_revision": "0.205",
   "units_per_em": 1000,
   "encoded_characters": 340,
   "glyphs_per_style": 341,

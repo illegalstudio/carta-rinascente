@@ -18,6 +18,7 @@ from .config import DESIGN_CAP_HEIGHT, DESIGN_X_HEIGHT, Style
 
 type Point = tuple[float, float]
 type Tips = tuple[float, float]
+type PressureProfile = tuple[tuple[float, float], ...]
 
 
 @dataclass(frozen=True)
@@ -36,7 +37,21 @@ class RoundDot:
     weight: float = 1.0
 
 
-type Stroke = str | tuple[str, float] | tuple[str, float, Tips] | FilledPath | RoundDot
+@dataclass(frozen=True)
+class PenStroke:
+    """A nib-depth override and smooth pressure stops along normalized path distance.
+
+    Depth strengthens a hairline without widening a vertical stem. Pressure
+    scales the whole nib locally and multiplies the style's terminal taper.
+    """
+
+    path: str
+    weight: float = 1.0
+    nib_depth: float | None = None
+    pressure: PressureProfile = ()
+
+
+type Stroke = str | tuple[str, float] | tuple[str, float, Tips] | FilledPath | RoundDot | PenStroke
 
 _TOKEN = re.compile(r"[MLCQZ]|[+-]?(?:\d+(?:\.\d*)?|\.\d+)")
 _ARITY = {"M": 2, "L": 2, "Q": 4, "C": 6, "Z": 0}
@@ -105,11 +120,21 @@ def sample_path(path: str, step_size: float = 7.0) -> list[Point]:
 
 def sweep(path: str, weight: float = 1.0, tips: Tips = (0.75, 0.6),
           *, nib_angle: float = 18, nib_depth: float = 8.5,
-          path_width_scale: float = 1.0) -> BaseGeometry:
-    """Sweep a rounded broad nib with terminal pressure taper along one path."""
-    if weight <= 0 or min(tips) <= 0 or path_width_scale <= 0:
-        raise ValueError("Pen weight, terminal pressure and path width must be positive")
+          path_width_scale: float = 1.0, pressure_profile: PressureProfile = ()) -> BaseGeometry:
+    """Sweep a rounded broad nib with terminal taper and optional local pressure."""
+    if weight <= 0 or min(tips) <= 0 or path_width_scale <= 0 or nib_depth <= 0:
+        raise ValueError("Pen weight, terminal pressure, path width and nib depth must be positive")
+    if pressure_profile and (
+        len(pressure_profile) < 2 or pressure_profile[0][0] != 0 or pressure_profile[-1][0] != 1
+        or any(not math.isfinite(t) or not math.isfinite(p) or p <= 0 for t, p in pressure_profile)
+        or any(a[0] >= b[0] for a, b in zip(pressure_profile, pressure_profile[1:]))
+    ):
+        raise ValueError("Pressure profiles need increasing positions from 0 to 1 and positive pressures")
     points = [(x * path_width_scale, y) for x, y in sample_path(path)]
+    distances = [0.0]
+    if pressure_profile:
+        for a, b in zip(points, points[1:]):
+            distances.append(distances[-1] + math.dist(a, b))
     closed = math.dist(points[0], points[-1]) < 1
     angle = math.radians(nib_angle)
     ca, sa = math.cos(angle), math.sin(angle)
@@ -117,6 +142,14 @@ def sweep(path: str, weight: float = 1.0, tips: Tips = (0.75, 0.6),
     for index, (x, y) in enumerate(points):
         t = index / (len(points) - 1)
         pressure = 1.0 if closed else min(1, tips[0] + t * 5, tips[1] + (1 - t) * 5)
+        if pressure_profile:
+            position = distances[index] / distances[-1]
+            for (start, first), (end, last) in zip(pressure_profile, pressure_profile[1:]):
+                if position <= end:
+                    fraction = (position - start) / (end - start)
+                    fraction = fraction * fraction * (3 - 2 * fraction)
+                    pressure *= first + (last - first) * fraction
+                    break
         contour = []
         for segment in range(16):
             a = segment * math.tau / 16
@@ -156,14 +189,20 @@ class GlyphBuilder:
         self.glyphs: dict[str, Shape] = {}
 
     def ink(self, path: str, weight: float = 1.0, tips: Tips = (0.75, 0.6),
-            *, path_width_scale: float | None = None) -> BaseGeometry:
+            *, path_width_scale: float | None = None, nib_depth: float | None = None,
+            pressure_profile: PressureProfile = ()) -> BaseGeometry:
         if self.style.italic:
-            return sweep(path, weight * self.style.pen_scale, tips, nib_angle=21, nib_depth=10,
-                         path_width_scale=self.style.path_width_scale if path_width_scale is None else path_width_scale)
+            return sweep(path, weight * self.style.pen_scale, tips, nib_angle=21,
+                         nib_depth=10 if nib_depth is None else nib_depth,
+                         path_width_scale=self.style.path_width_scale if path_width_scale is None else path_width_scale,
+                         pressure_profile=pressure_profile)
         # Roman strokes keep level terminals and even pressure, with fuller hairlines.
-        return sweep(path, weight * self.style.pen_scale, (1, 1), nib_angle=0, nib_depth=15)
+        return sweep(path, weight * self.style.pen_scale, (1, 1), nib_angle=0,
+                     nib_depth=15 if nib_depth is None else nib_depth, pressure_profile=pressure_profile)
 
     def stroke(self, path: Stroke) -> BaseGeometry:
+        if isinstance(path, PenStroke):
+            return self.ink(path.path, path.weight, nib_depth=path.nib_depth, pressure_profile=path.pressure)
         if isinstance(path, RoundDot):
             radius = 24 * path.weight * self.style.pen_scale
             if radius <= 0:

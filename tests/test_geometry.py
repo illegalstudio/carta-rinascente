@@ -5,10 +5,10 @@ SPDX-License-Identifier: OFL-1.1
 
 import unittest
 
-from shapely.geometry import Polygon, box
+from shapely.geometry import LineString, Polygon, box
 
 from src.config import STYLES
-from src.geometry import (FilledPath, GlyphBuilder, dot, raise_italic_body,
+from src.geometry import (FilledPath, GlyphBuilder, PenStroke, dot, raise_italic_body,
                           sample_path, soften_corners, sweep)
 
 
@@ -47,6 +47,47 @@ class PathTests(unittest.TestCase):
         self.assertGreater(after.interiors[0].bounds[2] - after.interiors[0].bounds[0],
                            before.interiors[0].bounds[2] - before.interiors[0].bounds[0])
         self.assertEqual(after.bounds[1::2], before.bounds[1::2])
+
+    def test_nib_depth_strengthens_hairlines_without_widening_stems(self):
+        builder = GlyphBuilder(STYLES[0])
+        for path, axis in (("M 0 0 L 300 0", 1), ("M 0 0 L 0 300", 0)):
+            before = builder.stroke(path)
+            after = builder.stroke(PenStroke(path, nib_depth=20))
+            old_width = before.bounds[axis + 2] - before.bounds[axis]
+            new_width = after.bounds[axis + 2] - after.bounds[axis]
+            if axis == 1:
+                self.assertGreater(new_width, old_width)
+            else:
+                self.assertAlmostEqual(new_width, old_width)
+
+    def test_local_pressure_preserves_stem_entry_and_lightens_return(self):
+        path = "M 0 500 L 0 0 L 250 0"
+        before = sweep(path, tips=(1, 1), nib_angle=0)
+        after = sweep(path, tips=(1, 1), nib_angle=0,
+                      pressure_profile=((0, 1), (0.6, 1), (1, 0.5)))
+        entry = LineString([(-100, 400), (100, 400)])
+        return_stroke = LineString([(200, -100), (200, 100)])
+        self.assertAlmostEqual(before.intersection(entry).length, after.intersection(entry).length)
+        self.assertLess(after.intersection(return_stroke).length,
+                        before.intersection(return_stroke).length * 0.6)
+        self.assertTrue(after.is_valid)
+        self.assertEqual(after.geom_type, "Polygon")
+
+    def test_pressure_depends_on_distance_not_path_command_count(self):
+        profile = ((0, 1), (0.5, 0.6), (1, 1))
+        sparse = sweep("M 0 0 L 350 0", tips=(1, 1), pressure_profile=profile)
+        split = sweep("M 0 0 L 1 0 L 2 0 L 3 0 L 350 0", tips=(1, 1), pressure_profile=profile)
+        self.assertLess(sparse.hausdorff_distance(split), 0.02)
+
+    def test_invalid_pressure_profiles_and_depth_fail(self):
+        for profile in (((0, 1),), ((0.1, 1), (1, 1)), ((0, 1), (0.9, 1)),
+                        ((0, 1), (0.5, 1), (0.5, 0.7), (1, 1)),
+                        ((0, 1), (1, 0)), ((0, 1), (1, float("nan")))):
+            with self.subTest(profile=profile), self.assertRaises(ValueError):
+                sweep("M 0 0 L 100 0", pressure_profile=profile)
+        for depth in (0, -1):
+            with self.subTest(depth=depth), self.assertRaises(ValueError):
+                sweep("M 0 0 L 100 0", nib_depth=depth)
 
 
 class BuilderTests(unittest.TestCase):

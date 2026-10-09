@@ -51,9 +51,6 @@ def _extended_letters(builder: GlyphBuilder) -> None:
     shapes['Ð'] = shapes['Đ']
     add('ð', 'M 99 676 C 279 615 368 421 319 214 C 275 11 107 -60 65 125 C 29 291 133 470 255 431 Q 303 416 327 356',
         ('M 101 513 L 294 645', 0.65))
-    add('µ', 'M 92 449 L 48 -197',
-        'M 92 444 L 73 146 C 55 -19 187 -40 279 180',
-        'M 294 455 L 269 109 Q 256 -13 340 67')
     add('þ', 'M 56 704 Q 119 749 107 650 L 58 -197',
         'M 97 316 C 215 530 353 462 324 244 C 300 67 203 -23 90 78')
     add('Þ', 'M 88 685 L 56 18', 'M 82 522 C 353 620 464 436 344 284 Q 235 162 68 211')
@@ -180,9 +177,8 @@ def _spacing_and_diacritics(builder: GlyphBuilder, accent_geometry: dict[str, Ba
 def extend_alphabet(builder: GlyphBuilder) -> None:
     """Complete one style in dependency order, without any input font."""
     _extended_letters(builder)
-    if not builder.style.italic:
-        from .design import roman
-        roman.draw_extended(builder)
+    from .design import italic, roman
+    (italic if builder.style.italic else roman).draw_extended(builder)
     accents = _accented_letters(builder)
     _punctuation(builder)
     _small_forms(builder)

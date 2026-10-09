@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="dist/metadata.json"><img src="https://img.shields.io/badge/version-0.5.1-762F3B?style=flat-square&amp;color=762F3B" alt="Version: 0.5.1"></a>
+  <a href="dist/metadata.json"><img src="https://img.shields.io/badge/version-0.5.2-762F3B?style=flat-square&amp;color=762F3B" alt="Version: 0.5.2"></a>
   <a href="OFL.txt"><img src="https://img.shields.io/badge/license-OFL%201.1-762F3B?style=flat-square&amp;color=762F3B" alt="License: SIL OFL 1.1"></a>
   <a href="#get-the-font"><img src="https://img.shields.io/badge/formats-TTF%20%2B%20WOFF2-762F3B?style=flat-square&amp;color=762F3B" alt="Formats: TTF and WOFF2"></a>
 </p>
@@ -108,11 +108,11 @@ Use normal CSS `font-weight` and `font-style` to select a face. Regular and Bold
 - **340 encoded characters and 341 glyphs per style**, including the missing-character glyph.
 - **Complete printable Basic Latin and Latin-1 coverage**, Italian accents, many Latin Extended-A characters, combining marks, the euro symbol and typographic punctuation.
 - **Proportional spacing and numerals**, with style-specific kerning, combining-mark positioning, contextual dot removal for accented i and j, and conventional comma forms in ď, ľ, ť and ģ.
-- **Four linked styles**, version 0.5.1: Regular, Italic, Bold and Bold Italic, each supplied as TTF and WOFF2.
+- **Four linked styles**, version 0.5.2: Regular, Italic, Bold and Bold Italic, each supplied as TTF and WOFF2.
 
 This experimental family is intended for headings and short passages. The reading proof shows all four styles at exactly 18, 24, 36 and 48 px, using “The art of a quiet page.” without automatic resizing. Inspect it at 100% zoom and check the result in your target application. Dedicated ligatures, stacked-mark positioning and manual TrueType hinting are not included. Greek, Cyrillic and emoji are outside the current character set.
 
-Browse the [full character metadata](dist/metadata.json), [character sheet](dist/caratteri.png), [reading and spacing tests](dist/prove-lettura.png), [letterform details](dist/prove-forme.png), [dots and punctuation](dist/prove-punteggiatura.png) or [four-style family specimen](dist/anteprima.png).
+Browse the [full character metadata](dist/metadata.json), [character sheet](dist/caratteri.png), [reading and spacing tests](dist/prove-lettura.png), [letterform details](dist/prove-forme.png), [stroke balance](dist/prove-spessori.png), [dots and punctuation](dist/prove-punteggiatura.png) or [four-style family specimen](dist/anteprima.png).
 
 ## Inspiration and originality
 
@@ -165,7 +165,9 @@ The original `build_font.py`, `render_specimen.py` and `validate_font.py` comman
 | [`distribution.py`](src/distribution.py) | Validated, reproducible release ZIP and checksums |
 | [`release.py`](src/release.py) | Interactive preflight, isolated preparation and atomic tag push |
 
-The upright styles have dedicated uppercase, lowercase and lining numeral designs, including a double-storey a and g. A level pen, even pressure and curved serif brackets keep the roman steady. Small corner rounding softens abrupt joins without changing the advances; an angled pen and dedicated italic paths give the cursive its contrasting rhythm. Bold styles use a heavier pen during geometry construction. All builds use isolated glyph state, fixed timestamps and deterministic glyph ordering.
+The upright styles have dedicated uppercase, lowercase and lining numeral designs, including a double-storey a and g. A level pen, steady stems and curved serif brackets keep the roman composed. Small corner rounding softens abrupt joins without changing the advances; an angled pen and dedicated italic paths give the cursive its contrasting rhythm. Bold styles use a heavier pen during geometry construction. All builds use isolated glyph state, fixed timestamps and deterministic glyph ordering.
+
+Individual pen strokes can set their nib depth and a smooth pressure profile along the path. Fuller shoulders support n, m, h and r without widening their stems; lighter bowl returns keep u and related forms open. Pressure positions follow traveled distance, so adding path commands does not shift the correction. Accented letters inherit the refined base forms.
 
 The design is drawn on a 900-unit grid and exported at 1000 units per em. Outlines, spacing, kerning and mark positions are scaled together. The lowercase body reaches approximately 56% of the em. Wider roman counters and fuller strokes give the family more presence at the same font size; the italic body is enlarged without extending its ascenders or descenders.
 
@@ -179,7 +181,7 @@ The validator checks every style's character coverage, nonempty contours, vertic
 
 Seven neutral samples also compare each italic's shaped width with its upright companion. The reference phrase is required to be equal or up to 3% wider in italic; other samples allow natural variation between letterforms. Exact line breaks can still differ between styles.
 
-The unit tests cover malformed paths and filled contours, open counters, corner refinement, round dots, italic body scaling, isolated style state, explicit zero advances, shared accent anchors, contextual accent clearance, accented and punctuation kerning pairs, and safe handling of failed builds. `--check-reproducible` compares every font and manifest against a second clean build.
+The unit tests cover malformed paths and filled contours, local stroke pressure and hairline depth, open counters, corner refinement, round dots, italic body scaling, isolated style state, explicit zero advances, shared accent anchors, contextual accent clearance, accented and punctuation kerning pairs, and safe handling of failed builds. `--check-reproducible` compares every font and manifest against a second clean build.
 
 The generated proofs and the browser preview have been visually checked. Integration in Ariadne and other native applications still needs verification in the target product.
 
