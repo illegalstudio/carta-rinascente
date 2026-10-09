@@ -1,8 +1,8 @@
 {
   "result": "PASS",
   "family": "Carta Rinascente",
-  "version": "0.5.4",
-  "font_revision": "0.207",
+  "version": "0.5.5",
+  "font_revision": "0.208",
   "engines": [
     "FontTools",
     "FreeType via Pillow",
@@ -29,8 +29,8 @@
       "joined_strokes_and_counters": true,
       "woff2_round_trip_equivalent": true,
       "sha256": {
-        "CartaRinascente-Regular.ttf": "4f9f9d3125a40768f038670b19be6e6bfde07279aa0995ec5d555f4cd38acd93",
-        "CartaRinascente-Regular.woff2": "4eab247ee78650b475e30ef8f4abf175307362efb725e73b9c5ea1e8d3922555"
+        "CartaRinascente-Regular.ttf": "b3789d3ceb2101e31cdea67bde9d08794d1978d6d10cbc9f2c65ad33cd37769d",
+        "CartaRinascente-Regular.woff2": "943d78497b6f125d336915bf8804b982cbf8052b11f14cb3a8e02593d0c65700"
       }
     },
     {
@@ -48,8 +48,8 @@
       "joined_strokes_and_counters": true,
       "woff2_round_trip_equivalent": true,
       "sha256": {
-        "CartaRinascente-Italic.ttf": "3a903c03b71156955e2066d815d8e3735a470d9a266ff434160ffb698e093e01",
-        "CartaRinascente-Italic.woff2": "a623be5da4e0df005df96ba1fdab61ed4b51891b6bb6094f60a8e1abfe27a3cd"
+        "CartaRinascente-Italic.ttf": "412a9b0af046bcf95bea2d6d1363e69284fb3e4cd1671d9b8e7f67b949c246bc",
+        "CartaRinascente-Italic.woff2": "2b12114e662d1cf124d9eb396f42df2bfcfc73c4f2965aa622abb433dbc9ace2"
       }
     },
     {
@@ -67,8 +67,8 @@
       "joined_strokes_and_counters": true,
       "woff2_round_trip_equivalent": true,
       "sha256": {
-        "CartaRinascente-Bold.ttf": "6842a05ebdfca25c878b764afa4a982ee317fd5d975af7296d321aa3a4b37ec9",
-        "CartaRinascente-Bold.woff2": "57e0416c5e6cea88ee0e17576e3696bd39294429ce71f1256407f7bb4213a67e"
+        "CartaRinascente-Bold.ttf": "19d5e2ebb735e900778221607d93f48d7364ecf4228b36c0ff0f8ebc0322ca42",
+        "CartaRinascente-Bold.woff2": "84f929c9ab4fac83ee35a88183bdb8bc4bd9155e0a0f3ca5f578236545456d0d"
       }
     },
     {
@@ -86,8 +86,8 @@
       "joined_strokes_and_counters": true,
       "woff2_round_trip_equivalent": true,
       "sha256": {
-        "CartaRinascente-BoldItalic.ttf": "d8f43a15b749bb90cc6030ce5554b753eff76c65895606e0dc9c39a944f786da",
-        "CartaRinascente-BoldItalic.woff2": "dfc0944bcdc5c32477bb17668068cd3d7259ace2859667fd6b0a62234c5f44e0"
+        "CartaRinascente-BoldItalic.ttf": "9d01d6558aed1722122a4e8359701267ba2b5e0eca3919639b17f3d1a940dd2e",
+        "CartaRinascente-BoldItalic.woff2": "c9274d8d20f321415bf99363f400e7f6d03ec70c8899e1a3e1cf7ecfb0531ce2"
       }
     }
   ],
@@ -99,45 +99,45 @@
       "samples": [
         {
           "text": "The art of a quiet page.",
-          "roman_px": 213.86,
-          "italic_px": 216.16,
+          "roman_px": 213.82,
+          "italic_px": 216.13,
           "ratio": 1.0108
         },
         {
           "text": "A quiet page, an expressive voice.",
-          "roman_px": 312.35,
-          "italic_px": 306.95,
-          "ratio": 0.9827
+          "roman_px": 312.14,
+          "italic_px": 307.19,
+          "ratio": 0.9841
         },
         {
           "text": "A place for notes, chapters and new beginnings.",
-          "roman_px": 441.27,
-          "italic_px": 436.97,
-          "ratio": 0.9903
+          "roman_px": 440.93,
+          "italic_px": 437.22,
+          "ratio": 0.9916
         },
         {
           "text": "The quick brown fox jumps over the lazy dog.",
-          "roman_px": 426.55,
-          "italic_px": 413.05,
-          "ratio": 0.9684
+          "roman_px": 426.38,
+          "italic_px": 413.12,
+          "ratio": 0.9689
         },
         {
           "text": "Perch\u00e9 la citt\u00e0 \u00e8 gi\u00e0 pi\u00f9 bella?",
-          "roman_px": 273.02,
-          "italic_px": 282.73,
-          "ratio": 1.0355
+          "roman_px": 272.99,
+          "italic_px": 283.01,
+          "ratio": 1.0367
         },
         {
           "text": "minimum illimitato fili foglie qui quattro",
-          "roman_px": 369.22,
-          "italic_px": 371.23,
-          "ratio": 1.0055
+          "roman_px": 369.18,
+          "italic_px": 370.94,
+          "ratio": 1.0048
         },
         {
           "text": "Hamburgefontsiv 0123456789",
-          "roman_px": 265.7,
-          "italic_px": 286.81,
-          "ratio": 1.0795
+          "roman_px": 265.57,
+          "italic_px": 286.76,
+          "ratio": 1.0798
         }
       ]
     },
@@ -148,45 +148,45 @@
       "samples": [
         {
           "text": "The art of a quiet page.",
-          "roman_px": 227.45,
-          "italic_px": 229.45,
-          "ratio": 1.0088
+          "roman_px": 227.36,
+          "italic_px": 229.41,
+          "ratio": 1.009
         },
         {
           "text": "A quiet page, an expressive voice.",
-          "roman_px": 334.98,
-          "italic_px": 327.11,
-          "ratio": 0.9765
+          "roman_px": 334.6,
+          "italic_px": 327.38,
+          "ratio": 0.9784
         },
         {
           "text": "A place for notes, chapters and new beginnings.",
-          "roman_px": 472.1,
-          "italic_px": 464.35,
-          "ratio": 0.9836
+          "roman_px": 471.49,
+          "italic_px": 464.56,
+          "ratio": 0.9853
         },
         {
           "text": "The quick brown fox jumps over the lazy dog.",
-          "roman_px": 454.32,
-          "italic_px": 437.8,
-          "ratio": 0.9636
+          "roman_px": 454.0,
+          "italic_px": 437.89,
+          "ratio": 0.9645
         },
         {
           "text": "Perch\u00e9 la citt\u00e0 \u00e8 gi\u00e0 pi\u00f9 bella?",
-          "roman_px": 292.91,
-          "italic_px": 301.52,
-          "ratio": 1.0294
+          "roman_px": 292.82,
+          "italic_px": 301.81,
+          "ratio": 1.0307
         },
         {
           "text": "minimum illimitato fili foglie qui quattro",
-          "roman_px": 398.65,
-          "italic_px": 397.01,
-          "ratio": 0.9959
+          "roman_px": 398.56,
+          "italic_px": 396.79,
+          "ratio": 0.9956
         },
         {
           "text": "Hamburgefontsiv 0123456789",
-          "roman_px": 284.0,
-          "italic_px": 303.61,
-          "ratio": 1.069
+          "roman_px": 283.77,
+          "italic_px": 303.59,
+          "ratio": 1.0698
         }
       ]
     }

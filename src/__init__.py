@@ -1,4 +1,4 @@
 """Original Carta Rinascente font sources, licensed under SIL OFL 1.1."""
 
-__version__ = "0.5.4"
-__font_revision__ = "0.207"
+__version__ = "0.5.5"
+__font_revision__ = "0.208"

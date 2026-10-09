@@ -29,7 +29,7 @@ def draw(builder: GlyphBuilder) -> None:
     add('g', PenStroke('M 279 377 C 217 525 53 433 54 246 C 48 69 158 30 269 183', pressure=BOWL_JOINS),
         'M 299 458 C 275 324 278 119 241 -56 C 192 -300 -86 -242 -17 -123 Q 17 -61 131 -73')
     add('h', 'M 216 683 C 196 746 123 739 114 622 L 73 19',
-        PenStroke('M 91 289 C 182 523 315 482 293 324 L 265 104 Q 241 -33 358 84', nib_depth=SHOULDER_DEPTH, pressure=SHOULDER_PRESSURE))
+        PenStroke('M 91 345 C 182 507 315 482 293 324 L 265 104 Q 241 -33 358 84', nib_depth=SHOULDER_DEPTH, pressure=SHOULDER_PRESSURE))
     stem_i = ('M 43 397 Q 118 514 105 380 L 74 105 Q 55 -25 172 92',)
     add('i', *stem_i, dot(110, 587, 1.3))
     add('ı', *stem_i)
@@ -40,17 +40,18 @@ def draw(builder: GlyphBuilder) -> None:
         ('M 115 210 C 209 270 298 392 301 466', 0.74),
         ('M 173 276 C 272 281 204 46 294 27 Q 331 18 369 80', 1.0, (0.35, 0.6)))
     add('l', 'M 214 683 C 195 746 130 742 119 621 L 76 126 C 61 13 109 13 194 88')
-    add('m', 'M 32 397 Q 108 511 91 378 L 69 20',
-        PenStroke('M 86 294 C 166 518 284 484 263 327 L 229 21', nib_depth=SHOULDER_DEPTH, pressure=SHOULDER_PRESSURE),
-        PenStroke('M 249 294 C 336 516 456 480 432 326 L 402 102 Q 381 -32 501 86', nib_depth=SHOULDER_DEPTH, pressure=SHOULDER_PRESSURE))
-    add('n', 'M 34 397 Q 108 511 91 378 L 69 20',
-        PenStroke('M 86 294 C 172 530 320 480 294 321 L 265 103 Q 241 -32 364 86', nib_depth=SHOULDER_DEPTH, pressure=SHOULDER_PRESSURE))
-    add('p', 'M 30 396 Q 113 516 97 371 L 41 -211',
+    entry_stem = 'M 34 397 C 84 457 117 476 108 398 L 69 20'
+    add('m', entry_stem,
+        PenStroke('M 86 345 C 166 507 284 484 263 327 L 229 21', nib_depth=SHOULDER_DEPTH, pressure=SHOULDER_PRESSURE),
+        PenStroke('M 249 345 C 336 507 456 480 432 326 L 402 102 Q 381 -32 501 86', nib_depth=SHOULDER_DEPTH, pressure=SHOULDER_PRESSURE))
+    add('n', entry_stem,
+        PenStroke('M 86 345 C 172 507 320 480 294 321 L 265 103 Q 241 -32 364 86', nib_depth=SHOULDER_DEPTH, pressure=SHOULDER_PRESSURE))
+    add('p', 'M 30 396 C 80 456 106 476 97 398 L 41 -211',
         PenStroke('M 89 309 C 210 551 367 466 325 242 C 293 74 190 7 74 90', pressure=LEFT_BOWL_JOINS))
     add('q', PenStroke('M 278 388 C 215 515 65 440 50 235 C 32 35 149 -31 264 156', pressure=BOWL_JOINS),
         'M 298 457 L 242 -132 Q 222 -278 340 -176')
-    add('r', 'M 34 396 Q 109 512 91 376 L 70 20',
-        PenStroke('M 87 287 C 156 468 242 521 276 405 Q 271 361 237 385', nib_depth=SHOULDER_DEPTH, pressure=ARM_PRESSURE))
+    add('r', entry_stem,
+        PenStroke('M 87 340 C 156 455 242 501 276 405 Q 271 361 237 385', nib_depth=SHOULDER_DEPTH, pressure=ARM_PRESSURE))
     add('t', 'M 165 613 C 137 444 89 203 98 94 C 108 -29 209 15 287 119',
         ('M 34 410 Q 161 439 283 452', 0.62))
     add('u', PenStroke('M 35 397 Q 110 509 96 375 L 70 143 C 45 -38 194 -25 280 188',

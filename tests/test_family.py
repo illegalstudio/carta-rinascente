@@ -8,11 +8,11 @@ import unittest
 from unittest.mock import patch
 
 from shapely.affinity import translate
-from shapely.geometry import box
+from shapely.geometry import LineString, box
 
 from src.anchors import mark_anchor
 from src.build import build_family
-from src.composition import _accented_letters
+from src.composition import _accented_letters, _additional_symbols
 from src.config import STYLES
 from src.design import roman
 from src.features import kerning_pairs
@@ -20,11 +20,17 @@ from src.geometry import GlyphBuilder, Shape
 
 
 class OutlineTests(unittest.TestCase):
-    def test_roman_stems_stay_inside_flat_serif_feet(self):
+    @classmethod
+    def setUpClass(cls):
+        cls.roman_builders = []
         for style in (STYLES[0], STYLES[2]):
             builder = GlyphBuilder(style)
             roman.draw(builder)
             roman.draw_numerals(builder)
+            cls.roman_builders.append((style, builder))
+
+    def test_roman_stems_stay_inside_flat_serif_feet(self):
+        for style, builder in self.roman_builders:
             # Round bowls, bare terminals and flared feet have their own overshoot.
             for char in 'AdfhiklmnrxHIKMPRTXY14':
                 with self.subTest(style=style.name, char=char):
@@ -32,6 +38,27 @@ class OutlineTests(unittest.TestCase):
             for char in 'pq':
                 with self.subTest(style=style.name, char=char):
                     self.assertGreaterEqual(builder.glyphs[char].geometry.bounds[1], -212.1)
+
+    def test_curved_r_leg_has_no_inward_spur_above_the_baseline(self):
+        for style, builder in self.roman_builders:
+            glyph = builder.glyphs['R']
+            edges = [glyph.geometry.intersection(LineString(
+                [(glyph.advance * 0.45, y), (glyph.advance, y)])).bounds[0]
+                for y in range(2, 100, 2)]
+            for lower, upper in zip(edges, edges[1:]):
+                with self.subTest(style=style.name):
+                    self.assertGreaterEqual(lower, upper - 0.5)
+
+    def test_pilcrow_stems_remain_separate_below_the_bowl(self):
+        for style in STYLES:
+            builder = GlyphBuilder(style)
+            _additional_symbols(builder)
+            glyph = builder.glyphs['¶']
+            section = glyph.geometry.intersection(LineString([(0, 100), (glyph.advance, 100)]))
+            with self.subTest(style=style.name):
+                self.assertEqual(section.geom_type, 'MultiLineString')
+                self.assertEqual(len(section.geoms), 2)
+                self.assertGreater(section.geoms[0].distance(section.geoms[1]), 20)
 
 
 class CompositionTests(unittest.TestCase):

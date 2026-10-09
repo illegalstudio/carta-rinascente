@@ -14,7 +14,7 @@ import unicodedata
 from fontTools.ttLib import TTFont
 from PIL import ImageFont
 from shapely.affinity import translate
-from shapely.geometry import Polygon
+from shapely.geometry import LineString, Polygon
 from shapely.geometry.base import BaseGeometry
 from shapely.ops import unary_union
 import uharfbuzz as hb
@@ -120,16 +120,20 @@ def _check_proof_spacing(font: TTFont, data: bytes, style: Style) -> None:
 
 def _check_joined_outlines(font: TTFont, style: Style) -> None:
     """Keep tapered junctions connected and counters intact after quantization."""
-    counters = {**dict.fromkeys('abdpqþ', 1), **dict.fromkeys('æœ', 2),
-                **dict.fromkeys('hmnruµy', 0)}
-    if style.italic:
-        counters['g'] = 1
+    counters = {**dict.fromkeys('abdpqþDPR', 1), **dict.fromkeys('æœB', 2),
+                **dict.fromkeys('hmnruµyCGS', 0)}
+    counters['g'] = 1 if style.italic else 2
     for char, expected in counters.items():
         outline = _polygon_outline(font, char)
         require(outline.geom_type == 'Polygon' and not outline.is_empty,
                 f"{style.name}: disconnected strokes in {char!r}")
         require(len(outline.interiors) == expected,
                 f"{style.name}: damaged counter or stray hole in {char!r}")
+    pilcrow = _polygon_outline(font, '¶')
+    left, _, right, _ = pilcrow.bounds
+    stems = pilcrow.intersection(LineString([(left - 1, 100), (right + 1, 100)]))
+    require(stems.geom_type == 'MultiLineString' and len(stems.geoms) == 2,
+            f"{style.name}: merged pilcrow stems")
 
 
 def _check_style_widths(directory: Path) -> list[dict]:
