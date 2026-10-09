@@ -5,6 +5,7 @@ SPDX-License-Identifier: OFL-1.1
 """
 
 from pathlib import Path
+import unicodedata
 
 from fontTools.ttLib import TTFont
 from PIL import Image, ImageDraw, ImageFont
@@ -131,10 +132,36 @@ def refinement_sheet(directory: Path) -> None:
         text(draw, directory, style, "b d f h k l   v w u   fi fl ff", (80, top + 48), 88, fit=False)
         text(draw, directory, style, "ł Ł ø Ø đ Đ § © ® æ œ ß µ þ ð", (80, top + 166), 64, fit=False)
         text(draw, directory, style, "ģ ď ľ ť   life flow hello shelf fluffy", (80, top + 260), 52, fit=False)
-        text(draw, directory, style, "The art of a quiet page. A little light falls across the shelf.",
+        text(draw, directory, style, "A little light, a quiet page. i j . , : ; ! ? ...  ‘light’  “quiet”",
              (80, top + 351), 18, fit=False)
         draw.line((80, top + 395, 1520, top + 395), fill=RULE)
     image.save(directory / "prove-forme.png")
+
+
+def punctuation_sheet(directory: Path) -> None:
+    """Proof every supported punctuation mark, plus dots at actual reading sizes."""
+    with TTFont(directory / f"{STYLES[0].filename}.ttf") as face:
+        characters = [chr(cp) for cp in face.getBestCmap()
+                      if unicodedata.category(chr(cp)).startswith("P")]
+    image = Image.new("RGB", (1600, 1800), PAPER)
+    draw = ImageDraw.Draw(image)
+    draw.text((80, 30), f"CARTA RINASCENTE / DOTS AND PUNCTUATION / {VERSION}", font=label(24), fill=INK)
+    draw.text((80, 66), "View at 100% zoom. Reading samples use the exact sizes shown.", font=label(18), fill=MUTED)
+    for index, style in enumerate(STYLES):
+        top = 112 + index * 414
+        draw.text((80, top), style.name.upper(), font=label(22), fill=ACCENT)
+        face = font(directory, style, 54)
+        for column, char in enumerate(characters):
+            x, y = 80 + column % 21 * 69, top + 40 + column // 21 * 94
+            draw.text((x, y + 62), char, font=face, fill=INK, anchor="ls")
+            draw.text((x, y + 76), f"{ord(char):04X}", font=label(11), fill=MUTED)
+        for row, size in enumerate((18, 24, 36)):
+            y = top + 246 + row * 48
+            draw.text((80, y), f"{size} px", font=label(16), fill=MUTED)
+            sample = '“Is it finished?” Yes, it is; a quiet page. i j . , : ; ! ? …'
+            text(draw, directory, style, sample, (160, y), size, width=1360, fit=False)
+        draw.line((80, top + 388, 1520, top + 388), fill=RULE)
+    image.save(directory / "prove-punteggiatura.png")
 
 
 def render_family(directory: Path, readme_output: Path | None = None) -> None:
@@ -149,3 +176,4 @@ def render_family(directory: Path, readme_output: Path | None = None) -> None:
         character_sheet(directory, style)
     reading_sheet(directory)
     refinement_sheet(directory)
+    punctuation_sheet(directory)

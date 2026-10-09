@@ -1,8 +1,8 @@
 {
   "result": "PASS",
   "family": "Carta Rinascente",
-  "version": "0.5.0",
-  "font_revision": "0.203",
+  "version": "0.5.1",
+  "font_revision": "0.204",
   "engines": [
     "FontTools",
     "FreeType via Pillow",
@@ -28,8 +28,8 @@
       "proof_pairs_do_not_overlap": true,
       "woff2_round_trip_equivalent": true,
       "sha256": {
-        "CartaRinascente-Regular.ttf": "9ea2d2d456538d3baf593c27cf3dfb378e585d70fd92ac181c28bb0c87ed5a3a",
-        "CartaRinascente-Regular.woff2": "563790693621cf3f62033ad423dcca62b5622034a62049d962e1b9d6db722ae9"
+        "CartaRinascente-Regular.ttf": "9a81a286c2162588163e209b7ee03ee2722fbc5905c42aa1d1ac42af7f8e8fde",
+        "CartaRinascente-Regular.woff2": "ea8ed7f389aef72dff225991ac8165d945bd68526da70423cfcd562ebd4e9808"
       }
     },
     {
@@ -46,8 +46,8 @@
       "proof_pairs_do_not_overlap": true,
       "woff2_round_trip_equivalent": true,
       "sha256": {
-        "CartaRinascente-Italic.ttf": "e1d21e384e50741511b336f2bd864c5d9ee3b6d50454392276e032e63b8ccc22",
-        "CartaRinascente-Italic.woff2": "52469bc6bfbca64b80f80df39cbdc5fa4834904447831e261ce35a439a2654b3"
+        "CartaRinascente-Italic.ttf": "c1309453b81d22312d0baa9579ce2603d6851dafd5c44eb418e4c2102a075355",
+        "CartaRinascente-Italic.woff2": "f448b0fb09172c8aba22776ec8f9fed470d619a203cc38b15074f79b9f77a5c7"
       }
     },
     {
@@ -64,8 +64,8 @@
       "proof_pairs_do_not_overlap": true,
       "woff2_round_trip_equivalent": true,
       "sha256": {
-        "CartaRinascente-Bold.ttf": "b69803eaa753017f049d983e3a9e26126a21a375be0b012fbc354d89563ee0f8",
-        "CartaRinascente-Bold.woff2": "9e0ba02334e53c5f4405bfe1ebf4dd2e83cf1bfea48f2e6f87cfc40b5df398e6"
+        "CartaRinascente-Bold.ttf": "4f83ba7481c5362f642237f5756a587f8ece9262507f818acca9dd73deb6b405",
+        "CartaRinascente-Bold.woff2": "7c61224c9920179012803dd4cc2138e0104d6276b74e9d1cff01190cf9e9f8ba"
       }
     },
     {
@@ -82,8 +82,8 @@
       "proof_pairs_do_not_overlap": true,
       "woff2_round_trip_equivalent": true,
       "sha256": {
-        "CartaRinascente-BoldItalic.ttf": "bc71b4b02b148a60cb43c76424c7115de993bde744377d24c13086a5eb2186f3",
-        "CartaRinascente-BoldItalic.woff2": "c89c980360e3a9ec8a9a04908bf5f126f82d4002b5f08344ddc42ead2b4a40ae"
+        "CartaRinascente-BoldItalic.ttf": "85404ab05badbf0a2c6d6a51f356d3b6b4d5b5fc450b147639580aa41fcf4d7c",
+        "CartaRinascente-BoldItalic.woff2": "051b7306d06108234eff37bfd5d0c49757bd80867bf1fdece4d4beab87e20a61"
       }
     }
   ],
@@ -95,45 +95,45 @@
       "samples": [
         {
           "text": "The art of a quiet page.",
-          "roman_px": 213.19,
-          "italic_px": 215.06,
-          "ratio": 1.0088
+          "roman_px": 213.86,
+          "italic_px": 216.0,
+          "ratio": 1.01
         },
         {
           "text": "A quiet page, an expressive voice.",
-          "roman_px": 311.33,
-          "italic_px": 304.74,
-          "ratio": 0.9788
+          "roman_px": 312.35,
+          "italic_px": 306.72,
+          "ratio": 0.982
         },
         {
           "text": "A place for notes, chapters and new beginnings.",
-          "roman_px": 440.24,
-          "italic_px": 434.5,
-          "ratio": 0.987
+          "roman_px": 441.27,
+          "italic_px": 436.19,
+          "ratio": 0.9885
         },
         {
           "text": "The quick brown fox jumps over the lazy dog.",
-          "roman_px": 425.88,
-          "italic_px": 411.71,
-          "ratio": 0.9667
+          "roman_px": 426.55,
+          "italic_px": 412.65,
+          "ratio": 0.9674
         },
         {
           "text": "Perch\u00e9 la citt\u00e0 \u00e8 gi\u00e0 pi\u00f9 bella?",
           "roman_px": 273.02,
-          "italic_px": 281.34,
-          "ratio": 1.0305
+          "italic_px": 282.55,
+          "ratio": 1.0349
         },
         {
           "text": "minimum illimitato fili foglie qui quattro",
           "roman_px": 369.22,
-          "italic_px": 368.08,
-          "ratio": 0.9969
+          "italic_px": 370.67,
+          "ratio": 1.0039
         },
         {
           "text": "Hamburgefontsiv 0123456789",
           "roman_px": 265.7,
-          "italic_px": 286.2,
-          "ratio": 1.0772
+          "italic_px": 286.49,
+          "ratio": 1.0782
         }
       ]
     },
@@ -144,45 +144,45 @@
       "samples": [
         {
           "text": "The art of a quiet page.",
-          "roman_px": 226.53,
-          "italic_px": 227.7,
-          "ratio": 1.0052
+          "roman_px": 227.43,
+          "italic_px": 229.0,
+          "ratio": 1.0069
         },
         {
           "text": "A quiet page, an expressive voice.",
-          "roman_px": 333.58,
-          "italic_px": 324.0,
-          "ratio": 0.9713
+          "roman_px": 334.94,
+          "italic_px": 326.65,
+          "ratio": 0.9752
         },
         {
           "text": "A place for notes, chapters and new beginnings.",
-          "roman_px": 470.7,
-          "italic_px": 461.02,
-          "ratio": 0.9794
+          "roman_px": 472.07,
+          "italic_px": 463.28,
+          "ratio": 0.9814
         },
         {
           "text": "The quick brown fox jumps over the lazy dog.",
-          "roman_px": 453.4,
-          "italic_px": 435.71,
-          "ratio": 0.961
+          "roman_px": 454.3,
+          "italic_px": 437.0,
+          "ratio": 0.9619
         },
         {
           "text": "Perch\u00e9 la citt\u00e0 \u00e8 gi\u00e0 pi\u00f9 bella?",
           "roman_px": 292.9,
-          "italic_px": 299.39,
-          "ratio": 1.0222
+          "italic_px": 300.96,
+          "ratio": 1.0275
         },
         {
           "text": "minimum illimitato fili foglie qui quattro",
           "roman_px": 398.65,
-          "italic_px": 392.94,
-          "ratio": 0.9857
+          "italic_px": 396.34,
+          "ratio": 0.9942
         },
         {
           "text": "Hamburgefontsiv 0123456789",
           "roman_px": 284.0,
-          "italic_px": 302.69,
-          "ratio": 1.0658
+          "italic_px": 303.07,
+          "ratio": 1.0671
         }
       ]
     }

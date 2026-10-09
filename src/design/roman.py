@@ -61,10 +61,10 @@ def draw(builder: GlyphBuilder) -> None:
     add('h', 'M 112 684 L 112 24', head(112, 686), serif(112),
         'M 113 340 C 227 570 441 549 441 351 L 441 24', serif(441))
     stem_i = ('M 112 482 L 112 24', head(112, 486), serif(112))
-    add('i', *stem_i, dot(112, 621, 1.02), bearing=61)
+    add('i', *stem_i, dot(112, 621, 1.38), bearing=61)
     add('ı', *stem_i, bearing=61)
     stem_j = ('M 112 482 L 112 -47 C 112 -207 -36 -222 -54 -117', head(112, 486))
-    add('j', *stem_j, dot(112, 621, 1.02))
+    add('j', *stem_j, dot(112, 621, 1.38))
     add('ȷ', *stem_j)
     add('k', 'M 112 684 L 112 24', head(112, 686), serif(112),
         ('M 440 482 L 115 220', 0.74), 'M 270 348 L 463 24', serif(440, 497, top=True), serif(463))

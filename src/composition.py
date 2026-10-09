@@ -12,7 +12,7 @@ from shapely.geometry.base import BaseGeometry
 from shapely.ops import unary_union
 
 from .anchors import mark_anchor
-from .config import DESIGN_UNITS_PER_EM
+from .config import DESIGN_CAP_HEIGHT, DESIGN_UNITS_PER_EM
 from .design.accents import ACCENTS, CONTEXTUAL_ACCENTS, SIDE_COMMA, TURNED_COMMA
 from .geometry import GlyphBuilder, Shape
 
@@ -99,9 +99,10 @@ def _punctuation(builder: GlyphBuilder) -> None:
     add('ſ', 'M 18 -178 C 79 -156 78 21 102 255 L 137 592 C 152 757 283 755 293 639')
     shapes['ſ'] = Shape(translate(shapes['ſ'].geometry, xoff=-60), 302, 'ſ')
     # Reusable punctuation is transformed from our own paths.
-    for char, xflip, yflip, offset in [('‘', -1, -1, 650), ('’', 1, 1, 590), ('‚', 1, 1, 0)]:
+    for char, xflip, yflip in [('‘', -1, -1), ('’', 1, 1), ('‚', 1, 1)]:
         g = shapes[',']
         geo = scale(g.geometry, xfact=xflip, yfact=yflip, origin=(g.advance/2, 30))
+        offset = 0 if char == '‚' else DESIGN_CAP_HEIGHT - geo.bounds[3]
         shapes[char] = Shape(translate(geo, yoff=offset), g.advance, char)
     for char, base in [('“', '‘'), ('”', '’'), ('„', '‚')]:
         g = shapes[base]

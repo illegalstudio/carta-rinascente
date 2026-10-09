@@ -21,13 +21,21 @@ def kerning_pairs(glyphs: dict[str, Shape], style: Style) -> dict[tuple[str, str
     if style.italic:
         adjustments.update({('f', 'i'): 22, ('f', 'l'): 74, ('f', 'p'): 42, ('f', 'y'): 42,
                             ('f', 'w'): 90, ('q', 'g'): 54, ('q', 'j'): 59, ('q', 'y'): 54})
+        for quote in '’”':
+            adjustments['d', quote] = 16
+            adjustments['f', quote] = 32
+        for quote in "'\"":
+            for letter, clearance in (('d', 30), ('f', 74), ('j', 12), ('l', 48)):
+                adjustments[letter, quote] = clearance
     else:
-        adjustments.update({('g', 'j'): 47, ('q', 'j'): 34})
+        adjustments.update({('g', 'j'): 47, ('q', 'j'): 34, ('[', 'j'): 56, ('{', 'j'): 50})
         if style.weight == 700:
             adjustments['f', 'l'] = 32
     for (left, right), adjustment in adjustments.items():
-        lefts = [char for char, shape in glyphs.items() if shape.base == left and char.isalpha()]
-        rights = [char for char, shape in glyphs.items() if shape.base == right and char.isalpha()]
+        lefts = [char for char, shape in glyphs.items()
+                 if shape.base == left and (char.isalpha() or char == left)]
+        rights = [char for char, shape in glyphs.items()
+                  if shape.base == right and (char.isalpha() or char == right)]
         for a in lefts:
             for b in rights:
                 pairs[glyph_name(a), glyph_name(b)] = adjustment

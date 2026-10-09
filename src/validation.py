@@ -8,7 +8,7 @@ from io import BytesIO
 import hashlib
 import json
 from pathlib import Path
-from string import ascii_lowercase
+from string import ascii_letters, ascii_lowercase
 import unicodedata
 
 from fontTools.ttLib import TTFont
@@ -108,6 +108,8 @@ def _polygon_outline(font: TTFont, char: str) -> BaseGeometry:
 def _check_proof_spacing(font: TTFont, data: bytes, style: Style) -> None:
     pairs = {'AV', 'VA', 'WA', 'TA', 'To', 'Ta', 'Te', 'Yo', 'Wo'}
     pairs.update(left + right for left in ascii_lowercase for right in ascii_lowercase)
+    pairs.update(letter + mark for letter in ascii_letters for mark in ".,:;!?)]}’”»›'\"")
+    pairs.update(mark + letter for mark in "([{‘“«‹'\"" for letter in ascii_letters)
     outlines = {char: _polygon_outline(font, char) for char in set(''.join(pairs))}
     for pair in sorted(pairs):
         result = shape(data, pair)

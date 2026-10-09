@@ -6,6 +6,9 @@ SPDX-License-Identifier: OFL-1.1
 
 from ..geometry import GlyphBuilder, dot
 
+PUNCTUATION_DOT_WEIGHT = 1.35
+COMMA_DOT_WEIGHT = 1.3
+
 
 def draw(builder: GlyphBuilder) -> None:
     add = builder.add
@@ -22,12 +25,14 @@ def draw(builder: GlyphBuilder) -> None:
         ('M 119 339 L 308 350', 0.7))
     add('8', 'M 221 673 C 93 677 51 506 157 413 C 276 312 371 275 330 131 C 286 -41 87 -10 64 146 C 43 288 221 340 301 466 C 381 589 318 675 221 673 Z')
     add('9', 'M 309 384 C 157 215 28 366 79 544 C 130 743 338 711 331 480 C 327 251 222 -51 67 56')
-    add('.', dot(60, 35, 0.85), bearing=37)
-    add(',', dot(77, 37, 0.82), ('M 79 33 Q 79 -33 34 -70', 0.66), bearing=29)
-    add(':', dot(65, 43, 0.8), dot(80, 334, 0.8), bearing=38)
-    add(';', dot(71, 334, 0.8), dot(58, 43, 0.8), ('M 59 40 Q 68 -18 19 -69', 0.62), bearing=29)
-    add('!', 'M 91 670 L 61 183', dot(47, 40, 0.85), bearing=38)
-    add('?', 'M 67 524 C 100 711 329 713 318 550 C 307 413 154 405 149 210', dot(132, 44, 0.85))
+    add('.', dot(60, 35, PUNCTUATION_DOT_WEIGHT), bearing=37)
+    add(',', dot(77, 37, COMMA_DOT_WEIGHT), ('M 79 33 Q 79 -40 31 -80', 0.74), bearing=29)
+    add(':', dot(65, 43, PUNCTUATION_DOT_WEIGHT), dot(80, 334, PUNCTUATION_DOT_WEIGHT), bearing=38)
+    add(';', dot(71, 334, PUNCTUATION_DOT_WEIGHT), dot(58, 43, COMMA_DOT_WEIGHT),
+        ('M 59 40 Q 68 -25 16 -79', 0.74), bearing=29)
+    add('!', 'M 91 670 L 61 183', dot(47, 40, PUNCTUATION_DOT_WEIGHT), bearing=38)
+    add('?', 'M 67 524 C 100 711 329 713 318 550 C 307 413 154 405 149 210',
+        dot(132, 44, PUNCTUATION_DOT_WEIGHT))
     add('-', ('M 35 270 Q 124 286 222 276', 0.8), bearing=39)
     add('_', ('M 22 -77 L 377 -77', 0.73))
     add('/', ('M 38 -104 L 314 735', 0.71), bearing=28)
@@ -68,10 +73,11 @@ def draw(builder: GlyphBuilder) -> None:
         ('M 64 328 L 361 333', 0.63), ('M 57 198 L 351 203', 0.63))
     add('¢', 'M 321 424 C 271 541 91 427 82 270 C 65 91 211 40 328 177', ('M 247 658 L 153 11', 0.58))
     add('°', ('M 135 682 C 31 688 16 500 124 493 C 230 487 248 672 135 682 Z', 0.65))
-    add('·', dot(62, 312, 0.75), bearing=50)
+    add('·', dot(62, 312, 1.25), bearing=50)
     add('×', ('M 45 490 L 346 131', 0.74), ('M 366 500 L 42 125', 0.72))
-    add('÷', ('M 41 317 L 370 323', 0.72), dot(215, 513, 0.7), dot(194, 133, 0.7))
+    add('÷', ('M 41 317 L 370 323', 0.72), dot(215, 513, 1.1), dot(194, 133, 1.1))
     add('±', ('M 42 367 L 384 373', 0.7), ('M 226 577 L 210 155', 0.74), ('M 31 43 L 374 49', 0.7))
     add('¬', ('M 42 377 L 384 383 L 371 190', 0.75))
-    add('¡', 'M 48 -165 L 78 322', dot(92, 465, 0.85), bearing=38)
-    add('¿', 'M 312 -25 C 279 -212 50 -213 61 -51 C 72 86 225 94 230 289', dot(247, 455, 0.85))
+    add('¡', 'M 48 -165 L 78 322', dot(92, 465, PUNCTUATION_DOT_WEIGHT), bearing=38)
+    add('¿', 'M 312 -25 C 279 -212 50 -213 61 -51 C 72 86 225 94 230 289',
+        dot(247, 455, PUNCTUATION_DOT_WEIGHT))

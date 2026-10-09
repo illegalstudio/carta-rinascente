@@ -58,6 +58,24 @@ class CompositionTests(unittest.TestCase):
         self.assertLess(pairs['A', 'V'], 0)
         self.assertEqual(pairs['Agrave', 'V'], pairs['A', 'V'])
 
+    def test_punctuation_kerning_keeps_accented_letter_variants(self):
+        glyphs = {'[': Shape(box(0, 0, 10, 10), 100, '['),
+                  'j': Shape(box(0, 0, 10, 10), 100, 'j'),
+                  'ĵ': Shape(box(0, 0, 10, 10), 100, 'j'),
+                  'd': Shape(box(0, 0, 10, 10), 100, 'd'),
+                  'ď': Shape(box(0, 0, 10, 10), 100, 'd'),
+                  "'": Shape(box(0, 0, 10, 10), 100, "'")}
+        for style in (STYLES[0], STYLES[2]):
+            with self.subTest(style=style.name):
+                pairs = kerning_pairs(glyphs, style)
+                self.assertGreater(pairs['bracketleft', 'j'], 0)
+                self.assertEqual(pairs['bracketleft', 'jcircumflex'], pairs['bracketleft', 'j'])
+        for style in (STYLES[1], STYLES[3]):
+            with self.subTest(style=style.name):
+                pairs = kerning_pairs(glyphs, style)
+                self.assertGreater(pairs['d', 'quotesingle'], 0)
+                self.assertEqual(pairs['dcaron', 'quotesingle'], pairs['d', 'quotesingle'])
+
 
 class ReleaseTests(unittest.TestCase):
     def test_failed_build_does_not_publish_partial_fonts(self):
