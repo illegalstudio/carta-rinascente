@@ -25,8 +25,8 @@ from .config import (ASCENT, CAP_HEIGHT, DESCENT, FAMILY, FONT_REVISION, STYLES,
 SAMPLES = (
     "Carta Rinascente", "A quiet page, an expressive voice.",
     "The art of a quiet page. A yellow flower, a playful melody.",
-    "Perché la città è già più bella? À È É Ì Ò Ù à è é ì ò ù",
-    "minimum illimitato fili foglie qui quattro",
+    "A naïve poet writes at the café. À È É Ì Ò Ù à è é ì ò ù",
+    "Minimum effort, flowing lines, quiet rhythm.",
     "AVATAR WA VA To Ta Te Yo Wo fi fl ffi ffl",
     "The journey: € 125.90. 09/10/2026 (14:30)",
     "Æ Œ æ œ ð þ Ð Þ µ ß ı ȷ",
@@ -37,8 +37,8 @@ WIDTH_PROOFS = (
     "A quiet page, an expressive voice.",
     "A place for notes, chapters and new beginnings.",
     "The quick brown fox jumps over the lazy dog.",
-    "Perché la città è già più bella?",
-    "minimum illimitato fili foglie qui quattro",
+    "A naïve poet writes at the café.",
+    "Minimum effort, flowing lines, quiet rhythm.",
     "Hamburgefontsiv 0123456789",
 )
 

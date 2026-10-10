@@ -112,7 +112,7 @@ Use normal CSS `font-weight` and `font-style` to select a face. Regular and Bold
 
 This experimental family is intended for headings and short passages. The reading proof shows all four styles at exactly 18, 24, 36 and 48 px, using “The art of a quiet page.” without automatic resizing. Inspect it at 100% zoom and check the result in your target application. Dedicated ligatures, stacked-mark positioning and manual TrueType hinting are not included. Greek, Cyrillic and emoji are outside the current character set.
 
-Browse the [full character metadata](dist/metadata.json), [character sheet](dist/caratteri.png), [reading and spacing tests](dist/prove-lettura.png), [letterform details](dist/prove-forme.png), [stroke balance](dist/prove-spessori.png), [dots and punctuation](dist/prove-punteggiatura.png) or [four-style family specimen](dist/anteprima.png).
+Browse the [full character metadata](dist/metadata.json), [character sheet](dist/character-sheet-Regular.png), [reading and spacing tests](dist/reading-proof.png), [letterform details](dist/letterform-proof.png), [stroke balance](dist/stroke-balance-proof.png), [dots and punctuation](dist/punctuation-proof.png) or [four-style family specimen](dist/family-specimen.png).
 
 ## Inspiration and originality
 

@@ -101,8 +101,7 @@ def character_sheet(directory: Path, style: Style) -> None:
         draw.text((x + (cell - bounds[2] + bounds[0]) / 2 - bounds[0], y + 98),
                   value, font=face, fill=INK, anchor="ls")
         draw.text((x + 12, y + 118), f"U+{codepoint:04X}", font=label(13), fill=MUTED)
-    name = "caratteri.png" if style.name == "Regular" else f"caratteri-{style.slug}.png"
-    image.save(directory / name)
+    image.save(directory / f"character-sheet-{style.slug}.png")
 
 
 def reading_sheet(directory: Path) -> None:
@@ -118,7 +117,7 @@ def reading_sheet(directory: Path) -> None:
             draw.text((60, y), f"{size} px", font=label(16), fill=MUTED)
             text(draw, directory, style, "The art of a quiet page.",
                  (160, y), size, width=780, fit=False)
-    image.save(directory / "prove-lettura.png")
+    image.save(directory / "reading-proof.png")
 
 
 def refinement_sheet(directory: Path) -> None:
@@ -135,7 +134,7 @@ def refinement_sheet(directory: Path) -> None:
         text(draw, directory, style, "Round shapes, calm lines. The art of a quiet page. i j . , : ; ! ?",
              (80, top + 351), 18, fit=False)
         draw.line((80, top + 395, 1520, top + 395), fill=RULE)
-    image.save(directory / "prove-forme.png")
+    image.save(directory / "letterform-proof.png")
 
 
 def punctuation_sheet(directory: Path) -> None:
@@ -161,7 +160,7 @@ def punctuation_sheet(directory: Path) -> None:
             sample = '“Is it finished?” Yes, it is; a quiet page. i j . , : ; ! ? …'
             text(draw, directory, style, sample, (160, y), size, width=1360, fit=False)
         draw.line((80, top + 388, 1520, top + 388), fill=RULE)
-    image.save(directory / "prove-punteggiatura.png")
+    image.save(directory / "punctuation-proof.png")
 
 
 def contrast_sheet(directory: Path) -> None:
@@ -181,13 +180,13 @@ def contrast_sheet(directory: Path) -> None:
             text(draw, directory, style, "A minimum of human nuance. The art of a quiet page.",
                  (160, y), size, width=1360, fit=False)
         draw.line((80, top + 376, 1520, top + 376), fill=RULE)
-    image.save(directory / "prove-spessori.png")
+    image.save(directory / "stroke-balance-proof.png")
 
 
 def render_family(directory: Path, readme_output: Path | None = None) -> None:
     """Render every proof from the same installed family, with no borrowed outlines."""
     family = family_sheet(directory)
-    family.save(directory / "anteprima.png")
+    family.save(directory / "family-specimen.png")
     if readme_output is not None:
         readme_output.parent.mkdir(parents=True, exist_ok=True)
         family.save(readme_output)
