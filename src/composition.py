@@ -43,7 +43,8 @@ def _extended_letters(builder: GlyphBuilder) -> None:
     for char, base in [('đ', 'd'), ('Đ', 'D')]:
         original = shapes[base]
         y = 564 if char.islower() else 354
-        bar = ink(f'M 15 {y} L {original.advance - 20} {y + 8}', 0.66, path_width_scale=1.0)
+        bar = ink(f'M 15 {y} L {original.advance - 20} {y + 8}', 0.66, path_width_scale=1.0,
+                  nib_depth=builder.rule('M 0 0 L 1 0').nib_depth)
         shapes[char] = Shape(unary_union([original.geometry, bar]), original.advance, base)
     shapes['Ð'] = shapes['Đ']
     add('ð', 'M 99 676 C 279 615 368 421 319 214 C 275 11 107 -60 65 125 C 29 291 133 470 255 431 Q 303 416 327 356',
@@ -56,7 +57,10 @@ def _accented_letters(builder: GlyphBuilder) -> dict[str, BaseGeometry]:
     shapes = builder.glyphs
     accent_geometry = {}
     for char, paths in ACCENTS.items():
-        accent_geometry[char] = unary_union([builder.stroke(p) for p in paths])
+        # The roman draws its accents with the even pen, so they hold beside fine hairlines.
+        strokes = [builder.rule(p[0], p[1] * 0.74) if isinstance(p, tuple) and not builder.style.italic else p
+                   for p in paths]
+        accent_geometry[char] = unary_union([builder.stroke(p) for p in strokes])
         shapes[char] = Shape(accent_geometry[char], 0, char)
     for cp in range(0xC0, 0x180):
         char = chr(cp)
@@ -88,8 +92,9 @@ def _punctuation(builder: GlyphBuilder) -> None:
     """Derive quotation marks, dashes and related punctuation."""
     add = builder.add
     shapes = builder.glyphs
-    add('ſ', 'M 18 -178 C 79 -156 78 21 102 255 L 137 592 C 152 757 283 755 293 639')
-    shapes['ſ'] = Shape(translate(shapes['ſ'].geometry, xoff=-60), 302, 'ſ')
+    if 'ſ' not in shapes:
+        add('ſ', 'M 18 -178 C 79 -156 78 21 102 255 L 137 592 C 152 757 283 755 293 639')
+        shapes['ſ'] = Shape(translate(shapes['ſ'].geometry, xoff=-60), 302, 'ſ')
     # Reusable punctuation is transformed from our own paths.
     for char, xflip, yflip in [('‘', -1, -1), ('’', 1, 1), ('‚', 1, 1)]:
         g = shapes[',']
@@ -108,7 +113,8 @@ def _punctuation(builder: GlyphBuilder) -> None:
             adv = adv*2-10
         shapes[char] = Shape(geo, adv, char)
     for cp, length in [(0x2013, 460), (0x2014, 800), (0x2212, 410)]:
-        add(chr(cp), (f'M 35 280 L {length-35} 285', 0.76), bearing=35)
+        rise = 5 if builder.style.italic else 0
+        add(chr(cp), builder.rule(f'M 35 280 L {length-35} {280 + rise}', 0.76), bearing=35)
     g = shapes['.']
     shapes['…'] = Shape(unary_union([translate(g.geometry, xoff=i*g.advance) for i in range(3)]), 3*g.advance, '.')
     shapes['\u00ad'] = shapes['-']

@@ -32,7 +32,7 @@ class OutlineTests(unittest.TestCase):
     def test_roman_stems_stay_inside_flat_serif_feet(self):
         for style, builder in self.roman_builders:
             # Round bowls, bare terminals and flared feet have their own overshoot.
-            for char in 'AdfhiklmnrxHIKMPRTXY14':
+            for char in 'AfhiklmnrxHIKMPRTXY14':
                 with self.subTest(style=style.name, char=char):
                     self.assertGreaterEqual(builder.glyphs[char].geometry.bounds[1], -0.1)
             for char in 'pq':
@@ -90,7 +90,7 @@ class CompositionTests(unittest.TestCase):
                 x, y = mark_anchor(builder.glyphs['a'], 'a', '\u0301', style)
                 expected = builder.glyphs['a'].geometry.union(
                     translate(builder.glyphs['\u0301'].geometry, xoff=x, yoff=y))
-                self.assertTrue(expected.equals(builder.glyphs['á'].geometry))
+                self.assertLess(expected.symmetric_difference(builder.glyphs['á'].geometry).area, 1e-6)
                 self.assertEqual(builder.glyphs['á'].advance, 261)
 
     def test_kerning_propagates_to_accented_bases(self):

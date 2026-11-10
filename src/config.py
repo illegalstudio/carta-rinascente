@@ -84,8 +84,8 @@ class Style:
 
 
 STYLES = (
-    Style("Regular", pen_scale=1.3, side_bearing=36),
-    Style("Italic", italic=True, pen_scale=1.26, side_bearing=25),
-    Style("Bold", weight=700, pen_scale=1.76, side_bearing=38),
-    Style("Bold Italic", weight=700, italic=True, pen_scale=1.72, side_bearing=28),
+    Style("Regular", pen_scale=1.3, side_bearing=32),
+    Style("Italic", italic=True, pen_scale=1.26, side_bearing=27),
+    Style("Bold", weight=700, pen_scale=1.76, side_bearing=34),
+    Style("Bold Italic", weight=700, italic=True, pen_scale=1.72, side_bearing=30),
 )

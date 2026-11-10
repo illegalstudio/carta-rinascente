@@ -21,16 +21,32 @@ def kerning_pairs(glyphs: dict[str, Shape], style: Style) -> dict[tuple[str, str
     if style.italic:
         adjustments.update({('f', 'i'): 22, ('f', 'l'): 74, ('f', 'p'): 42, ('f', 'y'): 42,
                             ('f', 'w'): 90, ('q', 'g'): 54, ('q', 'j'): 59, ('q', 'y'): 54})
+        # Slanted capitals with a wide top let the following small letters tuck under.
+        for capital, tuck in (('T', -60), ('Y', -50), ('V', -34), ('W', -28), ('F', -24), ('P', -18)):
+            for letter in 'acegmnopqrsuvwxyz':
+                adjustments[capital, letter] = tuck
+        # A raised apostrophe leaves a hole before the small letter that follows it.
+        for letter in 'acdegoqs':
+            adjustments['’', letter] = -34
         for quote in '’”':
+            adjustments['l', quote] = 44
             adjustments['d', quote] = 16
             adjustments['f', quote] = 32
+        for quote in "'\"’”":
+            adjustments['P', quote] = 30
         for quote in "'\"":
-            for letter, clearance in (('d', 30), ('f', 74), ('j', 12), ('l', 48)):
+            for letter, clearance in (('d', 30), ('f', 74), ('j', 12), ('l', 74)):
                 adjustments[letter, quote] = clearance
     else:
-        adjustments.update({('g', 'j'): 47, ('q', 'j'): 34, ('[', 'j'): 56, ('{', 'j'): 50})
+        heavy = 26 if style.weight == 700 else 0
+        adjustments.update({('g', 'j'): 47, ('q', 'j'): 64 + heavy, ('[', 'j'): 56, ('{', 'j'): 58 + heavy,
+                            ('(', 'j'): 74 + heavy})
         if style.weight == 700:
-            adjustments['f', 'l'] = 32
+            # The bold f hook reaches over the next letter's ascender or raised mark.
+            for letter in 'bhkl':
+                adjustments['f', letter] = 46
+            for mark in ")]}’”'\"!?":
+                adjustments['f', mark] = 40
     for (left, right), adjustment in adjustments.items():
         lefts = [char for char, shape in glyphs.items()
                  if shape.base == left and (char.isalpha() or char == left)]

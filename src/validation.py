@@ -11,6 +11,7 @@ from pathlib import Path
 from string import ascii_letters, ascii_lowercase
 import unicodedata
 
+from fontTools.pens.basePen import BasePen
 from fontTools.ttLib import TTFont
 from PIL import ImageFont
 from shapely.affinity import translate
@@ -92,16 +93,36 @@ def _check_style(font: TTFont, style: Style) -> None:
     require("SIL Open Font License" in (names.getDebugName(13) or ""), "Missing embedded license")
 
 
+class _FlatteningPen(BasePen):
+    """Collect each contour as a polygon, sampling its quadratic curves."""
+
+    def __init__(self) -> None:
+        super().__init__(None)
+        self.contours: list[list[tuple[float, float]]] = []
+
+    def _moveTo(self, point):
+        self.contours.append([point])
+
+    def _lineTo(self, point):
+        self.contours[-1].append(point)
+
+    def _qCurveToOne(self, control, point):
+        start = self.contours[-1][-1]
+        for step in range(1, 9):
+            t = step / 8
+            self.contours[-1].append((
+                (1 - t) ** 2 * start[0] + 2 * t * (1 - t) * control[0] + t * t * point[0],
+                (1 - t) ** 2 * start[1] + 2 * t * (1 - t) * control[1] + t * t * point[1]))
+
+
 def _polygon_outline(font: TTFont, char: str) -> BaseGeometry:
-    """Read the exported polygon contours, so spacing checks include quantization."""
-    glyph = font['glyf'][font.getBestCmap()[ord(char)]]
-    coordinates, ends, flags = glyph.getCoordinates(font['glyf'])
-    require(all(flag & 1 for flag in flags), "Polygon proof expects on-curve points")
-    outer, holes, start = [], [], 0
-    for end in ends:
-        contour = Polygon(coordinates[start:end + 1])
-        (holes if contour.exterior.is_ccw else outer).append(contour)
-        start = end + 1
+    """Read the exported contours, so spacing checks include curve fitting and quantization."""
+    pen = _FlatteningPen()
+    font.getGlyphSet()[font.getBestCmap()[ord(char)]].draw(pen)
+    outer, holes = [], []
+    for points in pen.contours:
+        contour = Polygon(points).buffer(0)
+        (holes if Polygon(points).exterior.is_ccw else outer).append(contour)
     return unary_union(outer).difference(unary_union(holes))
 
 

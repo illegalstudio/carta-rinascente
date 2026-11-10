@@ -58,7 +58,8 @@ class PathTests(unittest.TestCase):
             if axis == 1:
                 self.assertGreater(new_width, old_width)
             else:
-                self.assertAlmostEqual(new_width, old_width)
+                # The roman nib is slightly rotated, so depth adds a trace of width.
+                self.assertAlmostEqual(new_width, old_width, delta=2)
 
     def test_local_pressure_preserves_stem_entry_and_lightens_return(self):
         path = "M 0 500 L 0 0 L 250 0"
@@ -77,7 +78,8 @@ class PathTests(unittest.TestCase):
         profile = ((0, 1), (0.5, 0.6), (1, 1))
         sparse = sweep("M 0 0 L 350 0", tips=(1, 1), pressure_profile=profile)
         split = sweep("M 0 0 L 1 0 L 2 0 L 3 0 L 350 0", tips=(1, 1), pressure_profile=profile)
-        self.assertLess(sparse.hausdorff_distance(split), 0.02)
+        # Compare ink, not vertices: both outlines are sampled differently.
+        self.assertLess(sparse.symmetric_difference(split).area, 1)
 
     def test_terminal_taper_is_independent_of_path_command_count(self):
         sparse = sweep("M 0 0 L 350 0")

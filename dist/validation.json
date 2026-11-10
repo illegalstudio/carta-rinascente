@@ -19,26 +19,7 @@
       "result": "PASS",
       "glyph_count": 341,
       "encoded_characters": 340,
-      "outline_y_min": -246,
-      "outline_y_max": 1016,
-      "style_linking": true,
-      "nfc_nfd_equivalence": true,
-      "kerning_active": true,
-      "combining_marks": true,
-      "proof_pairs_do_not_overlap": true,
-      "joined_strokes_and_counters": true,
-      "woff2_round_trip_equivalent": true,
-      "sha256": {
-        "CartaRinascente-Regular.ttf": "b3789d3ceb2101e31cdea67bde9d08794d1978d6d10cbc9f2c65ad33cd37769d",
-        "CartaRinascente-Regular.woff2": "943d78497b6f125d336915bf8804b982cbf8052b11f14cb3a8e02593d0c65700"
-      }
-    },
-    {
-      "style": "Italic",
-      "result": "PASS",
-      "glyph_count": 341,
-      "encoded_characters": 340,
-      "outline_y_min": -283,
+      "outline_y_min": -247,
       "outline_y_max": 1017,
       "style_linking": true,
       "nfc_nfd_equivalence": true,
@@ -48,8 +29,27 @@
       "joined_strokes_and_counters": true,
       "woff2_round_trip_equivalent": true,
       "sha256": {
-        "CartaRinascente-Italic.ttf": "412a9b0af046bcf95bea2d6d1363e69284fb3e4cd1671d9b8e7f67b949c246bc",
-        "CartaRinascente-Italic.woff2": "2b12114e662d1cf124d9eb396f42df2bfcfc73c4f2965aa622abb433dbc9ace2"
+        "CartaRinascente-Regular.ttf": "e76bb9defb96dfacb037168acd43cb88ce905cbf6e75e6d77ddd8e90ac7f2266",
+        "CartaRinascente-Regular.woff2": "542a831fd698cdabeeeddfcfa78d6e511b326e4070d7c6b668d80063c8507446"
+      }
+    },
+    {
+      "style": "Italic",
+      "result": "PASS",
+      "glyph_count": 341,
+      "encoded_characters": 340,
+      "outline_y_min": -282,
+      "outline_y_max": 1017,
+      "style_linking": true,
+      "nfc_nfd_equivalence": true,
+      "kerning_active": true,
+      "combining_marks": true,
+      "proof_pairs_do_not_overlap": true,
+      "joined_strokes_and_counters": true,
+      "woff2_round_trip_equivalent": true,
+      "sha256": {
+        "CartaRinascente-Italic.ttf": "819a07f1d77271f82aabf08b03f36ee116c51af2eaa18420840b1fd8f2b3c1be",
+        "CartaRinascente-Italic.woff2": "deed1491a7631cabb6ec522d0a6923c8c2952b6ed008394a4797c68caaac7e8b"
       }
     },
     {
@@ -57,7 +57,7 @@
       "result": "PASS",
       "glyph_count": 341,
       "encoded_characters": 340,
-      "outline_y_min": -252,
+      "outline_y_min": -247,
       "outline_y_max": 1022,
       "style_linking": true,
       "nfc_nfd_equivalence": true,
@@ -67,8 +67,8 @@
       "joined_strokes_and_counters": true,
       "woff2_round_trip_equivalent": true,
       "sha256": {
-        "CartaRinascente-Bold.ttf": "19d5e2ebb735e900778221607d93f48d7364ecf4228b36c0ff0f8ebc0322ca42",
-        "CartaRinascente-Bold.woff2": "84f929c9ab4fac83ee35a88183bdb8bc4bd9155e0a0f3ca5f578236545456d0d"
+        "CartaRinascente-Bold.ttf": "bf8802db63d45305a1525e28beae72768f91ef024d10899de969a74d6cb2ad03",
+        "CartaRinascente-Bold.woff2": "dd1abd6f1d2f8b51568fc8782565d3b305cfbf73a47226ad4d790f0fb15eb733"
       }
     },
     {
@@ -76,7 +76,7 @@
       "result": "PASS",
       "glyph_count": 341,
       "encoded_characters": 340,
-      "outline_y_min": -292,
+      "outline_y_min": -294,
       "outline_y_max": 1023,
       "style_linking": true,
       "nfc_nfd_equivalence": true,
@@ -86,8 +86,8 @@
       "joined_strokes_and_counters": true,
       "woff2_round_trip_equivalent": true,
       "sha256": {
-        "CartaRinascente-BoldItalic.ttf": "9d01d6558aed1722122a4e8359701267ba2b5e0eca3919639b17f3d1a940dd2e",
-        "CartaRinascente-BoldItalic.woff2": "c9274d8d20f321415bf99363f400e7f6d03ec70c8899e1a3e1cf7ecfb0531ce2"
+        "CartaRinascente-BoldItalic.ttf": "4e8453a5651bdbb940db0b4bcd9be0959d5fe52bab9477b40b7e82341fd24461",
+        "CartaRinascente-BoldItalic.woff2": "6b29332c4d5ea7cdb08cecc209f4fc4092e32ae490dbdf2b46201ded7efc95a8"
       }
     }
   ],
@@ -99,45 +99,45 @@
       "samples": [
         {
           "text": "The art of a quiet page.",
-          "roman_px": 213.82,
-          "italic_px": 216.13,
-          "ratio": 1.0108
+          "roman_px": 212.8,
+          "italic_px": 216.43,
+          "ratio": 1.0171
         },
         {
           "text": "A quiet page, an expressive voice.",
-          "roman_px": 312.14,
-          "italic_px": 307.19,
-          "ratio": 0.9841
+          "roman_px": 310.37,
+          "italic_px": 303.91,
+          "ratio": 0.9792
         },
         {
           "text": "A place for notes, chapters and new beginnings.",
-          "roman_px": 440.93,
-          "italic_px": 437.22,
-          "ratio": 0.9916
+          "roman_px": 440.42,
+          "italic_px": 436.57,
+          "ratio": 0.9913
         },
         {
           "text": "The quick brown fox jumps over the lazy dog.",
-          "roman_px": 426.38,
-          "italic_px": 413.12,
-          "ratio": 0.9689
+          "roman_px": 420.75,
+          "italic_px": 412.18,
+          "ratio": 0.9796
         },
         {
           "text": "A na\u00efve poet writes at the caf\u00e9.",
-          "roman_px": 290.12,
-          "italic_px": 288.22,
-          "ratio": 0.9934
+          "roman_px": 288.43,
+          "italic_px": 286.22,
+          "ratio": 0.9923
         },
         {
           "text": "Minimum effort, flowing lines, quiet rhythm.",
-          "roman_px": 408.15,
-          "italic_px": 402.52,
-          "ratio": 0.9862
+          "roman_px": 408.01,
+          "italic_px": 399.37,
+          "ratio": 0.9788
         },
         {
           "text": "Hamburgefontsiv 0123456789",
-          "roman_px": 265.57,
-          "italic_px": 286.76,
-          "ratio": 1.0798
+          "roman_px": 266.72,
+          "italic_px": 286.11,
+          "ratio": 1.0727
         }
       ]
     },
@@ -148,45 +148,45 @@
       "samples": [
         {
           "text": "The art of a quiet page.",
-          "roman_px": 227.36,
-          "italic_px": 229.41,
-          "ratio": 1.009
+          "roman_px": 224.75,
+          "italic_px": 229.64,
+          "ratio": 1.0218
         },
         {
           "text": "A quiet page, an expressive voice.",
-          "roman_px": 334.6,
-          "italic_px": 327.38,
-          "ratio": 0.9784
+          "roman_px": 329.92,
+          "italic_px": 323.06,
+          "ratio": 0.9792
         },
         {
           "text": "A place for notes, chapters and new beginnings.",
-          "roman_px": 471.49,
-          "italic_px": 464.56,
-          "ratio": 0.9853
+          "roman_px": 467.98,
+          "italic_px": 463.57,
+          "ratio": 0.9906
         },
         {
           "text": "The quick brown fox jumps over the lazy dog.",
-          "roman_px": 454.0,
-          "italic_px": 437.89,
-          "ratio": 0.9645
+          "roman_px": 445.3,
+          "italic_px": 436.7,
+          "ratio": 0.9807
         },
         {
           "text": "A na\u00efve poet writes at the caf\u00e9.",
-          "roman_px": 309.42,
-          "italic_px": 305.84,
-          "ratio": 0.9884
+          "roman_px": 303.68,
+          "italic_px": 302.96,
+          "ratio": 0.9976
         },
         {
           "text": "Minimum effort, flowing lines, quiet rhythm.",
-          "roman_px": 438.95,
-          "italic_px": 428.47,
-          "ratio": 0.9761
+          "roman_px": 437.2,
+          "italic_px": 425.38,
+          "ratio": 0.973
         },
         {
           "text": "Hamburgefontsiv 0123456789",
-          "roman_px": 283.77,
-          "italic_px": 303.59,
-          "ratio": 1.0698
+          "roman_px": 282.67,
+          "italic_px": 302.06,
+          "ratio": 1.0686
         }
       ]
     }

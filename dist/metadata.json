@@ -13,7 +13,7 @@
       "italic_angle": 0.0,
       "glyphs": 341,
       "encoded_characters": 340,
-      "kerning_pairs": 886,
+      "kerning_pairs": 888,
       "files": [
         "CartaRinascente-Regular.ttf",
         "CartaRinascente-Regular.woff2"
@@ -26,7 +26,7 @@
       "italic_angle": -13.0,
       "glyphs": 341,
       "encoded_characters": 340,
-      "kerning_pairs": 932,
+      "kerning_pairs": 1538,
       "files": [
         "CartaRinascente-Italic.ttf",
         "CartaRinascente-Italic.woff2"
@@ -39,7 +39,7 @@
       "italic_angle": 0.0,
       "glyphs": 341,
       "encoded_characters": 340,
-      "kerning_pairs": 891,
+      "kerning_pairs": 907,
       "files": [
         "CartaRinascente-Bold.ttf",
         "CartaRinascente-Bold.woff2"
@@ -52,7 +52,7 @@
       "italic_angle": -13.0,
       "glyphs": 341,
       "encoded_characters": 340,
-      "kerning_pairs": 932,
+      "kerning_pairs": 1538,
       "files": [
         "CartaRinascente-BoldItalic.ttf",
         "CartaRinascente-BoldItalic.woff2"
