@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="dist/metadata.json"><img src="https://img.shields.io/badge/version-0.5.5-762F3B?style=flat-square&amp;color=762F3B" alt="Version: 0.5.5"></a>
+  <a href="dist/metadata.json"><img src="https://img.shields.io/badge/version-0.6.0-762F3B?style=flat-square&amp;color=762F3B" alt="Version: 0.6.0"></a>
   <a href="OFL.txt"><img src="https://img.shields.io/badge/license-OFL%201.1-762F3B?style=flat-square&amp;color=762F3B" alt="License: SIL OFL 1.1"></a>
   <a href="#get-the-font"><img src="https://img.shields.io/badge/formats-TTF%20%2B%20WOFF2-762F3B?style=flat-square&amp;color=762F3B" alt="Formats: TTF and WOFF2"></a>
 </p>
@@ -108,7 +108,7 @@ Use normal CSS `font-weight` and `font-style` to select a face. Regular and Bold
 - **340 encoded characters and 341 glyphs per style**, including the missing-character glyph.
 - **Complete printable Basic Latin and Latin-1 coverage**, Italian accents, many Latin Extended-A characters, combining marks, the euro symbol and typographic punctuation.
 - **Proportional spacing and numerals**, with style-specific kerning, combining-mark positioning, contextual dot removal for accented i and j, and conventional comma forms in ď, ľ, ť and ģ.
-- **Four linked styles**, version 0.5.5: Regular, Italic, Bold and Bold Italic, each supplied as TTF and WOFF2.
+- **Four linked styles**, version 0.6.0: Regular, Italic, Bold and Bold Italic, each supplied as TTF and WOFF2.
 
 This experimental family is intended for headings and short passages. The reading proof shows all four styles at exactly 18, 24, 36 and 48 px, using “The art of a quiet page.” without automatic resizing. Inspect it at 100% zoom and check the result in your target application. Dedicated ligatures, stacked-mark positioning and manual TrueType hinting are not included. Greek, Cyrillic and emoji are outside the current character set.
 

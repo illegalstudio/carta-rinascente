@@ -1,8 +1,8 @@
 {
   "result": "PASS",
   "family": "Carta Rinascente",
-  "version": "0.5.5",
-  "font_revision": "0.208",
+  "version": "0.6.0",
+  "font_revision": "0.209",
   "engines": [
     "FontTools",
     "FreeType via Pillow",
@@ -29,8 +29,8 @@
       "joined_strokes_and_counters": true,
       "woff2_round_trip_equivalent": true,
       "sha256": {
-        "CartaRinascente-Regular.ttf": "e76bb9defb96dfacb037168acd43cb88ce905cbf6e75e6d77ddd8e90ac7f2266",
-        "CartaRinascente-Regular.woff2": "542a831fd698cdabeeeddfcfa78d6e511b326e4070d7c6b668d80063c8507446"
+        "CartaRinascente-Regular.ttf": "0c9f6d023d1a1a4f368216b38b3c42253c713a8a453df9fc05147f6235431877",
+        "CartaRinascente-Regular.woff2": "ab87db100c35ea3f029d48ba5a39798e853026fc0fcb54c312b78e435e6b2492"
       }
     },
     {
@@ -48,8 +48,8 @@
       "joined_strokes_and_counters": true,
       "woff2_round_trip_equivalent": true,
       "sha256": {
-        "CartaRinascente-Italic.ttf": "819a07f1d77271f82aabf08b03f36ee116c51af2eaa18420840b1fd8f2b3c1be",
-        "CartaRinascente-Italic.woff2": "deed1491a7631cabb6ec522d0a6923c8c2952b6ed008394a4797c68caaac7e8b"
+        "CartaRinascente-Italic.ttf": "6e9608c8a242c09a2847555d57bb39836436cd8b9c74cd712912be9bfa733a7c",
+        "CartaRinascente-Italic.woff2": "96a005b153ad991f28866816c23ab93e4555f827ecd843528442e4d55a7131ae"
       }
     },
     {
@@ -67,8 +67,8 @@
       "joined_strokes_and_counters": true,
       "woff2_round_trip_equivalent": true,
       "sha256": {
-        "CartaRinascente-Bold.ttf": "bf8802db63d45305a1525e28beae72768f91ef024d10899de969a74d6cb2ad03",
-        "CartaRinascente-Bold.woff2": "dd1abd6f1d2f8b51568fc8782565d3b305cfbf73a47226ad4d790f0fb15eb733"
+        "CartaRinascente-Bold.ttf": "af8eae6873f95617550fd5cfe2c187957baf029d4a0497218359a0a251a18a3a",
+        "CartaRinascente-Bold.woff2": "fd5460850545933d35ba556c8ecc11e82ec59aa860d8fde84294906a8c61a2b3"
       }
     },
     {
@@ -86,8 +86,8 @@
       "joined_strokes_and_counters": true,
       "woff2_round_trip_equivalent": true,
       "sha256": {
-        "CartaRinascente-BoldItalic.ttf": "4e8453a5651bdbb940db0b4bcd9be0959d5fe52bab9477b40b7e82341fd24461",
-        "CartaRinascente-BoldItalic.woff2": "6b29332c4d5ea7cdb08cecc209f4fc4092e32ae490dbdf2b46201ded7efc95a8"
+        "CartaRinascente-BoldItalic.ttf": "94c92a9606448159ab3e9b56ad83a34ae4d913b36e6f81a1e01e594a11d09307",
+        "CartaRinascente-BoldItalic.woff2": "9395216298454196f642fc5be62a296ebbe82bc78fb1b53b4fdef830b82e1e48"
       }
     }
   ],
